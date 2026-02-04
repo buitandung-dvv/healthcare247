@@ -14,7 +14,9 @@ tool/.env
 .swiftpm/
 migrate_working_dir/
 Fitness App UI/
-agent/
+example ui/
+.agent/
+tools/
 
 # IntelliJ related
 *.iml
