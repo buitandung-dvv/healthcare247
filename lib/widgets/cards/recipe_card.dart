@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
+import '../../core/utils/translation_helper.dart';
 import '../../data/models/recipe_model.dart';
 import '../common/common_widgets.dart';
 
@@ -46,26 +47,55 @@ class RecipeCard extends StatelessWidget {
                   ),
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
-                    child: recipe.imageUrl != null
-                        ? CachedNetworkImage(
-                            imageUrl: recipe.imageUrl!,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColors.secondary.withValues(alpha: 0.2),
-                                    AppColors.accent.withValues(alpha: 0.1),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                              ),
-                              child: const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
+                    child:
+                        recipe.imageUrl != null
+                            ? CachedNetworkImage(
+                              imageUrl: recipe.imageUrl!,
+                              fit: BoxFit.cover,
+                              placeholder:
+                                  (context, url) => Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColors.secondary.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                          AppColors.accent.withValues(
+                                            alpha: 0.1,
+                                          ),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                    child: const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                              errorWidget:
+                                  (context, url, error) => Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColors.secondary.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                          AppColors.accent.withValues(
+                                            alpha: 0.1,
+                                          ),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.restaurant,
+                                      size: 48,
+                                      color: AppColors.secondary,
+                                    ),
+                                  ),
+                            )
+                            : Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -82,24 +112,6 @@ class RecipeCard extends StatelessWidget {
                                 color: AppColors.secondary,
                               ),
                             ),
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.secondary.withValues(alpha: 0.2),
-                                  AppColors.accent.withValues(alpha: 0.1),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.restaurant,
-                              size: 48,
-                              color: AppColors.secondary,
-                            ),
-                          ),
                   ),
                 ),
 
@@ -125,7 +137,10 @@ class RecipeCard extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        recipe.category!,
+                        TranslationHelper.translateRecipeCategory(
+                          context,
+                          recipe.category!,
+                        ),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 11,
@@ -159,7 +174,10 @@ class RecipeCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            recipe.area!,
+                            TranslationHelper.translateRecipeArea(
+                              context,
+                              recipe.area!,
+                            ),
                             style: TextStyle(
                               color: AppColors.textSecondary,
                               fontSize: 11,
@@ -205,8 +223,8 @@ class RecipeCard extends StatelessWidget {
                   Text(
                     recipe.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -218,14 +236,16 @@ class RecipeCard extends StatelessWidget {
                       children: [
                         _NutritionBadge(
                           icon: Icons.local_fire_department,
-                          value: '${recipe.nutritionInfo!.calories?.toInt() ?? 0}',
+                          value:
+                              '${recipe.nutritionInfo!.calories?.toInt() ?? 0}',
                           unit: 'cal',
                           color: AppColors.caloriesColor,
                         ),
                         const SizedBox(width: AppSizes.md),
                         _NutritionBadge(
                           icon: Icons.egg_alt,
-                          value: '${recipe.nutritionInfo!.protein?.toInt() ?? 0}',
+                          value:
+                              '${recipe.nutritionInfo!.protein?.toInt() ?? 0}',
                           unit: 'g',
                           color: AppColors.proteinColor,
                         ),
@@ -246,10 +266,11 @@ class RecipeCard extends StatelessWidget {
                     Wrap(
                       spacing: AppSizes.xs,
                       runSpacing: AppSizes.xs,
-                      children: recipe.tagList
-                          .take(3)
-                          .map((tag) => _TagChip(tag: tag))
-                          .toList(),
+                      children:
+                          recipe.tagList
+                              .take(3)
+                              .map((tag) => _TagChip(tag: tag))
+                              .toList(),
                     ),
                   ],
                 ],
@@ -287,28 +308,30 @@ class RecipeListTile extends StatelessWidget {
             child: SizedBox(
               width: 70,
               height: 70,
-              child: recipe.imageUrl != null
-                  ? CachedNetworkImage(
-                      imageUrl: recipe.imageUrl!,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: AppColors.background,
-                      ),
-                      errorWidget: (context, url, error) => Container(
+              child:
+                  recipe.imageUrl != null
+                      ? CachedNetworkImage(
+                        imageUrl: recipe.imageUrl!,
+                        fit: BoxFit.cover,
+                        placeholder:
+                            (context, url) =>
+                                Container(color: AppColors.background),
+                        errorWidget:
+                            (context, url, error) => Container(
+                              color: AppColors.secondary.withValues(alpha: 0.1),
+                              child: const Icon(
+                                Icons.restaurant,
+                                color: AppColors.secondary,
+                              ),
+                            ),
+                      )
+                      : Container(
                         color: AppColors.secondary.withValues(alpha: 0.1),
                         child: const Icon(
                           Icons.restaurant,
                           color: AppColors.secondary,
                         ),
                       ),
-                    )
-                  : Container(
-                      color: AppColors.secondary.withValues(alpha: 0.1),
-                      child: const Icon(
-                        Icons.restaurant,
-                        color: AppColors.secondary,
-                      ),
-                    ),
             ),
           ),
           const SizedBox(width: AppSizes.md),
@@ -320,9 +343,9 @@ class RecipeListTile extends StatelessWidget {
               children: [
                 Text(
                   recipe.name,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -337,20 +360,27 @@ class RecipeListTile extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.secondary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusSm,
+                          ),
                         ),
                         child: Text(
-                          recipe.category!,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: AppColors.secondary,
-                              ),
+                          TranslationHelper.translateRecipeCategory(
+                            context,
+                            recipe.category!,
+                          ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: AppColors.secondary),
                         ),
                       ),
                       const SizedBox(width: AppSizes.sm),
                     ],
                     if (recipe.area != null)
                       Text(
-                        recipe.area!,
+                        TranslationHelper.translateRecipeArea(
+                          context,
+                          recipe.area!,
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                   ],
@@ -359,9 +389,9 @@ class RecipeListTile extends StatelessWidget {
                   const SizedBox(height: AppSizes.xs),
                   Text(
                     '${recipe.nutritionInfo!.calories!.toInt()} calories',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textHint,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: AppColors.textHint),
                   ),
                 ],
               ],
@@ -417,10 +447,7 @@ class _TagChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.sm,
-        vertical: 2,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 2),
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(AppSizes.radiusFull),
@@ -428,11 +455,10 @@ class _TagChip extends StatelessWidget {
       ),
       child: Text(
         '#$tag',
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.textSecondary,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.labelSmall?.copyWith(color: AppColors.textSecondary),
       ),
     );
   }
 }
-

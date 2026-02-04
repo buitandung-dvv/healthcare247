@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
+import '../../core/utils/translation_helper.dart';
 import '../../data/models/recipe_model.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/language_provider.dart';
@@ -567,6 +568,7 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                   availableOptions: _availableCategories,
                   selectedValues: _tempFilter.categories,
                   selectedColor: AppColors.secondary,
+                  filterType: 'category',
                   onToggle: (value) {
                     setState(() {
                       _tempFilter = _tempFilter.toggleCategory(value);
@@ -576,11 +578,12 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
 
                 // Area - Multi-select
                 _buildMultiFilterSection(
-                  title: widget.lang.getText(en: 'Area', vi: 'Vùng miền'),
+                  title: widget.lang.getText(en: 'Area', vi: 'Quốc gia'),
                   allOptions: _allAreas,
                   availableOptions: _availableAreas,
                   selectedValues: _tempFilter.areas,
                   selectedColor: AppColors.primary,
+                  filterType: 'area',
                   onToggle: (value) {
                     setState(() {
                       _tempFilter = _tempFilter.toggleArea(value);
@@ -651,8 +654,22 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
     required List<String> selectedValues,
     required Color selectedColor,
     required ValueChanged<String> onToggle,
+    String? filterType, // 'category' or 'area'
   }) {
     final availableCount = availableOptions.length;
+
+    // Helper function to translate option based on filter type
+    String translateOption(String option) {
+      if (filterType == null) return option;
+      switch (filterType) {
+        case 'category':
+          return TranslationHelper.translateRecipeCategory(context, option);
+        case 'area':
+          return TranslationHelper.translateRecipeArea(context, option);
+        default:
+          return option;
+      }
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -695,7 +712,7 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                 final isAvailable = availableOptions.contains(option);
 
                 return FilterChip(
-                  label: Text(option),
+                  label: Text(translateOption(option)),
                   selected: isSelected,
                   onSelected:
                       isAvailable || isSelected

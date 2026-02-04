@@ -18,7 +18,6 @@ import 'providers/water_tracking_provider.dart';
 import 'providers/favorites_provider.dart';
 import 'providers/food_provider.dart';
 import 'providers/goals_provider.dart';
-import 'providers/audio_provider.dart';
 import 'screens/main/main_navigation_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/onboarding/onboarding_flow_screen.dart';
@@ -94,7 +93,6 @@ class HealthCareApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => FavoritesProvider(), lazy: true),
         ChangeNotifierProvider(create: (_) => GoalsProvider(), lazy: true),
-        ChangeNotifierProvider(create: (_) => AudioProvider(), lazy: true),
       ],
       child: const _AppContent(),
     );

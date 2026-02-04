@@ -524,7 +524,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              lang.getText(en: 'Macros Progress', vi: 'Tiến độ Macros'),
+              lang.getText(en: 'Macros Progress', vi: 'Tiến độ dinh dưỡng'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: AppSizes.lg),
@@ -532,13 +532,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 MacroProgressRing(
-                  label: lang.getText(en: 'Protein', vi: 'Protein'),
+                  label: lang.getText(en: 'Protein', vi: 'Chất đạm'),
                   current: progress.protein,
                   goal: progress.proteinGoal.toDouble(),
                   color: AppColors.proteinColor,
                 ),
                 MacroProgressRing(
-                  label: lang.getText(en: 'Carbs', vi: 'Carbs'),
+                  label: lang.getText(en: 'Carbs', vi: 'Tinh bột'),
                   current: progress.carbs,
                   goal: progress.carbsGoal.toDouble(),
                   color: AppColors.carbsColor,

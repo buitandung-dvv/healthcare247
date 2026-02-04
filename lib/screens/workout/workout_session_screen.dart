@@ -8,10 +8,8 @@ import '../../providers/workout_plan_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/audio_provider.dart';
 import '../../data/models/workout_session_model.dart';
 import '../../providers/exercise_provider.dart';
-import '../../widgets/music_selection_sheet.dart';
 
 class WorkoutSessionScreen extends StatefulWidget {
   const WorkoutSessionScreen({super.key});
@@ -871,8 +869,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
   }
 
   Widget _buildHeader({bool transparent = false}) {
-    final audioProvider = context.watch<AudioProvider>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
@@ -885,46 +881,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
               color: transparent ? AppColors.textPrimary : Colors.white,
             ),
           ),
-          Row(
-            children: [
-              // Sound toggle (TTS counting)
-              IconButton(
-                onPressed: () => audioProvider.toggleTts(),
-                icon: Icon(
-                  audioProvider.isTtsEnabled
-                      ? Icons.volume_up
-                      : Icons.volume_off,
-                  color:
-                      transparent
-                          ? (audioProvider.isTtsEnabled
-                              ? AppColors.primary
-                              : AppColors.textSecondary.withValues(alpha: 0.5))
-                          : (audioProvider.isTtsEnabled
-                              ? Colors.white
-                              : Colors.white.withValues(alpha: 0.5)),
-                  size: 24,
-                ),
-              ),
-              // Music toggle
-              IconButton(
-                onPressed: () => MusicSelectionSheet.show(context),
-                icon: Icon(
-                  audioProvider.isMusicEnabled
-                      ? Icons.music_note
-                      : Icons.music_note_outlined,
-                  color:
-                      transparent
-                          ? (audioProvider.isMusicEnabled
-                              ? AppColors.primary
-                              : AppColors.textSecondary.withValues(alpha: 0.5))
-                          : (audioProvider.isMusicEnabled
-                              ? Colors.white
-                              : Colors.white.withValues(alpha: 0.5)),
-                  size: 24,
-                ),
-              ),
-            ],
-          ),
+          const SizedBox(width: 48), // Placeholder for symmetry
         ],
       ),
     );

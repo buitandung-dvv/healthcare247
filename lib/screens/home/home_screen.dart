@@ -409,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: AppSizes.md),
           LinearProgressBar(
-            label: langProvider.getText(en: 'Protein', vi: 'Protein'),
+            label: langProvider.getText(en: 'Protein', vi: 'Chất đạm'),
             current: progress.protein,
             goal: progress.proteinGoal,
             unit: 'g',
@@ -417,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: AppSizes.sm),
           LinearProgressBar(
-            label: langProvider.getText(en: 'Carbs', vi: 'Carbs'),
+            label: langProvider.getText(en: 'Carbs', vi: 'Tinh bột'),
             current: progress.carbs,
             goal: progress.carbsGoal,
             unit: 'g',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
+import '../../core/utils/translation_helper.dart';
 import '../../data/models/exercise_model.dart';
 import '../../providers/exercise_provider.dart';
 import '../../providers/language_provider.dart';
@@ -646,6 +647,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   allOptions: widget.exerciseProvider.levels,
                   availableOptions: _availableLevels,
                   selectedValues: _tempFilter.levels,
+                  filterType: 'level',
                   onToggle: (value) {
                     setState(() {
                       _tempFilter = _tempFilter.toggleLevel(value);
@@ -662,6 +664,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   allOptions: widget.exerciseProvider.categories,
                   availableOptions: _availableCategories,
                   selectedValues: _tempFilter.categories,
+                  filterType: 'category',
                   onToggle: (value) {
                     setState(() {
                       _tempFilter = _tempFilter.toggleCategory(value);
@@ -678,6 +681,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   allOptions: widget.exerciseProvider.equipments,
                   availableOptions: _availableEquipments,
                   selectedValues: _tempFilter.equipments,
+                  filterType: 'equipment',
                   onToggle: (value) {
                     setState(() {
                       _tempFilter = _tempFilter.toggleEquipment(value);
@@ -698,6 +702,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                           .toList(),
                   availableOptions: _availableMuscles,
                   selectedValues: _tempFilter.muscles,
+                  filterType: 'muscle',
                   onToggle: (value) {
                     setState(() {
                       _tempFilter = _tempFilter.toggleMuscle(value);
@@ -747,9 +752,27 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
     required Set<String> availableOptions,
     required List<String> selectedValues,
     required ValueChanged<String> onToggle,
+    String? filterType, // 'level', 'category', 'equipment', 'muscle'
   }) {
     // Đếm số options khả dụng
     final availableCount = availableOptions.length;
+
+    // Helper function to translate option based on filter type
+    String translateOption(String option) {
+      if (filterType == null) return option;
+      switch (filterType) {
+        case 'level':
+          return TranslationHelper.translateLevel(context, option);
+        case 'category':
+          return TranslationHelper.translateCategory(context, option);
+        case 'equipment':
+          return TranslationHelper.translateEquipment(context, option);
+        case 'muscle':
+          return option; // Muscles already translated from database
+        default:
+          return option;
+      }
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -793,7 +816,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                 final isAvailable = availableOptions.contains(option);
 
                 return FilterChip(
-                  label: Text(option),
+                  label: Text(translateOption(option)),
                   selected: isSelected,
                   onSelected:
                       isAvailable || isSelected

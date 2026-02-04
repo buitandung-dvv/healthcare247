@@ -190,6 +190,23 @@ class _LevelBadge extends StatelessWidget {
 
   const _LevelBadge({required this.level, required this.isDark});
 
+  String _getDisplayLevel(BuildContext context) {
+    final isVietnamese = Localizations.localeOf(context).languageCode == 'vi';
+    if (!isVietnamese) return level;
+
+    switch (level.toLowerCase()) {
+      case 'beginner':
+        return 'Cơ bản';
+      case 'intermediate':
+        return 'Trung bình';
+      case 'expert':
+      case 'advanced':
+        return 'Nâng cao';
+      default:
+        return level;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Color badgeColor;
@@ -217,7 +234,7 @@ class _LevelBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.radiusFull),
       ),
       child: Text(
-        level,
+        _getDisplayLevel(context),
         style: TextStyle(
           fontSize: AppSizes.fontXs,
           fontWeight: FontWeight.w600,

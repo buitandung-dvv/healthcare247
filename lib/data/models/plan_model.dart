@@ -63,6 +63,7 @@ class PlanDetail {
   final int? restDuration;
   final int? orderIndex;
   final String? exerciseName;
+  final String? exerciseImages; // JSON string of image URLs
   final String? recipeName; // Changed from mealName
 
   PlanDetail({
@@ -75,11 +76,30 @@ class PlanDetail {
     this.restDuration,
     this.orderIndex,
     this.exerciseName,
+    this.exerciseImages,
     this.recipeName,
   });
 
   // Generate a unique ID from composite key
   String get compositeId => '${planId}_${dayOfWeek}_${orderIndex ?? 0}';
+
+  // Get first image URL from images JSON
+  String? get firstImageUrl {
+    if (exerciseImages == null || exerciseImages!.isEmpty) return null;
+    try {
+      // Images is stored as JSON array string
+      final images = exerciseImages!;
+      if (images.startsWith('[')) {
+        // Parse JSON array
+        final regex = RegExp(r'"([^"]+)"');
+        final match = regex.firstMatch(images);
+        return match?.group(1);
+      }
+      return images; // Return as-is if not array
+    } catch (_) {
+      return null;
+    }
+  }
 
   factory PlanDetail.fromJson(Map<String, dynamic> json) {
     return PlanDetail(
@@ -92,6 +112,7 @@ class PlanDetail {
       restDuration: json['rest_duration'] as int?,
       orderIndex: json['order_index'] as int?,
       exerciseName: json['exercise_name'] as String?,
+      exerciseImages: json['exercise_images'] as String?,
       recipeName: json['recipe_name'] as String?,
     );
   }

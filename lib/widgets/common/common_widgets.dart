@@ -596,11 +596,12 @@ class GradientStatCard extends StatelessWidget {
   }
 }
 
-/// Level Badge - Modern gradient style
+/// Level Badge - Modern gradient style with i18n support
 class LevelBadge extends StatelessWidget {
   final String level;
+  final String? displayText; // Optional translated text
 
-  const LevelBadge({super.key, required this.level});
+  const LevelBadge({super.key, required this.level, this.displayText});
 
   Color get _color {
     switch (level.toLowerCase()) {
@@ -636,8 +637,27 @@ class LevelBadge extends StatelessWidget {
     }
   }
 
+  /// Get Vietnamese translation for level
+  String get _translatedLevel {
+    if (displayText != null) return displayText!;
+    switch (level.toLowerCase()) {
+      case 'beginner':
+        return 'CƠ BẢN';
+      case 'intermediate':
+        return 'TRUNG BÌNH';
+      case 'expert':
+      case 'advanced':
+        return 'NÂNG CAO';
+      default:
+        return level.toUpperCase();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Check if Vietnamese mode
+    final isVietnamese = Localizations.localeOf(context).languageCode == 'vi';
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -652,7 +672,7 @@ class LevelBadge extends StatelessWidget {
         ],
       ),
       child: Text(
-        level.toUpperCase(),
+        isVietnamese ? _translatedLevel : level.toUpperCase(),
         style: const TextStyle(
           color: Colors.white,
           fontSize: 10,

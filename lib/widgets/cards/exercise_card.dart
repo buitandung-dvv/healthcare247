@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
+import '../../core/utils/translation_helper.dart';
 import '../../data/models/exercise_model.dart';
 import '../common/common_widgets.dart';
 
@@ -46,15 +47,42 @@ class ExerciseCard extends StatelessWidget {
                 children: [
                   AspectRatio(
                     aspectRatio: 16 / 9,
-                    child: exercise.images.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: exercise.images.first,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: AppColors.primarySoft,
-                              child: const Center(child: CircularProgressIndicator()),
-                            ),
-                            errorWidget: (context, url, error) => Container(
+                    child:
+                        exercise.images.isNotEmpty
+                            ? CachedNetworkImage(
+                              imageUrl: exercise.images.first,
+                              fit: BoxFit.cover,
+                              placeholder:
+                                  (context, url) => Container(
+                                    color: AppColors.primarySoft,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                              errorWidget:
+                                  (context, url, error) => Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColors.primary.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                          AppColors.secondary.withValues(
+                                            alpha: 0.1,
+                                          ),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.fitness_center,
+                                      size: 48,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                            )
+                            : Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -71,24 +99,6 @@ class ExerciseCard extends StatelessWidget {
                                 color: AppColors.primary,
                               ),
                             ),
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.primary.withValues(alpha: 0.2),
-                                  AppColors.secondary.withValues(alpha: 0.1),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.fitness_center,
-                              size: 48,
-                              color: AppColors.primary,
-                            ),
-                          ),
                   ),
                   // Level badge overlay
                   Positioned(
@@ -131,8 +141,8 @@ class ExerciseCard extends StatelessWidget {
                   Text(
                     exercise.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -145,21 +155,29 @@ class ExerciseCard extends StatelessWidget {
                     children: [
                       // Category chip
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.secondarySoft,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          exercise.category,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          TranslationHelper.translateCategory(
+                            context,
+                            exercise.category,
+                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
                             color: AppColors.secondaryDark,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
 
-                      // Muscles chips
+                      // Muscles chips (already translated in database for Vietnamese)
                       ...exercise.primaryMuscles
                           .take(2)
                           .map((muscle) => _MuscleChip(muscle: muscle)),
@@ -167,7 +185,10 @@ class ExerciseCard extends StatelessWidget {
                       // Equipment chip
                       if (exercise.equipment != null)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.accentSoft,
                             borderRadius: BorderRadius.circular(8),
@@ -182,8 +203,13 @@ class ExerciseCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                exercise.equipment!,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                TranslationHelper.translateEquipment(
+                                  context,
+                                  exercise.equipment!,
+                                ),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
                                   color: AppColors.accent,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -228,30 +254,32 @@ class ExerciseListTile extends StatelessWidget {
             child: SizedBox(
               width: 60,
               height: 60,
-              child: exercise.images.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: exercise.images.first,
-                      fit: BoxFit.cover,
-                      width: 60,
-                      height: 60,
-                      placeholder: (context, url) => Container(
-                        color: AppColors.background,
-                      ),
-                      errorWidget: (context, url, error) => Container(
+              child:
+                  exercise.images.isNotEmpty
+                      ? CachedNetworkImage(
+                        imageUrl: exercise.images.first,
+                        fit: BoxFit.cover,
+                        width: 60,
+                        height: 60,
+                        placeholder:
+                            (context, url) =>
+                                Container(color: AppColors.background),
+                        errorWidget:
+                            (context, url, error) => Container(
+                              color: AppColors.primary.withValues(alpha: 0.1),
+                              child: const Icon(
+                                Icons.fitness_center,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                      )
+                      : Container(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         child: const Icon(
                           Icons.fitness_center,
                           color: AppColors.primary,
                         ),
                       ),
-                    )
-                  : Container(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      child: const Icon(
-                        Icons.fitness_center,
-                        color: AppColors.primary,
-                      ),
-                    ),
             ),
           ),
           const SizedBox(width: AppSizes.md),
@@ -263,9 +291,9 @@ class ExerciseListTile extends StatelessWidget {
               children: [
                 Text(
                   exercise.name,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -301,21 +329,17 @@ class _MuscleChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.sm,
-        vertical: 2,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 2),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppSizes.radiusFull),
       ),
       child: Text(
         muscle,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.primary,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.labelSmall?.copyWith(color: AppColors.primary),
       ),
     );
   }
 }
-

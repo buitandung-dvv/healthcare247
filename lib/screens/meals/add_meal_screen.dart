@@ -440,13 +440,13 @@ class _AddMealScreenState extends State<AddMealScreen> {
             style: Theme.of(context).textTheme.titleSmall,
           ),
           const SizedBox(height: AppSizes.md),
-          _buildNutritionGrid(),
+          _buildNutritionGrid(lang),
         ],
       ),
     );
   }
 
-  Widget _buildNutritionGrid() {
+  Widget _buildNutritionGrid(LanguageProvider lang) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -477,7 +477,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Macros',
+                    lang.getText(en: 'Macros', vi: 'Dinh dưỡng chính'),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
@@ -491,7 +491,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                 children: [
                   Expanded(
                     child: _buildMacroCard(
-                      'Calories',
+                      lang.getText(en: 'Calories', vi: 'Calo'),
                       _calculatedCalories.toInt().toString(),
                       'kcal',
                       AppColors.caloriesColor,
@@ -501,7 +501,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   const SizedBox(width: AppSizes.sm),
                   Expanded(
                     child: _buildMacroCard(
-                      'Protein',
+                      lang.getText(en: 'Protein', vi: 'Chất đạm'),
                       _calculatedProtein.toStringAsFixed(1),
                       'g',
                       AppColors.proteinColor,
@@ -511,7 +511,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   const SizedBox(width: AppSizes.sm),
                   Expanded(
                     child: _buildMacroCard(
-                      'Carbs',
+                      lang.getText(en: 'Carbs', vi: 'Tinh bột'),
                       _calculatedCarbs.toStringAsFixed(1),
                       'g',
                       AppColors.carbsColor,
@@ -521,7 +521,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   const SizedBox(width: AppSizes.sm),
                   Expanded(
                     child: _buildMacroCard(
-                      'Fat',
+                      lang.getText(en: 'Fat', vi: 'Chất béo'),
                       _calculatedFat.toStringAsFixed(1),
                       'g',
                       AppColors.fatColor,
@@ -538,30 +538,30 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
         // Minerals Section
         _buildNutritionSection(
-          title: 'Minerals',
+          title: lang.getText(en: 'Minerals', vi: 'Khoáng chất'),
           icon: Icons.scatter_plot,
           color: Colors.teal,
           items: [
             _NutritionItem(
-              'Fiber',
+              lang.getText(en: 'Fiber', vi: 'Chất xơ'),
               _calculatedFiber.toStringAsFixed(1),
               'g',
               Colors.green,
             ),
             _NutritionItem(
-              'Cholest.',
+              lang.getText(en: 'Cholest.', vi: 'Cholest.'),
               _calculatedCholesterol.toStringAsFixed(0),
               'mg',
               Colors.purple,
             ),
             _NutritionItem(
-              'Calcium',
+              lang.getText(en: 'Calcium', vi: 'Canxi'),
               _calculatedCalcium.toStringAsFixed(0),
               'mg',
               Colors.teal,
             ),
             _NutritionItem(
-              'Iron',
+              lang.getText(en: 'Iron', vi: 'Sắt'),
               _calculatedIron.toStringAsFixed(1),
               'mg',
               Colors.brown,
@@ -573,24 +573,24 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
         // Electrolytes Section
         _buildNutritionSection(
-          title: 'Electrolytes',
+          title: lang.getText(en: 'Electrolytes', vi: 'Điện giải'),
           icon: Icons.bolt,
           color: Colors.orange,
           items: [
             _NutritionItem(
-              'Sodium',
+              lang.getText(en: 'Sodium', vi: 'Natri'),
               _calculatedSodium.toStringAsFixed(0),
               'mg',
               Colors.orange,
             ),
             _NutritionItem(
-              'Potassium',
+              lang.getText(en: 'Potassium', vi: 'Kali'),
               _calculatedPotassium.toStringAsFixed(0),
               'mg',
               Colors.deepOrange,
             ),
             _NutritionItem(
-              'Phosph.',
+              lang.getText(en: 'Phosph.', vi: 'Phốt pho'),
               _calculatedPhosphorus.toStringAsFixed(0),
               'mg',
               Colors.indigo,
@@ -602,24 +602,24 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
         // Vitamins Section
         _buildNutritionSection(
-          title: 'Vitamins',
+          title: lang.getText(en: 'Vitamins', vi: 'Vitamin'),
           icon: Icons.brightness_7,
           color: Colors.amber,
           items: [
             _NutritionItem(
-              'Vit. A',
+              lang.getText(en: 'Vit. A', vi: 'Vit. A'),
               _calculatedVitaminA.toStringAsFixed(0),
               'mcg',
               Colors.amber,
             ),
             _NutritionItem(
-              'Vit. B1',
+              lang.getText(en: 'Vit. B1', vi: 'Vit. B1'),
               _calculatedVitaminB1.toStringAsFixed(2),
               'mg',
               Colors.lime.shade700,
             ),
             _NutritionItem(
-              'Vit. C',
+              lang.getText(en: 'Vit. C', vi: 'Vit. C'),
               _calculatedVitaminC.toStringAsFixed(1),
               'mg',
               Colors.redAccent,

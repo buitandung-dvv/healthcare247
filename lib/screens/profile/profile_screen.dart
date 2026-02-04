@@ -556,7 +556,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Icon(icon, size: 20, color: AppColors.textSecondary),
               const SizedBox(width: 12),
-              Expanded(
+              SizedBox(
+                width: 100, // Fixed width for label
                 child: Text(
                   label,
                   style: TextStyle(
@@ -565,11 +566,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
+              Expanded(
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.end,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ],
@@ -591,8 +597,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         case 'lose_weight':
           return lang.getText(en: 'Lose Weight', vi: 'Giảm cân');
         default:
-          return goalValue ??
-              lang.getText(en: 'Maintain Weight', vi: 'Duy trì cân nặng');
+          return lang.getText(en: 'Not set', vi: 'Chưa đặt');
       }
     }
 
@@ -608,9 +613,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else if (goalValue == 'lose_weight') {
       goalIcon = Icons.directions_run;
       goalColor = AppColors.info; // Blue
-    } else {
+    } else if (goalValue == 'maintain_weight') {
       goalIcon = Icons.balance;
       goalColor = AppColors.success; // Green
+    } else {
+      // No goal set
+      goalIcon = Icons.help_outline;
+      goalColor = AppColors.textSecondary;
     }
 
     return Container(
@@ -702,7 +711,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _StatItem(
             icon: Icons.height,
             label: lang.getText(en: 'Height', vi: 'Chiều cao'),
-            value: '${user?.height?.toInt() ?? 170} cm',
+            value: user?.height != null ? '${user!.height!.toInt()} cm' : '--',
           ),
         ),
         const SizedBox(width: AppSizes.md),
@@ -710,7 +719,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _StatItem(
             icon: Icons.monitor_weight,
             label: lang.getText(en: 'Weight', vi: 'Cân nặng'),
-            value: '${user?.weight?.toInt() ?? 70} kg',
+            value: user?.weight != null ? '${user!.weight!.toInt()} kg' : '--',
           ),
         ),
         const SizedBox(width: AppSizes.md),
@@ -718,7 +727,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _StatItem(
             icon: Icons.speed,
             label: 'BMI',
-            value: user?.bmi?.toStringAsFixed(1) ?? '24.2',
+            value: user?.bmi?.toStringAsFixed(1) ?? '--',
           ),
         ),
       ],
