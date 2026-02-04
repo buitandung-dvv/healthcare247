@@ -35,11 +35,10 @@ export class PlanService {
             pd.rest_duration,
             pd.order_index,
             et.name as exercise_name,
-            e.images as exercise_images,
+            (SELECT TOP 1 '/images/exercises/' + ei.image_url FROM ExerciseImages ei WHERE ei.exercise_id = pd.exercise_id ORDER BY ei.display_order) as exercise_image,
             rt.name as recipe_name
           FROM Plan_Details pd
           LEFT JOIN Exercise_Translations et ON pd.exercise_id = et.exercise_id AND et.language_id = @language_id
-          LEFT JOIN Exercises e ON pd.exercise_id = e.exercise_id
           LEFT JOIN Recipe_Translations rt ON pd.recipe_id = rt.recipe_id AND rt.language_id = @language_id
           WHERE pd.plan_id IN (${planIds.join(',')})
           ORDER BY pd.day_of_week, pd.order_index
@@ -96,11 +95,10 @@ export class PlanService {
           pd.rest_duration,
           pd.order_index,
           et.name as exercise_name,
-          e.images as exercise_images,
+          (SELECT TOP 1 '/images/exercises/' + ei.image_url FROM ExerciseImages ei WHERE ei.exercise_id = pd.exercise_id ORDER BY ei.display_order) as exercise_image,
           rt.name as recipe_name
         FROM Plan_Details pd
         LEFT JOIN Exercise_Translations et ON pd.exercise_id = et.exercise_id AND et.language_id = @language_id
-        LEFT JOIN Exercises e ON pd.exercise_id = e.exercise_id
         LEFT JOIN Recipe_Translations rt ON pd.recipe_id = rt.recipe_id AND rt.language_id = @language_id
         WHERE pd.plan_id = @plan_id
         ORDER BY pd.day_of_week, pd.order_index

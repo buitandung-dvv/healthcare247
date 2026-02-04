@@ -64,10 +64,9 @@ export class WorkoutSessionService {
           ISNULL(pd.sets, 3),
           ISNULL(pd.reps, 10),
           ISNULL(pd.rest_duration, 60),
-          ISNULL(pd.order_index, 0)
+          ROW_NUMBER() OVER (ORDER BY pd.order_index, pd.exercise_id) - 1 as order_index
         FROM Plan_Details pd
         WHERE pd.plan_id = @plan_id AND pd.exercise_id IS NOT NULL
-        ORDER BY pd.order_index
       `);
   }
 

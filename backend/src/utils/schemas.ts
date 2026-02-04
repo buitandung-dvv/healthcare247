@@ -126,10 +126,10 @@ export const startSessionSchema = z.object({
 });
 
 export const updateExerciseProgressSchema = z.object({
-    sets_completed: z.number().int().min(0).max(50).optional(),
-    reps_completed: z.string().max(100).optional(),
-    weight_used: z.string().max(100).optional(),
-    notes: z.string().max(500).optional(),
+    sets_completed: z.number().int().min(0).max(50).optional().nullable(),
+    reps_completed: z.string().max(100).optional().nullable(),
+    weight_used: z.string().max(100).optional().nullable(),
+    notes: z.string().max(500).optional().nullable(),
 });
 
 // ============ FAVORITES SCHEMAS ============

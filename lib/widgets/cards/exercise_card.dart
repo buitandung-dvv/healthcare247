@@ -195,6 +195,7 @@ class ExerciseCard extends StatelessWidget {
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(
                                 Icons.sports_gymnastics,
@@ -329,7 +330,7 @@ class _MuscleChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppSizes.radiusFull),

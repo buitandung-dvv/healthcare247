@@ -41,6 +41,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
   // Current exercise state
   int _currentExerciseIndex = 0;
   int _currentSet = 1;
+  bool _wasLastSet =
+      false; // Track if we just completed the last set of an exercise
 
   @override
   void initState() {
@@ -130,10 +132,15 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     await provider.updateExerciseProgress(detail.exerciseId, _currentSet);
 
     setState(() {
-      if (_currentSet < detail.targetSets) {
+      // Check if this is the last set BEFORE incrementing
+      _wasLastSet = _currentSet >= detail.targetSets;
+
+      if (!_wasLastSet) {
+        // More sets remaining for current exercise
         _currentSet++;
         _startRest(detail.restDuration);
       } else {
+        // Last set completed, move to next exercise
         if (_currentExerciseIndex <
             (provider.activeSession?.details.length ?? 0) - 1) {
           _currentExerciseIndex++;
@@ -469,11 +476,27 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     WorkoutSessionDetail detail,
     LanguageProvider lang,
   ) {
-    // Get next exercise info
-    final nextIndex = _currentExerciseIndex + 1;
-    final hasNext = nextIndex < session.details.length;
-    final nextDetail = hasNext ? session.details[nextIndex] : null;
-    final displayDetail = nextDetail ?? detail;
+    // Use _wasLastSet to determine what to show
+    // If _wasLastSet is false: we have more sets, show current exercise with next set
+    // If _wasLastSet is true: we completed the last set, show next exercise
+
+    final targetSets = detail.targetSets;
+
+    // Determine what to display
+    final WorkoutSessionDetail displayDetail;
+    final String labelText;
+
+    if (_wasLastSet) {
+      // Just completed last set, now showing next exercise (which is current detail)
+      displayDetail = detail;
+      labelText =
+          '${lang.getText(en: 'NEXT', vi: 'TIẾP THEO')} ${_currentExerciseIndex + 1}/${session.details.length}';
+    } else {
+      // Still have more sets, show current exercise with next set number
+      displayDetail = detail;
+      labelText =
+          '${lang.getText(en: 'NEXT SET', vi: 'SET TIẾP')} $_currentSet/$targetSets';
+    }
 
     final minutes = (_restSeconds ~/ 60).toString().padLeft(2, '0');
     final secs = (_restSeconds % 60).toString().padLeft(2, '0');
@@ -525,14 +548,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          session.details.length == 1
-                              ? lang.getText(en: 'CONTINUE', vi: 'TIẾP TỤC')
-                              : hasNext
-                              ? '${lang.getText(en: 'NEXT', vi: 'TIẾP THEO')} ${nextIndex + 1}/${session.details.length}'
-                              : lang.getText(
-                                en: 'LAST EXERCISE',
-                                vi: 'BÀI TẬP CUỐI',
-                              ),
+                          labelText,
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,

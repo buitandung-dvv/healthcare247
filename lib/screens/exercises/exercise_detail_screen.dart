@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
+import '../../core/network/api_config.dart';
 import '../../data/models/exercise_model.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/workout_plan_provider.dart';
@@ -1535,9 +1536,11 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child:
-                                  detail.firstImageUrl != null
+                                  detail.exerciseImage != null
                                       ? CachedNetworkImage(
-                                        imageUrl: detail.firstImageUrl!,
+                                        imageUrl: ApiConfig.getImageUrl(
+                                          detail.exerciseImage,
+                                        ),
                                         width: 50,
                                         height: 50,
                                         fit: BoxFit.cover,
@@ -1690,7 +1693,7 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
   Future<void> _addToPlan(int planId) async {
     final success = await widget.planProvider.addExerciseToPlan(
       planId: planId,
-      dayOfWeek: 0, // 0 means not assigned to a specific day
+      dayOfWeek: 1, // Default to Monday (database requires 1-7)
       exerciseId: widget.exercise.exerciseId,
     );
 
