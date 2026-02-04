@@ -49,3 +49,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+# Added folders to ignore
+example ui/
+.agent/
+tools/
