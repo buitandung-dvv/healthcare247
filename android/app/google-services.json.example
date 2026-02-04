@@ -1,0 +1,40 @@
+{
+  "_comment": "This is a template file. Get the real google-services.json from Firebase Console.",
+  "_instructions": [
+    "1. Go to Firebase Console: https://console.firebase.google.com",
+    "2. Select your project (or create a new one)",
+    "3. Go to Project Settings > General",
+    "4. Scroll down to 'Your apps' section",
+    "5. Select your Android app (or add a new one)",
+    "6. Click 'Download google-services.json'",
+    "7. Replace this file with the downloaded file",
+    "8. DO NOT commit the real google-services.json to version control!"
+  ],
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "YOUR_PROJECT_ID",
+    "storage_bucket": "YOUR_PROJECT_ID.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "YOUR_APP_ID",
+        "android_client_info": {
+          "package_name": "com.example.health_care"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

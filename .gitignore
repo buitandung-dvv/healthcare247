@@ -8,15 +8,37 @@
 .build/
 .buildlog/
 .history
-.env
-tool/.env
 .svn/
 .swiftpm/
 migrate_working_dir/
+
+# Folders to ignore
 Fitness App UI/
 example ui/
 .agent/
 tools/
+
+# ===== SENSITIVE FILES - SECURITY =====
+
+# Environment files
+.env
+.env.*
+*.env
+!.env.example
+tool/.env
+
+# Firebase/Google Services - Contains API KEYS
+google-services.json
+**/google-services.json
+ios/Runner/GoogleService-Info.plist
+firebase.json
+.firebaserc
+
+# Backend sensitive files (also in backend/.gitignore)
+backend/.env
+backend/google-services.json
+
+# =======================================
 
 # IntelliJ related
 *.iml
@@ -49,7 +71,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-# Added folders to ignore
-example ui/
-.agent/
-tools/
