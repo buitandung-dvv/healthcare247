@@ -1,0 +1,598 @@
+﻿Food_Item,Food_Item_VN,Category,Category_VN,Calories (kcal),Protein (g),Carbohydrates (g),Fat (g),Fiber (g),Sugars (g),Sodium (mg),Cholesterol (mg),Meal_Type,Water_Intake (ml)
+Scrambled Eggs (2 large),Trứng chiên (2 quả lớn),Protein/Dairy,Chất đạm/Sữa,180,12,2,14,0,1,180,370,Breakfast,250
+Whole Wheat Toast (1 slice),Bánh mì nướng lúa mì nguyên hạt (1 lát),Grain,Ngũ cốc,80,4,14,1,2,2,140,0,Breakfast,0
+Coffee (black),Cà phê đen (không đường),Beverage,Đồ uống,5,0.3,0,0.1,0,0,5,0,Breakfast,0
+Banana,Chuối,Fruit,Trái cây,105,"46,082.00",27,0.4,3.1,14,1,0,Breakfast,0
+Grilled Chicken Salad,Gỏi Gà Nướng,Meal/Protein,Bữa ăn/Chất đạm,350,30,10,20,5,4,400,80,Lunch,500
+Apple,Táo,Fruit,Trái cây,95,0.5,25,0.3,4.4,19,2,0,Snack,0
+Salmon (4oz grilled),Cá hồi (113 gram nướng),Protein/Fish,Chất đạm/Cá,230,25,0,14,0,0,60,60,Dinner,250
+Quinoa (1 cup cooked),Hạt Diêm Mạch (185 gram đã nấu),Grain,Ngũ cốc,222,8,39,"46,176.00",5,1,13,0,Dinner,0
+Steamed Broccoli (1 cup),Bông cải xanh hấp (120 gram),Vegetable,Rau củ,55,"46,206.00","46,064.00",0.6,5.1,2,40,0,Dinner,0
+Greek Yogurt (plain 1 cup),"Sữa Chua Hy Lạp (nguyên chất, 240g)",Dairy,Sản phẩm từ sữa,150,25,8,3,0,7,85,10,Snack,250
+Oatmeal (1 cup cooked),Bột yến mạch (240 gram đã nấu chín),Grain,Ngũ cốc,160,6,28,3,4,1,2,0,Breakfast,250
+Blueberries (1/2 cup),Quả việt quất (74 g),Fruit,Trái cây,42,0.5,11,0.2,1.8,7,1,0,Breakfast,0
+Almonds (1 oz),Hạnh nhân (28.35 g),Nut,Hạt,164,6,6,14,3.5,1,1,0,Snack,0
+Turkey Sandwich (on wheat),Bánh Mì Thổ Nhĩ Kỳ (bánh mì lúa mì nguyên cám),Meal/Processed,Bữa ăn/Chế biến,340,22,34,12,5,6,850,50,Lunch,500
+Carrot Sticks (1 cup),Cà rốt dạng que (237 ml),Vegetable,Rau củ,52,"46,054.00","46,093.00",0.3,3.6,6,88,0,Snack,0
+Spaghetti Bolognese,Mì Ý Sốt Thịt Bò Bằm (Bolognese),Meal/Pasta,Bữa ăn/Mì ống,460,20,55,18,6,10,700,50,Dinner,250
+Side Salad (light dressing),Salad phụ (sốt trộn ít béo),Vegetable,Rau củ,70,2,8,4,3,3,150,0,Dinner,0
+Protein Shake (Whey),Thức uống bổ sung protein (Whey),Supplement,Thực phẩm bổ sung,120,24,3,1,1,2,160,5,Snack,500
+Cereal (Frosted Flakes 1 cup),"Ngũ cốc (Frosted Flakes, khẩu phần 240 ml)",Grain/Processed,Ngũ cốc/Chế biến,130,2,31,0,1,11,190,0,Breakfast,0
+Milk (2% 1 cup),Sữa giảm béo 2% (240ml),Dairy,Sản phẩm từ sữa,122,8,12,5,0,12,100,20,Breakfast,0
+Lentil Soup (1 can),Súp Đậu Lăng (1 lon),Meal/Legume,Bữa ăn/Đậu,230,15,35,3,12,6,650,0,Lunch,250
+White Rice (1 cup cooked),"Cơm trắng (186 g, đã nấu)",Grain,Ngũ cốc,204,"46,057.00",44.5,0.4,0.6,0.1,2,0,Dinner,0
+Tofu Stir-fry,Đậu phụ xào,Meal/Vegetarian,Bữa ăn/Chay,400,18,30,22,7,9,500,0,Dinner,250
+Orange,Quả Cam,Fruit,Trái cây,62,"46,054.00","46,127.00",0.2,3.1,12,0,0,Snack,0
+Bagel (plain),Bánh mì vòng (thường),Grain,Ngũ cốc,270,11,55,"46,143.00",2,5,430,0,Breakfast,250
+Cream Cheese (2 tbsp),Phô mai kem (khoảng 34 g),Dairy,Sản phẩm từ sữa,100,2,2,10,0,1,90,30,Breakfast,0
+Tuna Salad (1/2 cup),"Salad Cá Ngừ (1,2 dl)",Meal/Fish,Bữa ăn/Cá,190,19,2,12,1,1,400,30,Lunch,500
+Crackers (5 whole wheat),"Bánh quy giòn (5 chiếc, làm từ lúa mì nguyên hạt)",Grain/Processed,Ngũ cốc/Chế biến,90,2,14,3,2,0,180,0,Lunch,0
+Beef Steak (6oz sirloin),Bít tết bò (thăn nội 170g),Protein/Meat,Chất đạm/Thịt,270,42,0,10,0,0,90,115,Dinner,250
+Baked Potato (medium),Khoai tây nướng (cỡ trung bình),Vegetable,Rau củ,160,"46,085.00",36,0.2,3.8,1,17,0,Dinner,0
+Ice Cream (1/2 cup vanilla),Kem Vani (65 g),Dairy/Dessert,Sữa/Tráng miệng,145,"46,144.00",17,"46,149.00",0.5,16,55,30,Snack,0
+Pizza (1 slice pepperoni),Pizza (1 lát pepperoni),Meal/Processed,Bữa ăn/Chế biến,290,12,34,12,2,4,720,35,Dinner,250
+Avocado Toast (1 slice),Bánh mì nướng bơ (1 lát),Meal/Vegetarian,Bữa ăn/Chay,260,7,28,15,10,1,350,0,Breakfast,500
+Hard-Boiled Egg (1 large),Trứng Gà Luộc Chín (1 quả lớn),Protein,Chất đạm,78,"46,087.00",0.6,"46,086.00",0,0.5,62,187,Snack,0
+Chicken Wrap (with tortilla),Bánh Cuộn Gà (kèm vỏ bánh tortilla),Meal/Processed,Bữa ăn/Chế biến,410,25,38,17,5,3,780,60,Lunch,250
+Grapes (1 cup),Nho (150 gram),Fruit,Trái cây,104,"46,023.00",27,0.2,1.4,23,3,0,Snack,0
+Cottage Cheese (1/2 cup),Phô mai Cottage (khoảng 120 ml),Dairy,Sản phẩm từ sữa,90,12,5,3,0,4,400,10,Snack,0
+Burger (cheeseburger),Bánh mì kẹp thịt bò (thịt bò và phô mai),Meal/Processed,Bữa ăn/Chế biến,550,30,40,30,3,7,1100,90,Dinner,500
+French Fries (medium),Khoai tây chiên (cỡ vừa),Vegetable/Processed,Rau củ/Chế biến,340,4,44,17,4,0.3,230,0,Dinner,0
+Protein Bar,Thanh protein,Supplement/Processed,Thực phẩm bổ sung/Chế biến,210,20,22,7,6,1,180,5,Snack,500
+Black Beans (1/2 cup),Đậu đen (122g),Legume,Đậu,114,"46,180.00","46,132.00",0.5,7.5,0.3,1,0,Lunch,0
+Salsa (1/4 cup),Salsa (khoảng 59 ml),Vegetable,Rau củ,20,0.8,"46,146.00",0.1,1,3,250,0,Lunch,0
+Chicken Noodle Soup (1 can),Súp Gà Nui (1 lon),Meal/Processed,Bữa ăn/Chế biến,150,7,18,5,2,2,890,15,Lunch,250
+Peanut Butter (2 tbsp),Bơ Đậu Phộng (30 ml),Nut,Hạt,190,7,8,16,2,3,140,0,Snack,0
+Celery Sticks (1 cup),Cọng cần tây (100 gram),Vegetable,Rau củ,14,0.6,3,0.2,1.4,"46,054.00",77,0,Snack,0
+Cod (4oz baked),Cá tuyết (113g nướng),Protein/Fish,Chất đạm/Cá,95,20,0,0.8,0,0,95,55,Dinner,250
+Green Beans (1 cup),Đậu que (100 gram),Vegetable,Rau củ,31,"46,235.00",7,0.2,2.7,"46,084.00",6,0,Dinner,0
+Chocolate Chip Cookie (1 large),Bánh quy sô-cô-la chip (1 chiếc cỡ lớn),Dessert,Tráng miệng,220,"46,144.00",30,11,1.5,19,160,20,Snack,0
+Tea (Green 1 cup),Trà xanh (240 ml),Beverage,Đồ uống,2,0.5,0,0,0,0,2,0,Breakfast,250
+Shrimp (3oz steamed),Tôm (85g hấp),Protein/Fish,Chất đạm/Cá,84,20,0.2,0.2,0,0,100,161,Dinner,250
+Pancakes (2 medium),Bánh kếp (2 cỡ vừa),Grain,Ngũ cốc,180,5,30,5,1,6,450,25,Breakfast,0
+Maple Syrup (2 tbsp),Xi-rô phong (30 mL),Condiment,Gia vị,104,0,27,0,0,24,2,0,Breakfast,0
+Sausage Link (1 cooked),Xúc xích liên kết (1 cái đã nấu chín),Protein/Meat,Chất đạm/Thịt,85,5,1,7,0,0.5,300,20,Breakfast,0
+Smoothie (Fruit & Yogurt),Sinh tố (Trái cây & Sữa chua),Beverage/Meal,Đồ uống/Bữa ăn,280,12,55,3,7,40,70,5,Breakfast,250
+Tofu (4oz firm),"Đậu phụ (113g, dạng cứng)",Protein/Vegetarian,Chất đạm/Chay,90,10,3,5,2,1,10,0,Lunch,0
+Brown Rice (1 cup cooked),Gạo lứt (195g đã nấu chín),Grain,Ngũ cốc,215,5,45,"46,235.00",3.5,0.4,10,0,Lunch,0
+Bell Pepper (1 medium red),Ớt chuông (1 quả đỏ cỡ vừa),Vegetable,Rau củ,31,"46,054.00",6,0.3,2.1,"46,057.00",4,0,Lunch,0
+Hummus (2 tbsp),Hummus (30ml),Legume,Đậu,70,2,4,5,2,0,130,0,Snack,0
+Pita Bread (1 whole wheat),Bánh mì Pita (1 cái làm từ lúa mì nguyên cám),Grain,Ngũ cốc,170,6,35,"46,143.00",5,2,320,0,Snack,0
+Pork Chop (4oz grilled),Sườn heo (113g nướng),Protein/Meat,Chất đạm/Thịt,220,30,0,10,0,0,70,85,Dinner,250
+Mashed Potatoes (1 cup),Khoai tây nghiền (240 ml),Vegetable,Rau củ,230,4,35,8,3,2,350,15,Dinner,0
+Corn (1 cup),Ngô (175 g),Vegetable,Rau củ,132,"46,207.00",30,"46,235.00",3.6,"46,273.00",2,0,Dinner,0
+Soda (1 can Coke),Nước ngọt có ga (1 lon Coca),Beverage,Đồ uống,140,0,39,0,0,39,45,0,Snack,355
+Pretzels (1 oz),Bánh quy que (28 g),Grain/Processed,Ngũ cốc/Chế biến,110,3,23,1,1,1,450,0,Snack,0
+Cheddar Cheese (1 oz),Phô mai Cheddar (28g),Dairy,Sản phẩm từ sữa,115,7,1,"46,151.00",0,0.5,180,30,Snack,0
+Caesar Salad (with chicken),Salad Caesar (kèm thịt gà),Meal/Protein,Bữa ăn/Chất đạm,470,30,15,30,3,3,890,75,Lunch,250
+Orange Juice (1 cup),Nước cam ép (240 ml),Beverage,Đồ uống,112,"46,204.00","46,259.00",0.5,0.7,"46,254.00",2,0,Breakfast,240
+Bacon (2 slices cooked),Thịt ba rọi xông khói (2 lát đã nấu chín),Protein/Meat,Chất đạm/Thịt,86,6,0.2,"46,240.00",0,0.1,330,18,Breakfast,0
+Waffles (2 homemade),Bánh Waffle (2 cái tự làm),Grain,Ngũ cốc,220,6,28,9,1.5,3,420,45,Breakfast,0
+Pear,Lê,Fruit,Trái cây,101,0.6,27,0.2,5.5,16,2,0,Snack,0
+Chicken Breast (4oz roasted),"Ức gà (113g, quay/nướng)",Protein/Meat,Chất đạm/Thịt,185,35,0,4,0,0,80,95,Lunch,500
+Mixed Nuts (1/4 cup),Hỗn hợp các loại hạt (60 ml),Nut,Hạt,200,6,8,18,3,2,1,0,Snack,0
+Tilapia (4oz baked),"Cá rô phi (113,4g nướng)",Protein/Fish,Chất đạm/Cá,110,22,0,"46,144.00",0,0,50,50,Dinner,0
+Asparagus (1 cup steamed),Măng tây (175g hấp),Vegetable,Rau củ,40,"46,085.00","46,119.00",0.4,3.6,"46,145.00",4,0,Dinner,0
+Sweet Potato (1 medium baked),Khoai lang (1 củ nướng cỡ trung bình),Vegetable,Rau củ,103,"46,083.00","46,196.00",0.2,3.8,"46,119.00",41,0,Dinner,0
+Popcorn (3 cups air-popped),Bỏng ngô (3 cốc nổ bằng khí nóng),Grain,Ngũ cốc,93,3,"46,191.00","46,023.00",3.6,0.1,2,0,Snack,250
+Raisins (1/4 cup),Đã xảy ra lỗi. Hãy thử lại.,Fruit,Trái cây,130,"46,082.00",34,0.2,1.6,25,5,0,Snack,0
+Macaroni & Cheese (1 cup),Macaroni và Pho mát (240 ml),Meal/Pasta,Bữa ăn/Mì ống,350,10,40,17,2,5,750,40,Lunch,250
+Tomato Soup (1 can),Súp Cà Chua (1 lon),Meal/Vegetable,Bữa ăn/Rau củ,170,4,25,6,4,15,900,10,Lunch,0
+Grilled Cheese Sandwich,Bánh Mì Nướng Phô Mai,Meal/Processed,Bữa ăn/Chế biến,390,15,32,22,3,4,800,60,Lunch,0
+Beef Tacos (2 hard shell),Tacos Bò (2 vỏ cứng),Meal/Meat,Bữa ăn/Thịt,380,18,28,22,5,3,600,50,Dinner,500
+Refried Beans (1/2 cup),Đậu nghiền (120 ml),Legume,Đậu,115,7,19,1,6,1,480,0,Dinner,0
+Guacamole (1/4 cup),Guacamole (60 mL),Vegetable/Condiment,Rau củ/Gia vị,90,1,4,8,3,0.5,120,0,Dinner,0
+Watermelon (1 cup diced),Dưa hấu (152 gram cắt hạt lựu),Fruit,Trái cây,46,0.9,"46,153.00",0.2,0.6,"46,121.00",2,0,Snack,0
+English Muffin (whole wheat),Bánh Muffin Kiểu Anh (ngũ cốc nguyên hạt),Grain,Ngũ cốc,134,6,26,1,4.4,1,210,0,Breakfast,250
+Peanut Butter & Jelly Sandwich,Bánh mì kẹp bơ đậu phộng và mứt trái cây (thạch),Meal/Processed,Bữa ăn/Chế biến,390,12,50,17,5,20,450,0,Lunch,250
+Clam Chowder (1 cup),Súp nghêu (240 ml),Meal/Seafood,Bữa ăn/Hải sản,200,10,18,9,1,2,870,30,Lunch,0
+Iced Tea (Sweetened 16oz),Trà đá (đã làm ngọt 473 ml),Beverage,Đồ uống,180,0,46,0,0,46,15,0,Snack,500
+Lasagna (1 serving meat),Lasagna (1 khẩu phần thịt),Meal/Pasta,Bữa ăn/Mì ống,350,20,30,17,4,7,850,55,Dinner,250
+Garlic Bread (1 slice),Bánh Mì Bơ Tỏi (1 lát),Grain,Ngũ cốc,150,4,18,7,1,1,310,0,Dinner,0
+Chocolate Milk (1 cup),Sữa Sô-cô-la (240 ml),Beverage/Dairy,Đồ uống/Sữa,200,8,26,8,1,24,160,30,Snack,0
+White Bread (1 slice),Bánh mì trắng (1 lát),Grain,Ngũ cốc,70,2,13,1,0.6,"46,054.00",140,0,Breakfast,0
+Jelly (1 tbsp grape),Thạch (15 gam nho),Condiment,Gia vị,50,0,13,0,0.1,12,5,0,Breakfast,0
+Veggie Burger (1 patty),Burger Rau Củ (1 miếng chả),Protein/Vegetarian,Chất đạm/Chay,120,11,10,4,5,1,350,0,Lunch,250
+Bun (hamburger),Bánh mì kẹp thịt (Hamburger),Grain,Ngũ cốc,140,4,26,2,1,4,260,0,Lunch,0
+Ketchup (1 tbsp),Sốt cà chua (15 mL),Condiment,Gia vị,20,0.2,5,0.1,0.2,4,160,0,Lunch,0
+Muffin (Blueberry 1 large),"Bánh muffin (Việt quất, 1 cái lớn)",Grain/Dessert,Ngũ cốc/Tráng miệng,380,5,55,16,2,30,350,50,Breakfast,250
+Coffee (with cream/sugar),Cà phê (có kem/đường),Beverage,Đồ uống,50,0.5,5,3,0,"46,146.00",10,10,Breakfast,250
+Potato Chips (1 oz),Khoai tây chiên (1 oz),Snack/Processed,Đồ ăn nhẹ/Chế biến,160,2,15,10,1,0.5,170,0,Snack,0
+Tzatziki Sauce (2 tbsp),Sốt Tzatziki (khoảng 30 ml),Condiment/Dairy,Gia vị/Sữa,30,"46,143.00",2,2,0,"46,143.00",100,5,Dinner,0
+Scallops (3oz seared),Sò điệp (85g áp chảo),Protein/Seafood,Chất đạm/Hải sản,95,17,5,1,0,0,180,35,Dinner,0
+Risotto (Mushroom 1 cup),"Cơm Risotto (Nấm, khẩu phần 240g)",Meal/Grain,Bữa ăn/Ngũ cốc,250,7,35,9,3,3,600,20,Dinner,0
+Caprese Salad,Salad Caprese,Meal/Vegetable,Bữa ăn/Rau củ,240,10,8,18,2,5,350,40,Lunch,250
+Balsamic Vinaigrette (2 tbsp),Nước xốt giấm Balsamic (30 mL),Condiment,Gia vị,90,0,3,9,0,"46,144.00",300,0,Lunch,0
+Cherries (1 cup),Quả Cherry (138 gram),Fruit,Trái cây,77,"46,174.00",19,0.5,2.5,15,0,0,Snack,0
+Turkey Bacon (2 slices),Thịt xông khói gà tây (2 lát),Protein/Meat,Chất đạm/Thịt,70,6,1,5,0,0.5,360,30,Breakfast,0
+Grits (1 cup cooked),"Bột ngô xay nhuyễn (236,6 ml đã nấu chín)",Grain,Ngũ cốc,150,3,32,1,2,0.5,320,0,Breakfast,0
+Butter (1 tbsp),Bơ (15ml),Condiment/Dairy,Gia vị/Sữa,100,0.1,0,11,0,0,82,30,Breakfast,0
+Meatball Sub (6 inch),Bánh Mì Kẹp Thịt Viên (15 cm),Meal/Processed,Bữa ăn/Chế biến,580,28,55,27,6,10,1200,70,Lunch,500
+Kiwifruit (1 medium),Quả kiwi (1 quả cỡ vừa),Fruit,Trái cây,46,0.9,"46,033.00",0.4,2.3,"46,209.00",2,0,Snack,0
+Beef Jerky (1 oz),"Thịt bò khô (khoảng 28,35 g)",Snack/Processed,Đồ ăn nhẹ/Chế biến,116,"46,121.00","46,025.00","46,060.00",0.5,"46,144.00",590,30,Snack,0
+Figs (2 medium),Quả sung (2 quả cỡ vừa),Fruit,Trái cây,74,0.6,"46,072.00",0.3,2.9,"46,069.00",2,0,Snack,0
+Lobster (3oz steamed),Tôm hùm (85g hấp),Protein/Seafood,Chất đạm/Hải sản,76,16,0,0.7,0,0,250,125,Dinner,250
+Melted Butter (for lobster),Bơ đun chảy (dùng kèm tôm hùm),Condiment,Gia vị,200,0.2,0,22,0,0,164,60,Dinner,0
+Corn on the Cob (1 large),Bắp/Ngô luộc/nướng nguyên trái (1 trái lớn),Vegetable,Rau củ,125,5,29,"46,143.00",3,5,2,0,Dinner,0
+Vegetable Soup (1 can),Súp Rau Củ (1 lon),Meal/Vegetable,Bữa ăn/Rau củ,140,4,22,4,6,8,780,5,Lunch,250
+Saltine Crackers (5 crackers),Bánh quy giòn mặn (5 cái),Grain/Processed,Ngũ cốc/Chế biến,60,1,10,"46,143.00",0.5,0,140,0,Lunch,0
+Mango (1 cup slices),Xoài (165g miếng cắt lát),Fruit,Trái cây,99,"46,113.00","46,227.00",0.6,2.6,"46,164.00",2,0,Snack,0
+Cheesecake (1 slice),Bánh phô mai (1 lát),Dessert,Tráng miệng,320,5,28,21,1,20,280,65,Snack,250
+Pad Thai (Chicken 1.5 cups),Pad Thái (Gà 355 ml),Meal/Pasta,Bữa ăn/Mì ống,550,25,60,22,5,10,950,70,Dinner,500
+Spring Roll (Veg 2 rolls),"Chả giò (Cuốn rau củ, 2 cuốn)",Snack/Processed,Đồ ăn nhẹ/Chế biến,180,4,25,7,3,3,450,0,Dinner,0
+Coconut Water (1 cup),Nước dừa (240ml),Beverage,Đồ uống,46,"46,204.00","46,273.00",0.5,2.6,"46,087.00",252,0,Snack,240
+Kimchi (1/2 cup),Kimchi (118 ml),Vegetable,Rau củ,22,"46,204.00",4,0.4,2.4,"46,143.00",750,0,Side,0
+Sashimi (Salmon 3 pcs),Sashimi (Cá hồi 3 lát),Protein/Fish,Chất đạm/Cá,120,18,0,5,0,0,45,40,Lunch,0
+Wasabi (1 tsp),Wasabi (5 ml),Condiment,Gia vị,10,0.1,"46,055.00",0.1,0.3,1,40,0,Lunch,0
+Seaweed Salad (1/2 cup),Gỏi rong biển (khoảng 120 ml),Vegetable,Rau củ,60,2,8,3,2,4,350,0,Lunch,0
+French Onion Soup (1 cup),Súp hành tây kiểu Pháp (240 ml),Meal,Bữa ăn,150,6,15,7,2,5,800,20,Lunch,250
+Croutons (1/4 cup),Bánh mì sấy giòn (khoảng 60 ml),Grain,Ngũ cốc,50,"46,143.00",7,2,0.5,0.5,140,0,Lunch,0
+Shepherd's Pie (1 serving),Bánh Thịt Cừu Đút Lò (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,400,20,35,20,6,7,850,55,Dinner,250
+Green Peas (1/2 cup),Đậu Hà Lan Xanh (120ml),Legume,Đậu,62,"46,026.00","46,033.00",0.2,4.4,"46,057.00",2,0,Dinner,0
+Apple Pie (1 slice),Bánh Táo (1 lát),Dessert,Tráng miệng,410,3,58,19,3,25,320,0,Snack,0
+Gin & Tonic (1 drink),Gin & Tonic (1 ly),Beverage,Đồ uống,170,0,13,0,0,13,2,0,Snack,180
+Red Wine (5 oz glass),Rượu Vang Đỏ (cốc 150 ml),Beverage,Đồ uống,125,0.1,"46,237.00",0,0,0.9,6,0,Dinner,0
+Halibut (4oz baked),Cá bơn Đại Tây Dương nướng (khoảng 113 gram),Protein/Fish,Chất đạm/Cá,125,24,0,"46,144.00",0,0,60,40,Dinner,250
+Quinoa Salad (1 cup),Salad Hạt Diêm Mạch (240g),Meal/Vegetarian,Bữa ăn/Chay,260,9,32,12,6,4,300,0,Lunch,250
+Lemonade (1 cup),Nước chanh (240 ml),Beverage,Đồ uống,99,0.1,26,0,0.1,25,30,0,Snack,240
+Pistachios (1 oz shelled),Hạt dẻ cười (28 gam tách vỏ),Nut,Hạt,159,"46,208.00","46,210.00","46,246.00",3,"46,055.00",2,0,Snack,0
+Oat Milk (1 cup),Sữa Yến Mạch (240 ml),Beverage/Dairy-Alt,Đồ uống/Sữa thay thế,120,3,16,5,2,7,100,0,Breakfast,0
+Biscuits and Gravy (1 serving),Bánh quy và Nước sốt (1 khẩu phần),Meal/Processed,Bữa ăn/Chế biến,480,10,45,28,2,3,1100,35,Breakfast,250
+Avocado (1/2 fruit),Quả Bơ (1/2 quả),Fruit,Trái cây,160,2,"46,150.00","46,217.00",6.7,0.7,7,0,Breakfast,0
+Corn Flakes (1 cup),Bánh ngô lát (237 ml),Grain,Ngũ cốc,100,2,24,0,1,3,200,0,Breakfast,0
+T-Bone Steak (6oz),Bít tết T-Bone (170g),Protein/Meat,Chất đạm/Thịt,460,38,0,33,0,0,110,105,Dinner,0
+Creamed Spinach (1/2 cup),Cải bó xôi kem (120 ml),Vegetable,Rau củ,190,5,8,16,3,2,450,50,Dinner,0
+Pecans (1 oz),"Hạt hồ đào (28,35g)",Nut,Hạt,196,"46,175.00","46,268.00","46,132.00",2.7,"46,023.00",0,0,Snack,0
+Fruit Cocktail (canned 1 cup),Hỗn hợp trái cây đóng hộp (240g),Fruit,Trái cây,110,1,28,0,2,26,10,0,Snack,0
+Ramen (Instant 1 pack),Mì Ramen (Mì ăn liền 1 gói),Meal/Processed,Bữa ăn/Chế biến,380,9,53,14,2,2,1580,0,Lunch,500
+Mocha Latte (16oz),Latte Mocha (480ml),Beverage,Đồ uống,360,12,48,15,2,42,150,45,Snack,473
+Cucumber Slices (1 cup),Dưa chuột thái lát (240 ml),Vegetable,Rau củ,16,0.7,"46,176.00",0.1,0.5,"46,204.00",2,0,Snack,0
+Feta Cheese (1 oz),"Phô mai Feta (28,35 g)",Dairy,Sản phẩm từ sữa,75,4,"46,054.00","46,028.00",0,0.7,316,25,Lunch,0
+Olives (Kalamata 5 large),Ô liu (Kalamata 5 quả lớn),Fruit,Trái cây,35,0.2,1,"46,145.00",0.5,0,210,0,Lunch,0
+Chicken Alfredo (1.5 cups),Gà Alfredo (khoảng 355 ml),Meal/Pasta,Bữa ăn/Mì ống,680,35,45,38,4,5,980,120,Dinner,250
+Breadstick (1 large),Bánh mì que (1 cái lớn),Grain,Ngũ cốc,160,4,28,3,1,2,350,0,Dinner,0
+Cobb Salad,Salad Cobb,Meal/Protein,Bữa ăn/Chất đạm,510,30,12,38,7,6,800,210,Lunch,500
+Blue Cheese Dressing (2 tbsp),Sốt phô mai xanh (30 ml),Condiment,Gia vị,150,1,2,16,0,1,320,10,Lunch,0
+Mandarin Orange (1 medium),Quýt (1 quả cỡ trung bình),Fruit,Trái cây,37,0.6,"46,090.00",0.2,1.3,"46,088.00",1,0,Snack,0
+Cashews (1 oz roasted),"Hạt điều (28g, rang)",Nut,Hạt,163,"46,085.00","46,062.00","46,035.00",0.9,"46,113.00",140,0,Snack,0
+Eggo Waffle (2 waffles),Bánh Waffle Eggo (2 chiếc),Grain/Processed,Ngũ cốc/Chế biến,180,4,30,5,1,4,400,0,Breakfast,0
+Diet Soda (1 can),Nước Ngọt Ăn Kiêng (1 lon),Beverage,Đồ uống,0,0,0,0,0,0,40,0,Lunch,355
+Pulled Pork Sandwich,Bánh Mì Thịt Heo Xé (Kẹp),Meal/Meat,Bữa ăn/Thịt,480,25,48,20,3,15,900,75,Lunch,250
+Macadamia Nuts (1 oz),Hạt Macadamia (khoảng 28 gram),Nut,Hạt,204,"46,055.00","46,268.00","46,163.00",2.4,"46,082.00",1,0,Snack,0
+Crab Cakes (2 medium),Bánh cua (2 cỡ vừa),Meal/Seafood,Bữa ăn/Hải sản,340,20,18,20,1,2,700,120,Dinner,250
+Tartar Sauce (2 tbsp),Sốt Tartar (30 ml),Condiment,Gia vị,60,0.2,2,"46,147.00",0.1,"46,143.00",180,5,Dinner,0
+Lemon Bar (1 square),Bánh chanh (1 miếng vuông),Dessert,Tráng miệng,150,"46,143.00",22,6,0.5,15,80,30,Snack,0
+Almond Milk (Unsweetened 1 cup),Sữa Hạnh Nhân (Không Đường 240 ml),Beverage/Dairy-Alt,Đồ uống/Sữa thay thế,30,1,1,"46,144.00",1,0,160,0,Breakfast,240
+Rice Krispies (1.5 cups),"Ngũ cốc Rice Krispies (3,55 đề-xi-lít)",Grain,Ngũ cốc,160,3,37,0.5,0.5,4,290,0,Breakfast,0
+Sugar (1 tsp for cereal),Đường (5g dùng cho ngũ cốc),Condiment,Gia vị,16,0,4,0,0,4,0,0,Breakfast,0
+Tuna (Canned 3oz in water),"Cá ngừ đóng hộp (85g, ngâm trong nước)",Protein/Fish,Chất đạm/Cá,90,20,0,1,0,0,250,35,Lunch,0
+Mayonnaise (1 tbsp),Sốt Mayonnaise (15 ml),Condiment,Gia vị,90,0.1,0.1,10,0,0.1,70,5,Lunch,0
+Pickle (1 spear dill),Dưa chuột muối chua (1 miếng dưa chuột muối thì là),Vegetable,Rau củ,5,0.2,1,0.1,0.3,0.5,300,0,Lunch,0
+Lobster Bisque (1 cup),Súp kem tôm hùm (240 mL),Meal/Seafood,Bữa ăn/Hải sản,250,8,12,18,1,3,850,50,Lunch,250
+Reuben Sandwich,Bánh mì kẹp Reuben,Meal/Processed,Bữa ăn/Chế biến,650,28,35,40,5,6,1500,100,Lunch,500
+Sauerkraut (1/4 cup side),Dưa cải bắp (phần ăn kèm 60 ml),Vegetable,Rau củ,7,0.3,"46,143.00",0,1,0.6,234,0,Lunch,0
+Mushroom (White 1 cup sliced),Nấm (Nấm trắng 70 gram thái lát),Vegetable,Rau củ,15,"46,055.00","46,083.00",0.2,0.7,"46,113.00",4,0,Dinner,0
+Soy Milk (Original 1 cup),Sữa đậu nành (Nguyên bản 240 ml),Beverage/Dairy-Alt,Đồ uống/Sữa thay thế,110,8,9,"46,146.00",2,6,125,0,Breakfast,240
+Chicken Tikka Masala (1.5 cups),Gà Tikka Masala (355 ml),Meal/Meat,Bữa ăn/Thịt,480,30,20,30,5,8,900,95,Dinner,250
+Naan Bread (1 piece),Bánh mì Naan (1 suất),Grain,Ngũ cốc,260,8,45,5,2,3,450,10,Dinner,0
+Cucumber Salad (1/2 cup),Salad dưa chuột (120 gam),Vegetable,Rau củ,40,1,5,2,1,4,200,0,Dinner,0
+Vodka Soda (1 drink),Rượu Vodka Soda (1 khẩu phần),Beverage,Đồ uống,100,0,0,0,0,0,5,0,Snack,180
+Chocolate Croissant,Bánh sừng bò sô-cô-la,Dessert,Tráng miệng,350,6,40,19,3,15,300,40,Breakfast,250
+Sweet & Sour Chicken (1 cup),Gà Xào Chua Ngọt (240 mL),Meal/Processed,Bữa ăn/Chế biến,380,18,45,15,3,25,750,50,Dinner,0
+Egg Drop Soup (1 cup),Súp Trứng (khẩu phần 250 ml),Meal/Vegetable,Bữa ăn/Rau củ,65,5,6,2,0.5,1,780,50,Dinner,0
+String Cheese (1 stick),"Phô mai sợi (1 thanh, 28g)",Dairy,Sản phẩm từ sữa,80,6,1,6,0,0,210,20,Snack,0
+Turkey Burger (1 patty),Bánh kẹp gà tây (1 miếng/phần ăn),Protein/Meat,Chất đạm/Thịt,160,22,2,8,0,1,400,70,Lunch,250
+Mustard (1 tbsp yellow),Mù tạt (15 ml mù tạt vàng),Condiment,Gia vị,10,0.5,1,0.5,0.5,0,160,0,Lunch,0
+Potato Salad (1/2 cup),Gỏi khoai tây (120 ml),Meal/Vegetable,Bữa ăn/Rau củ,180,2,19,11,2,3,500,10,Lunch,0
+Cranberry Juice (1 cup),Nước ép Nam Việt Quất (240 ml),Beverage,Đồ uống,130,0,33,0,0,30,10,0,Breakfast,240
+Spinach (1 cup raw),Rau cải bó xôi (khoảng 240g tươi),Vegetable,Rau củ,7,0.9,"46,023.00",0.1,0.7,0.1,24,0,Lunch,0
+Chicken Piccata (1 serving),Thịt gà Piccata (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,350,30,10,20,1,2,600,90,Dinner,250
+Angel Hair Pasta (1 cup),Mì Sợi Tóc Thiên Thần (một khẩu phần),Grain,Ngũ cốc,200,7,42,1,2,1,1,0,Dinner,0
+Olive Oil (1 tbsp),Dầu ô liu (15 ml),Condiment,Gia vị,120,0,0,14,0,0,0,0,Dinner,0
+Garlic (1 clove),Tỏi (1 tép),Vegetable,Rau củ,4,0.2,0.9,0,0.1,0,1,0,Dinner,0
+Salami (3 slices),Salami (3 lát),Protein/Processed,Chất đạm/Chế biến,110,6,1,9,0,0.5,500,30,Snack,0
+Provolone Cheese (1 slice),Phô mai Provolone (1 lát),Dairy,Sản phẩm từ sữa,100,7,1,8,0,0.5,250,20,Snack,0
+Ginger Ale (1 can),Nước gừng lên men (1 lon),Beverage,Đồ uống,124,0,32,0,0,31,40,0,Snack,355
+Shrimp Scampi (1 cup),Tôm xào bơ tỏi (240 mL),Meal/Seafood,Bữa ăn/Hải sản,380,22,40,15,3,3,750,140,Dinner,0
+Tiramisu (1 slice),Tiramisu (1 lát),Dessert,Tráng miệng,450,7,42,28,2,25,150,180,Snack,250
+Cereal Bar (Fruit),Thanh ngũ cốc (Trái cây),Snack/Processed,Đồ ăn nhẹ/Chế biến,140,2,30,3,1,15,110,0,Breakfast,250
+Veal Parmesan (1 serving),Thịt bê kiểu Parmesan (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,550,40,30,30,4,7,1100,130,Dinner,250
+Spaghetti (side),Mì Ý (phần ăn kèm),Grain,Ngũ cốc,100,"46,145.00",21,0.5,1,0.5,0,0,Dinner,0
+Hot Chocolate (1 cup),Sô cô la nóng (240 ml),Beverage,Đồ uống,200,3,30,8,2,25,160,10,Snack,240
+Coconut Shrimp (5 pcs),Tôm chiên dừa (5 miếng),Meal/Seafood,Bữa ăn/Hải sản,320,10,25,20,3,8,600,80,Dinner,0
+Sweet Chili Sauce (2 tbsp),Sốt ớt ngọt (30 ml),Condiment,Gia vị,70,0,17,0,0.5,16,450,0,Dinner,0
+White Wine (5 oz glass),Rượu vang trắng (ly 150 ml),Beverage,Đồ uống,121,0.1,"46,237.00",0,0,"46,113.00",5,0,Dinner,0
+Trail Mix (1/4 cup),Hỗn hợp hạt dinh dưỡng (60 mL),Snack/Processed,Đồ ăn nhẹ/Chế biến,190,5,20,12,3,14,50,0,Snack,250
+Onion Rings (6 rings),Vòng hành chiên (6 chiếc),Snack/Processed,Đồ ăn nhẹ/Chế biến,280,4,30,16,3,4,500,0,Snack,0
+Poached Egg (1 large),Trứng chần (1 quả lớn),Protein,Chất đạm,72,"46,087.00",0.4,"46,238.00",0,0.4,140,185,Breakfast,0
+Canadian Bacon (2 slices),Thịt Heo Kiểu Canada (2 lát),Protein/Meat,Chất đạm/Thịt,80,12,1,3,0,1,650,40,Breakfast,0
+Eggs Benedict (1 serving),Trứng Benedict (1 khẩu phần),Meal/Protein,Bữa ăn/Chất đạm,600,25,30,40,3,4,1100,450,Breakfast,250
+Hollandaise Sauce (2 tbsp),Sốt Hollandaise (30 ml),Condiment,Gia vị,110,1,0.5,12,0,0.2,150,50,Breakfast,0
+Spinach Artichoke Dip (1/4 cup),Đã xảy ra lỗi. Hãy thử lại.,Snack/Processed,Đồ ăn nhẹ/Chế biến,160,5,6,14,2,2,350,30,Snack,0
+Tortilla Chips (1 oz),"Bánh Tortilla Chiên (28,35 g)",Snack/Processed,Đồ ăn nhẹ/Chế biến,140,2,19,7,2,0.5,120,0,Snack,0
+Chicken Kebab (2 skewers),Gà xiên nướng Kebab (2 que),Meal/Meat,Bữa ăn/Thịt,280,30,8,14,3,4,500,85,Dinner,250
+Bell Peppers & Onions (sautéed),Ớt chuông và Hành tây (áp chảo),Vegetable,Rau củ,60,"46,143.00",10,2,3,6,30,0,Dinner,0
+Hummus Wrap (large),Bánh cuộn Hummus (cỡ lớn),Meal/Vegetarian,Bữa ăn/Chay,450,15,60,18,12,5,800,0,Lunch,500
+Kombucha (1 cup),Kombucha (240 ml),Beverage,Đồ uống,30,0,7,0,0,6,10,0,Snack,240
+Beef Stroganoff (1.5 cups),Bò Stroganoff (355 ml),Meal/Pasta,Bữa ăn/Mì ống,550,30,40,28,4,6,900,100,Dinner,0
+Egg Noodles (1 cup cooked),Mì trứng (1 suất 160g đã nấu),Grain,Ngũ cốc,220,8,40,3,2,2,20,50,Dinner,0
+Cottage Cheese (1 cup low fat),Phô mai tươi Cottage (240 gram ít béo),Dairy,Sản phẩm từ sữa,160,28,6,"46,144.00",0,4,820,10,Lunch,250
+Tomato (1 medium sliced),Cà chua (1 quả cỡ trung bình thái lát),Vegetable,Rau củ,22,"46,023.00","46,238.00",0.2,1.5,"46,056.00",6,0,Lunch,0
+Black Pepper (1 tsp),Hạt tiêu đen (5 ml),Condiment,Gia vị,6,0.2,"46,143.00",0.1,0.6,0,0,0,Lunch,0
+Chocolate Pudding (1/2 cup),Bánh Pút-đinh Sô-cô-la (120 ml),Dessert,Tráng miệng,150,2,28,4,2,22,130,2,Snack,0
+Mackerel (3oz cooked),Cá thu (85g đã nấu chín),Protein/Fish,Chất đạm/Cá,175,16,0,12,0,0,75,65,Dinner,0
+Collard Greens (1 cup cooked),Cải rổ (190 gam đã nấu),Vegetable,Rau củ,60,5,10,1,7,1,40,0,Dinner,0
+Ham (3oz deli sliced),"Thịt giăm bông (85g, thái lát)",Protein/Meat,Chất đạm/Thịt,110,16,2,4,0,"46,143.00",950,45,Lunch,0
+Swiss Cheese (1 slice),Phô mai Thụy Sĩ (1 lát),Dairy,Sản phẩm từ sữa,106,"46,180.00",1,8,0,0.4,54,26,Lunch,0
+Rye Bread (1 slice),Bánh mì lúa mạch đen (1 lát),Grain,Ngũ cốc,83,"46,205.00","46,157.00","46,023.00",1.9,"46,054.00",170,0,Lunch,0
+Potato Leek Soup (1 cup),Súp Khoai Tây Tỏi Tây (240 ml),Meal/Vegetable,Bữa ăn/Rau củ,180,4,25,7,3,4,650,15,Lunch,250
+Brie Cheese (1 oz),Phô mai Brie (28 gram),Dairy,Sản phẩm từ sữa,95,6,0.1,"46,272.00",0,0.1,178,28,Snack,0
+Water Cracker (5 crackers),Bánh quy lạt (5 cái),Grain/Processed,Ngũ cốc/Chế biến,70,"46,143.00",12,"46,143.00",0.5,0,150,0,Snack,0
+Grapefruit (1/2 medium),Bưởi (1/2 quả cỡ trung bình),Fruit,Trái cây,52,"46,023.00","46,066.00",0.2,2,"46,150.00",0,0,Breakfast,0
+Veggie Straws (1 oz),Ống rau củ (28 g),Snack/Processed,Đồ ăn nhẹ/Chế biến,130,1,17,7,1,1,220,0,Snack,0
+Fish Tacos (2 tacos),Tacos cá (2 cái),Meal/Fish,Bữa ăn/Cá,420,25,40,18,6,5,700,60,Dinner,500
+Cabbage Slaw (side),Salad bắp cải (món ăn kèm),Vegetable,Rau củ,60,1,8,3,2,5,120,5,Dinner,0
+Lime (juice of 1),"Nước chanh (từ 1 quả, khoảng 30 mL)",Condiment,Gia vị,11,0.2,"46,206.00",0,0.4,0.7,1,0,Dinner,0
+Beer (12 oz light),"Bia (355 ml, loại nhẹ)",Beverage,Đồ uống,103,0.9,"46,239.00",0,0,0.3,10,0,Snack,355
+Danish (Cheese 1 medium),"Bánh Đan Mạch (Phô Mai, 1 chiếc cỡ trung bình)",Dessert,Tráng miệng,340,7,38,18,2,16,300,55,Breakfast,250
+Kefir (Plain 1 cup),Kefir (Không đường 240ml),Beverage/Dairy,Đồ uống/Sữa,104,10,10,"46,144.00",0,9,100,10,Breakfast,240
+Gnocchi (1 cup),Gnocchi (khoảng 240 gram),Meal/Pasta,Bữa ăn/Mì ống,210,"46,146.00",45,"46,143.00",3,2,480,0,Dinner,0
+Pesto Sauce (1/4 cup),Sốt Pesto (60g),Condiment,Gia vị,260,5,4,26,2,1,550,5,Dinner,0
+Pine Nuts (1 tbsp),Hạt thông (10 g),Nut,Hạt,95,2,2,10,0.5,0.5,0,0,Dinner,0
+Chai Latte (12 oz),Chai Latte (355 ml),Beverage,Đồ uống,190,7,32,4,1,30,105,15,Snack,355
+Manicotti (2 shells cheese),Mì ống Manicotti (2 vỏ mì nhồi phô mai),Meal/Pasta,Bữa ăn/Mì ống,380,20,35,18,4,7,650,60,Dinner,0
+Italian Sausage (1 link),Xúc Xích Tươi Ý (80 g),Protein/Meat,Chất đạm/Thịt,200,12,3,16,0,1,550,50,Dinner,0
+Jicama (1 cup sticks),Củ đậu (130 gram dạng thanh),Vegetable,Rau củ,46,0.9,"46,183.00",0.1,5.8,"46,024.00",5,0,Snack,0
+Chili Powder (1 tsp),Bột ớt (khoảng 5 ml),Condiment,Gia vị,8,0.3,"46,113.00",0.4,0.9,0.2,10,0,Snack,0
+Ants on a Log (4 pcs),Cần tây phết bơ đậu phộng rắc nho khô (4 miếng),Snack,Đồ ăn nhẹ,180,6,12,12,3,7,120,0,Snack,250
+Split Pea Soup (1 cup),Súp đậu Hà Lan sấy khô (240 ml),Meal/Legume,Bữa ăn/Đậu,180,11,30,2,10,6,700,5,Lunch,250
+Ham & Cheese Croissant,Bánh Croissant Nhân Thịt Nguội & Phô Mai,Meal/Processed,Bữa ăn/Chế biến,400,15,35,22,2,6,750,60,Breakfast,250
+Espresso (double shot),Cà phê espresso (hai liều),Beverage,Đồ uống,5,0.5,0,0.1,0,0,1,0,Breakfast,60
+Ricotta Cheese (1/4 cup),Phô mai Ricotta (60 ml),Dairy,Sản phẩm từ sữa,85,"46,147.00","46,144.00",6,0,1,50,24,Dinner,0
+Chicken & Rice Soup (1 can),Súp Gà và Cơm (1 lon),Meal/Processed,Bữa ăn/Chế biến,130,7,18,3,2,2,850,15,Lunch,250
+Salt (1/4 tsp),Muối (1.45 gam),Condiment,Gia vị,0,0,0,0,0,0,580,0,Dinner,0
+Guava,Ổi,Fruit,Trái cây,68,"46,175.00","46,095.00",0.9,5.4,"46,273.00",3,0,Snack,0
+Club Sandwich,Bánh mì Club,Meal/Processed,Bữa ăn/Chế biến,580,35,40,30,5,7,1300,95,Lunch,500
+Pickle (1 whole dill),Dưa chuột muối (một trái dưa muối thì là nguyên vẹn),Vegetable,Rau củ,17,0.8,"46,206.00",0.2,1.5,"46,204.00",1200,0,Snack,0
+Turkey Chili (1 cup),Chili Gà Tây (237 mL),Meal/Meat,Bữa ăn/Thịt,250,22,25,7,8,6,750,50,Dinner,250
+Sour Cream (2 tbsp),Kem chua (30 ml),Condiment/Dairy,Gia vị/Sữa,60,0.8,"46,082.00","46,239.00",0,0.8,25,12,Dinner,0
+Shredded Cheese (Cheddar 1/4 cup),"Phô mai sợi (Cheddar, 60 ml)",Dairy,Sản phẩm từ sữa,115,7,1,"46,151.00",0,0.5,180,30,Dinner,0
+Matcha Latte (12 oz),Trà Xanh Matcha Latte (355 ml),Beverage,Đồ uống,180,6,28,5,2,25,90,20,Snack,355
+Chocolate Donut (1 medium),Bánh Donut Sô-cô-la (1 cỡ vừa),Dessert,Tráng miệng,300,4,35,17,2,18,230,20,Breakfast,0
+Tuna Melt,Bánh mì kẹp cá ngừ phô mai tan chảy,Meal/Processed,Bữa ăn/Chế biến,450,25,32,25,3,4,900,50,Lunch,250
+Apple Cider (1 cup),Nước ép Táo Lên men (240 ml),Beverage,Đồ uống,117,0.1,29,0.3,0.5,27,10,0,Snack,240
+Beef Burrito (large),Bánh burrito bò (cỡ lớn),Meal/Processed,Bữa ăn/Chế biến,650,30,70,28,10,5,1400,70,Dinner,500
+Pico de Gallo (1/4 cup),Pico de Gallo (khoảng 59 ml),Condiment,Gia vị,15,0.5,3,0,1,2,200,0,Dinner,0
+Corn Tortilla (1 medium),Bánh ngô Tor-ti-a (1 cái cỡ vừa),Grain,Ngũ cốc,52,"46,113.00","46,064.00",0.7,1.5,0.2,4,0,Dinner,0
+Mussels (3oz steamed),Trai vẹm (85g hấp),Protein/Seafood,Chất đạm/Hải sản,146,20,6,4,0,0,310,48,Dinner,0
+White Wine Sauce (1/4 cup),Sốt Rượu Vang Trắng (60 ml),Condiment,Gia vị,80,1,4,6,0.5,2,300,5,Dinner,0
+French Bread (2 slices),Bánh mì Pháp (2 lát),Grain,Ngũ cốc,180,6,36,1,2,2,380,0,Dinner,0
+Blackberries (1 cup),Quả mâm xôi đen (100 gram),Fruit,Trái cây,62,2,"46,247.00",0.7,7.6,"46,269.00",1,0,Snack,0
+Cheese Danish,Bánh ngàn lớp nhân phô mai,Dessert,Tráng miệng,340,7,38,18,2,16,300,55,Breakfast,250
+Chicken Salad Sandwich,Bánh mì kẹp salad gà,Meal/Processed,Bữa ăn/Chế biến,420,20,35,20,3,5,850,60,Lunch,250
+Soyrizo (2 oz),Soyrizo (57 g),Protein/Vegetarian,Chất đạm/Chay,140,10,6,9,3,2,450,0,Breakfast,0
+Hash Browns (1 cup),Khoai tây áp chảo (240 ml),Vegetable,Rau củ,330,3,38,19,3,1,550,0,Breakfast,0
+Ketchup (1 packet),Sốt cà chua (1 gói),Condiment,Gia vị,10,0.1,"46,144.00",0,0.1,2,90,0,Breakfast,0
+Philly Cheesesteak (6 inch),Bánh mì kẹp bò phô mai kiểu Philly (15 cm),Meal/Processed,Bữa ăn/Chế biến,500,25,40,28,3,5,1100,70,Lunch,500
+Cheese Whiz (2 tbsp),Phô mai phết Cheese Whiz (30 ml),Condiment/Processed,Gia vị/Chế biến,90,4,3,7,0,2,540,20,Lunch,0
+Onions (sautéed 1/4 cup),Hành tây (áp chảo 60 ml),Vegetable,Rau củ,30,0.5,5,1,1,3,5,0,Lunch,0
+Raspberries (1 cup),Quả Mâm Xôi Đỏ (123g),Fruit,Trái cây,64,"46,143.00","46,217.00",0.8,8,"46,117.00",1,0,Snack,0
+Cheesy Grits (1 cup),Bột ngô phô mai (240 mililít),Meal/Grain,Bữa ăn/Ngũ cốc,210,6,34,6,2,1,550,20,Breakfast,0
+Collard Greens (with ham hock),Cải rổ (kèm giò heo hun khói),Vegetable,Rau củ,180,10,15,9,8,3,600,30,Dinner,0
+Fried Okra (1 cup),Đậu bắp chiên (237 ml),Vegetable,Rau củ,220,4,25,12,5,3,450,10,Dinner,0
+Sweet Tea (16 oz),Trà ngọt (473 ml),Beverage,Đồ uống,180,0,46,0,0,46,15,0,Lunch,473
+Gyro (1 sandwich),Bánh mì kẹp thịt Gyro (1 chiếc),Meal/Meat,Bữa ăn/Thịt,600,25,55,30,5,6,1200,80,Dinner,250
+Pita Bread (White 1 large),"Bánh mì Pita (Trắng, 1 chiếc lớn)",Grain,Ngũ cốc,220,7,45,2,2,2,440,0,Dinner,0
+Tzatziki Sauce (2 tbsp),Nước sốt Tzatziki (30 ml),Condiment,Gia vị,30,"46,143.00",2,2,0,"46,143.00",100,5,Dinner,0
+Baklava (1 piece),Bánh Baklava (1 miếng),Dessert,Tráng miệng,280,3,30,18,2,20,80,10,Snack,0
+Coconut (shredded 1/4 cup),"Dừa (nạo, 24 g)",Fruit,Trái cây,110,1,"46,146.00","46,152.00",2,"46,143.00",3,0,Snack,0
+S'more (1 serving),Bánh S’more (1 khẩu phần),Dessert,Tráng miệng,140,2,25,4,1,15,90,0,Snack,0
+Graham Cracker (1 large rectangle),Bánh quy Graham (1 miếng lớn),Grain/Processed,Ngũ cốc/Chế biến,60,1,11,"46,143.00",0.5,4,70,0,Snack,0
+Marshmallow (1 large),Kẹo dẻo xốp (1 cái lớn),Dessert,Tráng miệng,23,0.1,"46,239.00",0,0,4,5,0,Snack,0
+Chocolate (Hershey's bar 1 segment),Sô-cô-la (Thanh Hershey's 1 miếng),Dessert,Tráng miệng,25,0.3,3,"46,143.00",0.2,"46,236.00",4,1,Snack,0
+Chicken Parm Sandwich,Bánh mì kẹp gà Parm,Meal/Processed,Bữa ăn/Chế biến,650,40,55,30,6,9,1400,100,Lunch,500
+Mozzarella (1 slice),"Phô mai Mozzarella (1 lát, khoảng 28g)",Dairy,Sản phẩm từ sữa,80,6,1,6,0,0.5,150,20,Lunch,0
+Bread Roll (hoagie),Bánh mì cuộn (hoagie),Grain,Ngũ cốc,200,6,38,2,2,3,400,0,Lunch,0
+Artichoke (1 medium steamed),"Atisô (1 củ cỡ trung bình, hấp, khoảng 130g)",Vegetable,Rau củ,60,"46,057.00","46,125.00",0.2,6.9,"46,054.00",112,0,Dinner,0
+Mayonnaise (1 tbsp for dipping),Mayonnaise (15 ml dùng để chấm),Condiment,Gia vị,90,0.1,0.1,10,0,0.1,70,5,Dinner,0
+Calamari (fried 3oz),Mực chiên giòn (khoảng 85g),Meal/Seafood,Bữa ăn/Hải sản,150,13,8,7,1,1,600,220,Dinner,0
+Lemon Wedge (for calamari),Múi chanh (dùng kèm mực chiên giòn),Condiment,Gia vị,3,0.1,1,0,0.3,0.2,0,0,Dinner,0
+Root Beer (1 can),Bia gừng/Sarsaparilla (1 lon),Beverage,Đồ uống,150,0,40,0,0,40,55,0,Snack,355
+Chicken McNuggets (6 pcs),Gà Viên McNuggets (6 miếng),Meal/Processed,Bữa ăn/Chế biến,270,15,16,16,1,0,500,40,Lunch,0
+BBQ Sauce (2 tbsp),Sốt BBQ (30 ml),Condiment,Gia vị,60,0.5,15,0,0.5,12,350,0,Lunch,0
+Honey (1 tbsp),Mật ong (15 ml),Condiment,Gia vị,64,0.1,"46,098.00",0,0,"46,070.00",1,0,Breakfast,0
+Tofu Scramble,Đậu phụ xào,Meal/Vegetarian,Bữa ăn/Chay,250,20,8,16,4,3,300,0,Breakfast,250
+Turmeric (1 tsp),"Nghệ (4,9 ml)",Condiment,Gia vị,9,0.3,"46,266.00",0.1,0.7,0.1,1,0,Breakfast,0
+Nutritional Yeast (1 tbsp),Nấm men dinh dưỡng (15 ml),Condiment,Gia vị,20,3,2,0,1,0,10,0,Breakfast,0
+Seitan (3oz),Seitan (85 g),Protein/Vegetarian,Chất đạm/Chay,90,18,4,1,1,1,300,0,Dinner,0
+Vegetable Broth (1 cup),Nước dùng rau củ (240 mililít),Beverage,Đồ uống,15,1,3,0,1,2,550,0,Dinner,240
+Mashed Cauliflower (1 cup),Súp lơ nghiền (240g),Vegetable,Rau củ,140,5,12,8,5,4,400,25,Dinner,0
+Peanut Sauce (2 tbsp),Nước sốt đậu phộng (30 ml),Condiment,Gia vị,80,2,4,6,1,3,250,0,Dinner,0
+Tempeh (3oz),Tempeh (85g),Protein/Vegetarian,Chất đạm/Chay,160,16,8,9,5,0,10,0,Lunch,0
+Sauerkraut (1/2 cup),Dưa cải muối chua (120 ml),Vegetable,Rau củ,14,0.7,"46,025.00",0.1,2,"46,054.00",468,0,Lunch,0
+Rye Crispbread (2 slices),Bánh quy giòn lúa mạch đen (2 lát),Grain,Ngũ cốc,70,2,14,0.5,3,0,120,0,Lunch,0
+Capers (1 tbsp),Cây bạch hoa (1 muỗng canh),Condiment,Gia vị,2,0.2,0.4,0.1,0.3,0.1,200,0,Dinner,0
+Chicken Liver (2 oz cooked),Gan gà (57g đã nấu chín),Protein/Meat,Chất đạm/Thịt,91,"46,186.00",0.6,"46,176.00",0,0,50,320,Dinner,0
+Onion (1/2 cup raw chopped),Hành tây (60 gram thái hạt lựu tươi),Vegetable,Rau củ,32,0.9,"46,149.00",0.1,1.4,"46,237.00",3,0,Dinner,0
+Bok Choy (1 cup steamed),Cải thìa (170g hấp),Vegetable,Rau củ,10,"46,143.00",2,0.1,1,1,40,0,Dinner,0
+Gummy Bears (10 pcs),Kẹo dẻo Gummy (10 viên),Snack/Dessert,Đồ ăn nhẹ/Tráng miệng,100,2,22,0,0,15,10,0,Snack,0
+Whiskey (1.5 oz shot),Rượu Whiskey (một li 45 ml),Beverage,Đồ uống,105,0,0.1,0,0,0.1,1,0,Snack,0
+Dates (2 medium Medjool),Chà là (2 quả Medjool cỡ trung bình),Fruit,Trái cây,133,0.8,36,0.1,3.2,32,1,0,Snack,0
+Tahini (1 tbsp),Bơ hạt mè (15 ml),Condiment,Gia vị,89,"46,175.00","46,056.00",8,1.4,0.1,17,0,Snack,0
+Chickpeas (1/2 cup canned),Đậu gà (120 gram đóng hộp),Legume,Đậu,135,7,22,2,6,3,250,0,Lunch,0
+Lettuce (Romaine 2 cups),Xà lách Romaine (85g),Vegetable,Rau củ,16,1,3,0.3,2,1,10,0,Lunch,0
+Italian Dressing (2 tbsp),Sốt trộn kiểu Ý (30 mL),Condiment,Gia vị,70,0,3,7,0,2,300,0,Lunch,0
+Turkey Sausage (1 patty),Xúc xích Gà tây (1 miếng chả),Protein/Meat,Chất đạm/Thịt,70,9,1,4,0,0.5,280,35,Breakfast,0
+Maple Syrup (1 tbsp),Xi-rô phong (15 mL),Condiment,Gia vị,52,0,"46,155.00",0,0,12,1,0,Breakfast,0
+Margarita (1 drink 4oz),Margarita (1 khẩu phần 120 mL),Beverage,Đồ uống,200,0.1,20,0,0.1,19,5,0,Snack,120
+Quesadilla (Cheese 1 medium),"Quesadilla (Phô mai, 1 chiếc cỡ vừa)",Meal/Processed,Bữa ăn/Chế biến,400,18,35,22,3,2,700,50,Lunch,250
+Sour Cream (1 tbsp),Kem chua (15 ml),Condiment/Dairy,Gia vị/Sữa,30,0.4,0.6,"46,267.00",0,0.4,12,6,Lunch,0
+Salsa (2 tbsp),Sốt Salsa (30 ml),Condiment,Gia vị,10,0.5,2,0,0.5,1,120,0,Lunch,0
+Red Cabbage (1 cup raw),Bắp cải tím (89 gam tươi),Vegetable,Rau củ,22,"46,023.00","46,058.00",0.1,1.6,"46,236.00",8,0,Dinner,0
+Duck (3oz roasted),Thịt vịt (85g rang),Protein/Meat,Chất đạm/Thịt,285,16,0,24,0,0,65,72,Dinner,0
+Orange Sauce (1/4 cup for duck),Sốt cam (60 ml cho vịt),Condiment,Gia vị,90,0.5,22,0,0.5,20,200,0,Dinner,0
+Wild Rice (1 cup cooked),Hạt lúa mạch đen (240 ml sau khi nấu),Grain,Ngũ cốc,166,"46,148.00",35,0.6,3,"46,054.00",5,0,Dinner,0
+Cupcake (Vanilla 1 medium),"Bánh Cupcake (Vị Vani, 1 khẩu phần vừa)",Dessert,Tráng miệng,240,2,35,11,1,25,200,30,Snack,0
+Frosting (Vanilla 2 tbsp),"Kem phủ (Vị vani, 30 ml)",Condiment,Gia vị,140,0,22,6,0,22,65,0,Snack,0
+Hot Sauce (1 tsp Tabasco),Tương ớt (5 mL Tabasco),Condiment,Gia vị,0,0,0,0,0,0,35,0,Breakfast,0
+Bison Burger (1 patty),Bánh kẹp thịt bò rừng Bison (1 miếng),Protein/Meat,Chất đạm/Thịt,150,22,0,7,0,0,65,70,Lunch,250
+Pretzel Bun (1 medium),Bánh mì kẹp Pretzel (1 cỡ vừa),Grain,Ngũ cốc,230,8,45,2,2,4,550,0,Lunch,0
+Spicy Mustard (1 tbsp),Mù tạt Cay (15 ml),Condiment,Gia vị,10,0.5,1,0.5,0.5,0,120,0,Lunch,0
+Pasta Salad (1 cup),Salad mì ống (240 ml),Meal/Pasta,Bữa ăn/Mì ống,280,8,30,14,4,5,450,10,Lunch,0
+Salami (3 slices),Thịt Salami (3 lát),Protein/Processed,Chất đạm/Chế biến,110,6,1,9,0,0.5,500,30,Lunch,0
+Pepperoncini (2 peppers),Ớt Pepperoncini (2 quả),Vegetable,Rau củ,10,0.5,2,0,1,1,350,0,Lunch,0
+Coconut Milk (1/4 cup canned),Nước cốt dừa (59 ml đóng hộp),Condiment,Gia vị,111,"46,023.00","46,267.00","46,184.00",0.5,"46,143.00",8,0,Dinner,0
+Green Curry Paste (1 tbsp),Sốt Cà ri Xanh (15 g),Condiment,Gia vị,30,0.5,2,"46,144.00",1,1,400,0,Dinner,0
+Chicken Thigh (1 roasted),Đùi Gà (1 cái nướng),Protein/Meat,Chất đạm/Thịt,210,24,0,13,0,0,90,120,Dinner,0
+Jasmine Rice (1 cup cooked),Cơm Gạo Lài (160 gram đã nấu),Grain,Ngũ cốc,205,"46,085.00",45,0.4,0.6,0,2,0,Dinner,0
+Thai Iced Tea (1 glass),Trà đá Thái Lan (1 ly),Beverage,Đồ uống,250,3,35,12,0,33,50,35,Snack,300
+Papaya (1 cup cubes),Đu đủ (140g khối lập phương),Fruit,Trái cây,62,0.6,"46,218.00",0.4,2.5,11,12,0,Snack,0
+Lime Juice (1 tbsp),Nước cốt chanh (15 ml),Condiment,Gia vị,4,0.1,"46,082.00",0,0.1,0.2,0,0,Snack,0
+Macaroni Salad (1 cup),Gỏi Mì Ống (240 ml),Meal/Pasta,Bữa ăn/Mì ống,380,8,30,25,3,6,750,20,Lunch,0
+Celery (1 stalk),Cần tây (1 thân),Vegetable,Rau củ,6,0.3,"46,054.00",0.1,0.6,0.5,32,0,Lunch,0
+Blue Cheese (1 oz),"Phô mai xanh (28,35 g)",Dairy,Sản phẩm từ sữa,100,6,0.7,8,0,0.1,325,21,Snack,0
+Dark Chocolate (1 oz 70%),Sô cô la Đen (28g 70%),Dessert,Tráng miệng,170,"46,055.00",13,12,3,7,5,0,Snack,0
+Acai Bowl (1 serving),Bát Acai (1 khẩu phần),Meal/Fruit,Bữa ăn/Trái cây,350,5,60,12,10,30,40,0,Breakfast,250
+Granola (1/4 cup topping),Ngũ cốc Granola (60 mililit lát phủ),Grain,Ngũ cốc,120,3,15,6,3,7,20,0,Breakfast,0
+Coconut Flakes (1 tbsp topping),Vảy Dừa (7 g dùng để rắc),Fruit,Trái cây,35,0.3,"46,143.00","46,084.00",0.7,0.5,1,0,Breakfast,0
+Honey (1 tsp drizzle),Mật ong (rắc 5 ml),Condiment,Gia vị,21,0,"46,239.00",0,0,"46,239.00",0,0,Breakfast,0
+Shrimp Cocktail (4 large shrimp),Cocktail Tôm (4 con tôm lớn),Protein/Seafood,Chất đạm/Hải sản,60,10,1,1,0,0.5,300,110,Snack,0
+Cocktail Sauce (2 tbsp),Sốt Cocktail (30 ml),Condiment,Gia vị,30,0.5,7,0,0.5,5,450,0,Snack,0
+Pork Bun (1 steamed),Bánh bao nhân thịt heo (1 cái hấp),Meal/Processed,Bữa ăn/Chế biến,220,8,30,8,2,6,400,20,Lunch,0
+Dim Sum (Siu Mai 3 pcs),Dim Sum (Xíu Mại 3 cái),Meal/Processed,Bữa ăn/Chế biến,180,12,10,10,2,1,550,60,Lunch,0
+Soy Sauce (1 tbsp for dipping),Nước tương (15 ml dùng để chấm),Condiment,Gia vị,9,1,1,0,0.1,0.4,920,0,Lunch,0
+Oyster (1 medium raw),"Hàu (1 con cỡ vừa, tươi sống)",Protein/Seafood,Chất đạm/Hải sản,8,1,0.5,0.2,0,0,50,10,Dinner,0
+Mignonette Sauce (1 tbsp),Sốt Mignonette (1 muỗng canh - khoảng 15 ml),Condiment,Gia vị,5,0,1,0,0,0.5,30,0,Dinner,0
+Beef Pho (1 large bowl),Phở Bò (1 tô lớn),Meal/Soup,Bữa ăn/Súp,450,30,55,12,4,5,1500,60,Dinner,500
+Bean Sprouts (1/4 cup garnish),"Mầm đậu nành (28,35g trang trí)",Vegetable,Rau củ,8,0.8,"46,143.00",0.1,0.4,1,1,0,Dinner,0
+Thai Basil (garnish),Húng quế Thái (dùng để trang trí),Condiment,Gia vị,1,0.1,0,0,0,0,0,0,Dinner,0
+Lime Wedge (garnish),Múi chanh (trang trí),Condiment,Gia vị,3,0.1,1,0,0.3,0.2,0,0,Dinner,0
+Jalapeno (1 tbsp sliced),Ớt Jalapeno (15 ml thái lát),Vegetable,Rau củ,4,0.1,0.8,0.1,0.4,0.5,1,0,Dinner,0
+Hoisin Sauce (1 tbsp),Sốt Hoisin (15 ml),Condiment,Gia vị,35,0.3,8,0.2,0.1,5,220,0,Dinner,0
+Sriracha (1 tsp),Tương ớt Sriracha (5 ml),Condiment,Gia vị,5,0.1,1,0.1,0.1,0.8,80,0,Dinner,0
+Crepe (1 plain),Bánh Crepe (1 cái không nhân),Grain,Ngũ cốc,90,"46,145.00",14,2,0.5,3,100,25,Breakfast,0
+Nutella (1 tbsp),Nutella (15 ml),Condiment,Gia vị,100,"46,143.00",11,6,1,10,10,0,Breakfast,0
+Powdered Sugar (1 tsp),"Đường bột (4,2 g)",Condiment,Gia vị,10,0,"46,144.00",0,0,"46,144.00",0,0,Breakfast,0
+Sake (3 oz),Calculations are not supported. Please use the Gemini side panel instead.,Beverage,Đồ uống,117,0.4,"46,237.00",0,0,0,4,0,Dinner,0
+Edamame (in pod 1 cup),"Đậu nành lông (còn vỏ, khoảng 150 gram)",Legume,Đậu,120,11,9,5,5,2,9,0,Snack,250
+Sea Salt (coarse 1/4 tsp),"Muối biển thô (1,5 gam)",Condiment,Gia vị,0,0,0,0,0,0,550,0,Snack,0
+Biryani (Chicken 1.5 cups),Cơm Biryani (Gà 355 ml),Meal/Meat,Bữa ăn/Thịt,520,28,60,18,5,6,900,75,Dinner,0
+Raita (2 tbsp),Raita (30 ml),Condiment/Dairy,Gia vị/Sữa,30,1,2,2,0.5,"46,143.00",100,5,Dinner,0
+Lassi (Mango 1 cup),"Lassi (Xoài, 240 ml)",Beverage,Đồ uống,180,5,30,4,1,28,60,15,Snack,240
+Samosa (1 piece vegetable),Samosa (1 miếng rau củ),Snack/Processed,Đồ ăn nhẹ/Chế biến,130,2,18,6,2,1,300,0,Snack,0
+Tamarind Chutney (1 tbsp),Tương ớt me (15 ml),Condiment,Gia vị,20,0.1,5,0,0.5,4,120,0,Snack,0
+Mint Chutney (1 tbsp),Chutney Bạc hà (15 ml),Condiment,Gia vị,5,0.2,0.5,0,0.3,0.2,150,0,Snack,0
+Pani Puri (6 pcs),Pani Puri (6 cái),Snack/Processed,Đồ ăn nhẹ/Chế biến,200,4,35,5,3,2,400,0,Snack,0
+Passion Fruit (1 fruit),Chanh dây (1 quả),Fruit,Trái cây,17,0.4,"46,057.00",0.1,1.9,2,5,0,Snack,0
+Kimchi Jjigae (1 bowl),Kimchi Jjigae (1 suất),Meal/Soup,Bữa ăn/Súp,350,15,20,22,5,6,1200,30,Dinner,500
+Silken Tofu (3oz in soup),Đậu phụ lụa (85g trong súp),Protein/Vegetarian,Chất đạm/Chay,45,5,2,"46,144.00",0.5,1,5,0,Dinner,0
+Pork Belly (1 oz in soup),Thịt Ba Chỉ (28g trong súp),Protein/Meat,Chất đạm/Thịt,145,3,0,15,0,0,150,20,Dinner,0
+Gochugaru (1 tsp),Bột ớt Hàn Quốc (1 thìa cà phê),Condiment,Gia vị,10,0.3,"46,235.00",0.3,0.5,0.3,1,0,Dinner,0
+Gochujang (1 tbsp),Gochujang (15 ml),Condiment,Gia vị,30,0.5,6,0,0.5,4,200,0,Dinner,0
+Sesame Oil (1 tsp),Dầu Mè (5 ml),Condiment,Gia vị,40,0,0,"46,146.00",0,0,0,0,Dinner,0
+Fish Sauce (1 tsp),Nước mắm (5 ml),Condiment,Gia vị,5,0.4,0.5,0,0,0.4,450,0,Dinner,0
+Sugar (1 tsp in broth),Đường (5 g trong nước dùng),Condiment,Gia vị,16,0,4,0,0,4,0,0,Dinner,0
+Green Onion (1 tbsp garnish),Hành lá (15 ml dùng để trang trí),Vegetable,Rau củ,3,0.2,0.7,0,0.2,0.2,0,0,Dinner,0
+Kombucha (16 oz),Kombucha (473 ml),Beverage,Đồ uống,60,0,14,0,0,12,20,0,Snack,473
+Beef Wellington (1 slice),Bò Wellington (1 lát),Meal/Meat,Bữa ăn/Thịt,600,30,35,38,4,4,850,100,Dinner,0
+Pate (Mushroom 2 tbsp),Pate Nấm (30 ml),Condiment,Gia vị,70,1,2,7,1,1,100,0,Dinner,0
+Puff Pastry (1 oz wrapper),"Bột bánh ngàn lớp (gói 28,35 g)",Grain,Ngũ cốc,115,"46,143.00",9,8,0.5,0,100,0,Dinner,0
+Prosciutto (1 slice),Thịt nguội Prosciutto (1 lát),Protein/Meat,Chất đạm/Thịt,35,4,0,"46,144.00",0,0,280,10,Dinner,0
+Asparagus (6 spears roasted),Măng tây (6 cọng nướng),Vegetable,Rau củ,40,4,4,2,3,2,150,0,Dinner,0
+Hollandaise Sauce (1 tbsp),Sốt Hollandaise (15 mL),Condiment,Gia vị,55,0.5,0.2,6,0,0.1,75,25,Dinner,0
+Flan (1 slice),Bánh Flan (1 phần ăn),Dessert,Tráng miệng,220,6,35,7,0,33,80,90,Snack,0
+Caramel Sauce (1 tbsp),Xốt Caramel (15 ml),Condiment,Gia vị,60,0,13,1,0,12,30,5,Snack,0
+Congee (1 cup plain),Cháo (240 ml nguyên chất),Meal/Grain,Bữa ăn/Ngũ cốc,130,"46,144.00",28,1,1,0.5,300,0,Breakfast,0
+Pickled Radish (1/4 cup),Củ cải muối (60 g),Vegetable,Rau củ,15,0.5,3,0,1,2,250,0,Breakfast,0
+Pork Floss (1 tbsp),Chà bông heo (15 ml),Protein/Meat,Chất đạm/Thịt,50,4,3,2,0,"46,144.00",150,10,Breakfast,0
+Century Egg (1 egg),Trứng bách thảo (1 quả trứng),Protein,Chất đạm,100,7,1,7,0,0.5,300,200,Breakfast,0
+Arugula (2 cups),Rau Arugula (40 gam),Vegetable,Rau củ,10,1,0.8,0.2,0.4,0.4,6,0,Lunch,0
+Goat Cheese (1 oz),"Phô mai Dê (28,35 g)",Dairy,Sản phẩm từ sữa,103,"46,028.00",0.1,"46,150.00",0,0.1,146,22,Lunch,0
+Beets (1/2 cup roasted),Củ dền (100 gram nướng),Vegetable,Rau củ,30,0.8,"46,240.00",0.1,1.4,"46,239.00",50,0,Lunch,0
+Walnuts (1 tbsp chopped),Quả óc chó (8 gram băm nhỏ),Nut,Hạt,46,"46,023.00",1,"46,177.00",0.5,0.2,0,0,Lunch,0
+Balsamic Glaze (1 tbsp),Lớp tráng men Balsamic (1 muỗng canh),Condiment,Gia vị,40,0,9,0,0,8,10,0,Lunch,0
+Bobotie (1 serving),Bobotie (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,450,25,30,25,5,15,700,150,Dinner,0
+Yellow Rice (1 cup),Cơm vàng (163g),Grain,Ngũ cốc,230,4,50,1,2,1,300,0,Dinner,0
+Chutney (Mango 1 tbsp),Tương ớt xoài (15 ml),Condiment,Gia vị,45,0.1,11,0.1,0.5,10,180,0,Dinner,0
+Malva Pudding (1 slice),Bánh Malva Pudding (1 lát cắt),Dessert,Tráng miệng,380,5,60,14,2,40,350,60,Snack,0
+Custard (1/4 cup),Bánh trứng sữa (khoảng 59 ml),Condiment,Gia vị,80,3,10,3,0,8,40,40,Snack,0
+Bubble Tea (16 oz milk tea),Trà Sữa (473 ml trà sữa),Beverage,Đồ uống,320,2,70,4,1,60,100,10,Snack,473
+Tapioca Pearls (1/4 cup boba),Hạt trân châu (59 ml trân châu),Condiment,Gia vị,100,0,25,0,0,20,5,0,Snack,0
+Paella (1.5 cups seafood),Paella (213 g hải sản),Meal/Rice,Bữa ăn/Cơm,550,30,70,18,6,5,1200,110,Dinner,0
+Chorizo (1 oz in paella),Chorizo (28 g trong món cơm thập cẩm Paella),Protein/Meat,Chất đạm/Thịt,130,6,1,11,0,0.5,350,30,Dinner,0
+Saffron (pinch),Nghệ tây (nhúm),Condiment,Gia vị,1,0,0.1,0,0,0,0,0,Dinner,0
+Aioli (Garlic 1 tbsp),Aioli (Tương tỏi 1 thìa canh),Condiment,Gia vị,95,0.1,0.5,"46,152.00",0,0.1,70,5,Dinner,0
+Gazpacho (1 cup),Gazpacho (khoảng 240 mL),Meal/Soup,Bữa ăn/Súp,90,2,12,4,3,7,600,0,Lunch,240
+Croutons (Garlic 1/4 cup),"Bánh mì sấy giòn (Tỏi, 60 mililít)",Grain,Ngũ cốc,50,"46,143.00",7,2,0.5,0.5,140,0,Lunch,0
+Olive Oil (1 tsp garnish),Dầu ô liu (5 ml dùng để trang trí),Condiment,Gia vị,40,0,0,"46,146.00",0,0,0,0,Lunch,0
+Churros (2 sticks),Bánh Churros (2 que),Dessert,Tráng miệng,240,3,30,12,1.5,10,200,20,Snack,0
+Chocolate Sauce (1 tbsp dipping),Sốt sô-cô-la (15 ml dùng để chấm),Condiment,Gia vị,50,0.5,10,"46,143.00",1,8,5,0,Snack,0
+Cinnamon Sugar (1 tsp),Đường Quế (5 ml),Condiment,Gia vị,20,0,5,0,0,5,0,0,Snack,0
+Horchata (1 cup),Nước uống Horchata (240 mL),Beverage,Đồ uống,140,2,25,3,1,22,30,5,Snack,240
+Ceviche (1 cup fish),Ceviche (236.59 gam cá),Meal/Fish,Bữa ăn/Cá,180,25,15,2,3,4,700,45,Lunch,0
+Red Onion (1/4 cup in ceviche),Hành tây đỏ (khoảng 60 ml trong món gỏi cá sống),Vegetable,Rau củ,16,0.3,"46,206.00",0,0.4,"46,235.00",1,0,Lunch,0
+Cilantro (2 tbsp garnish),Ngò rí (30 ml trang trí),Condiment,Gia vị,1,0.1,0,0,0.1,0,0,0,Lunch,0
+Corn Nuts (1 oz),Hạt bắp rang (28 g),Snack/Processed,Đồ ăn nhẹ/Chế biến,130,2,23,4,2,0,180,0,Snack,0
+Lomo Saltado (1.5 cups),Lomo Saltado (Khẩu phần 355 ml),Meal/Meat,Bữa ăn/Thịt,500,35,45,22,5,6,1100,90,Dinner,0
+French Fries (as side),Khoai tây chiên (phần ăn kèm),Vegetable/Processed,Rau củ/Chế biến,200,2,25,10,2,0.2,130,0,Dinner,0
+Soy Sauce (1 tbsp in stir-fry),Nước tương (15 ml trong món xào),Condiment,Gia vị,9,1,1,0,0.1,0.4,920,0,Dinner,0
+Aji Amarillo Paste (1 tsp),Tương ớt Aji Amarillo (khoảng 5 ml),Condiment,Gia vị,5,0.1,1,0,0.5,0.5,50,0,Dinner,0
+Pisco Sour (1 drink),Pisco Sour (1 đơn vị uống),Beverage,Đồ uống,250,1,25,0,0,24,5,5,Snack,180
+Egg White (in drink),Lòng trắng trứng (trong thức uống),Condiment,Gia vị,17,"46,176.00",0.2,0,0,0.2,55,0,Snack,0
+Angostura Bitters (dash),Rượu đắng Angostura (1 mL),Condiment,Gia vị,5,0,0,0,0,0,0,0,Snack,0
+Alfajores (1 cookie),Bánh quy Alfajores (1 cái),Dessert,Tráng miệng,180,2,22,10,1,15,60,20,Snack,0
+Dulce de Leche (1 tbsp filling),Sốt caramen sữa đặc (15 g nhân),Condiment,Gia vị,65,1,12,"46,143.00",0,10,30,5,Snack,0
+Coconut (shredded garnish),Dừa nạo (dùng để trang trí),Fruit,Trái cây,10,0.1,0.5,1,0.2,0.1,0,0,Snack,0
+Mate (1 cup),Trà Mate (240 ml),Beverage,Đồ uống,5,0.2,1,0,0,0,2,0,Breakfast,240
+Media Luna (1 pastry),Bánh Sừng Bò Nhân Đường (1 chiếc),Grain,Ngũ cốc,190,4,25,8,1,9,150,25,Breakfast,0
+Chimichurri (1 tbsp),Xốt Chimichurri (15 ml),Condiment,Gia vị,45,0.1,0.5,"46,146.00",0.2,0.1,100,0,Dinner,0
+Skirt Steak (4oz grilled),"Thịt bít tết sườn (113,4g nướng)",Protein/Meat,Chất đạm/Thịt,240,26,0,15,0,0,70,80,Dinner,0
+Provoleta (1 oz grilled cheese),Provoleta (30 g phô mai nướng),Dairy,Sản phẩm từ sữa,100,7,1,8,0,0.5,250,20,Dinner,0
+Oregano (1 tsp),Kinh giới cay (5 ml),Condiment,Gia vị,3,0.1,0.7,0,0.2,0,0,0,Dinner,0
+Empanada (Beef 1 medium),Bánh Empanada nhân thịt bò (1 cái cỡ trung bình),Meal/Processed,Bữa ăn/Chế biến,290,10,28,16,3,3,550,30,Lunch,0
+Chicken Milanesa (1 serving),Thịt gà Milanese (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,450,35,30,22,3,2,700,100,Dinner,0
+Mashed Potatoes (side),Khoai tây nghiền (món ăn kèm),Vegetable,Rau củ,150,3,25,4,2,2,300,10,Dinner,0
+Choripan (1 sandwich),Choripan (1 bánh mì kẹp),Meal/Processed,Bữa ăn/Chế biến,550,20,40,35,3,4,1100,80,Lunch,250
+Baguette (slice),Bánh mì (lát),Grain,Ngũ cốc,70,"46,144.00",14,0.5,0.6,0.5,150,0,Lunch,0
+Chimichurri (1 tbsp),Chimichurri (15 ml),Condiment,Gia vị,45,0.1,0.5,"46,146.00",0.2,0.1,100,0,Lunch,0
+Pizza (Margherita 1 slice),Bánh Pizza (Margherita 1 lát),Meal/Processed,Bữa ăn/Chế biến,250,12,30,10,3,4,600,25,Dinner,250
+Fresh Mozzarella (1 oz),"Phô mai Mozzarella tươi (khoảng 28,35 g)",Dairy,Sản phẩm từ sữa,72,5,0.8,5,0,0.3,138,22,Dinner,0
+Basil (2 tbsp fresh),Húng quế (30 ml tươi),Condiment,Gia vị,1,0.1,0.1,0,0.1,0,0,0,Dinner,0
+Carbonara (1.5 cups),"Mì Ý Carbonara (354,882 ml)",Meal/Pasta,Bữa ăn/Mì ống,650,25,60,35,4,4,900,250,Dinner,0
+Guanciale (1 oz),"Má Heo Muối Sấy (Guanciale) (28,35 g)",Protein/Meat,Chất đạm/Thịt,170,3,0,18,0,0,450,35,Dinner,0
+Pecorino Cheese (1 tbsp),Phô mai Pecorino (khoảng 15 ml),Dairy,Sản phẩm từ sữa,25,"46,143.00",0.1,2,0,0,110,6,Dinner,0
+Black Pepper (1/4 tsp),Hạt tiêu đen (khoảng 0.6g),Condiment,Gia vị,1,0,0.2,0,0.1,0,0,0,Dinner,0
+Egg Yolk (1 large in sauce),Lòng đỏ trứng (1 quả lớn trong nước sốt),Protein,Chất đạm,55,"46,205.00",0.6,"46,146.00",0,0.3,8,184,Dinner,0
+Supplì (1 piece fried rice ball),Supplì (1 viên cơm chiên),Snack/Processed,Đồ ăn nhẹ/Chế biến,200,8,25,8,2,2,400,25,Snack,0
+Aperol Spritz (1 drink),Aperol Spritz (1 ly),Beverage,Đồ uống,180,0,20,0,0,20,10,0,Snack,150
+Prosecco (3 oz),Prosecco (khoảng 89 mL),Beverage,Đồ uống,70,0,2,0,0,"46,143.00",5,0,Snack,0
+Club Soda (2 oz),Soda (59 ml),Beverage,Đồ uống,0,0,0,0,0,0,20,0,Snack,0
+Orange Slice (garnish),Lát cam (trang trí món ăn),Fruit,Trái cây,5,0.1,1,0,0.2,0.8,0,0,Snack,0
+Tagliatelle al Ragù (Bolognese),Tagliatelle al Ragù (Sốt Bolognese),Meal/Pasta,Bữa ăn/Mì ống,550,28,65,20,7,8,850,70,Dinner,500
+Ground Beef (2 oz in sauce),Thịt Bò Xay (56.7 g trong sốt),Protein/Meat,Chất đạm/Thịt,140,11,0,10,0,0,40,35,Dinner,0
+Pancetta (0.5 oz in sauce),"Thịt ba chỉ muối cuộn Pancetta (14,17 g trong nước sốt)",Protein/Meat,Chất đạm/Thịt,45,"46,143.00",0,"46,146.00",0,0,160,10,Dinner,0
+Carrot (1/4 minced in sauce),Cà rốt (1/4 băm nhỏ trong nước sốt),Vegetable,Rau củ,10,0.2,"46,114.00",0.1,0.7,"46,054.00",17,0,Dinner,0
+Celery (1/4 stalk minced),Cần tây (một phần tư cọng thái nhỏ),Vegetable,Rau củ,2,0.1,0.4,0,0.2,0.2,12,0,Dinner,0
+Onion (1/8 minced in sauce),Hành tây (một phần tám củ băm nhỏ trong nước sốt),Vegetable,Rau củ,5,0.1,"46,054.00",0,0.2,0.6,1,0,Dinner,0
+Crushed Tomatoes (1/2 cup sauce),Cà chua nghiền (120 mL sốt),Vegetable,Rau củ,20,1,4,0,1.5,3,200,0,Dinner,0
+Parmigiano-Reggiano (1 tbsp),Phô mai Parmigiano-Reggiano (15 mL),Dairy,Sản phẩm từ sữa,22,2,0.2,"46,143.00",0,0,95,4,Dinner,0
+Cannoli (1 medium),Bánh Cannoli (1 chiếc cỡ vừa),Dessert,Tráng miệng,240,5,25,13,1,18,100,30,Snack,0
+Ricotta (filling 1 oz),Ricotta (nhân 28.35 g),Dairy,Sản phẩm từ sữa,49,"46,056.00",0.8,"46,237.00",0,0.1,23,14,Snack,0
+Pistachio (garnish),Hạt hồ trăn (trang trí),Nut,Hạt,10,0.4,0.5,0.8,0.2,0.1,0,0,Snack,0
+Biscotti (1 cookie),Bánh Biscotti (1 đơn vị bánh quy),Dessert,Tráng miệng,110,2,18,4,1,9,50,15,Snack,0
+Espresso (for dipping),Cà phê espresso (dùng để chấm),Beverage,Đồ uống,2,0.2,0,0,0,0,1,0,Snack,30
+Focaccia (1 square),Focaccia (1 miếng vuông),Grain,Ngũ cốc,250,8,40,7,2,2,500,0,Lunch,0
+Rosemary (1 tsp topping),Hương thảo (1g rắc/trang trí),Condiment,Gia vị,1,0,0.2,0,0.1,0,0,0,Lunch,0
+Coarse Salt (garnish),Muối hạt (dùng để trang trí),Condiment,Gia vị,0,0,0,0,0,0,200,0,Lunch,0
+Olive Oil (1 tbsp drizzle),Dầu Ô liu (15 ml rưới nhẹ),Condiment,Gia vị,120,0,0,14,0,0,0,0,Lunch,0
+Bruschetta (2 pcs),Bruschetta (2 miếng),Snack/Appetizer,Đồ ăn nhẹ/Khai vị,180,4,25,7,3,4,350,0,Snack,0
+Balsamic Glaze (1 tsp),Sốt giấm Balsamic (5 ml),Condiment,Gia vị,13,0,3,0,0,"46,205.00",3,0,Snack,0
+Ribollita (1.5 cups soup),Ribollita (Khẩu phần 355 mililit súp),Meal/Soup,Bữa ăn/Súp,350,15,55,8,14,10,900,5,Dinner,500
+Cannellini Beans (1/2 cup in soup),Đậu Cannellini (130 gram trong súp),Legume,Đậu,105,7,20,0.5,6,1,230,0,Dinner,0
+Kale (1 cup in soup),Cải xoăn (240g trong súp),Vegetable,Rau củ,33,"46,267.00",6,0.6,2,1,29,0,Dinner,0
+Stale Bread (1/2 cup in soup),Bánh mì cũ (60 gram trong súp),Grain,Ngũ cốc,80,3,15,1,1,"46,143.00",160,0,Dinner,0
+Polenta (1 cup creamy),Polenta (250g dạng kem),Meal/Grain,Bữa ăn/Ngũ cốc,150,3,32,1,3,1,350,5,Dinner,0
+Gorgonzola Cheese (1 oz),Phô mai Gorgonzola (28g),Dairy,Sản phẩm từ sữa,100,6,0.7,8,0,0.1,325,21,Dinner,0
+Negroni (1 drink),Negroni (1 khẩu phần),Beverage,Đồ uống,190,0,15,0,0,15,5,0,Snack,90
+Gin (1 oz),Rượu Gin (30 ml),Beverage,Đồ uống,70,0,0,0,0,0,0,0,Snack,0
+Campari (1 oz),Campari (29.57 ml),Beverage,Đồ uống,80,0,10,0,0,10,5,0,Snack,0
+Sweet Vermouth (1 oz),Rượu Vermouth Ngọt (30 ml),Beverage,Đồ uống,40,0,5,0,0,5,0,0,Snack,0
+Orange Peel (garnish),Vỏ cam (trang trí thực phẩm),Condiment,Gia vị,1,0,0.2,0,0.1,0,0,0,Snack,0
+Osso Buco (1 serving),Osso Buco (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,550,45,15,30,4,6,900,150,Dinner,0
+Gremolata (1 tbsp),Gremolata (15 ml),Condiment,Gia vị,15,0.5,1,1,0.5,0.5,5,0,Dinner,0
+Risotto alla Milanese (1 cup),Risotto alla Milanese (khoảng 240ml),Meal/Rice,Bữa ăn/Cơm,350,10,50,12,3,3,700,30,Dinner,0
+Saffron (pinch in risotto),Nghệ tây (một nhúm trong món cơm Ý risotto),Condiment,Gia vị,1,0,0.1,0,0,0,0,0,Dinner,0
+Panettone (1 slice),Bánh Panettone (1 lát),Dessert,Tráng miệng,320,6,50,12,3,25,200,70,Snack,0
+Candied Fruit (1 tbsp),Trái cây Sấy dẻo/Kẹo trái cây (15 ml),Fruit,Trái cây,30,0,8,0,0.5,8,5,0,Snack,0
+Amaretti Cookie (2 cookies),Bánh quy Amaretti (2 cái),Dessert,Tráng miệng,90,2,12,4,1,10,10,0,Snack,0
+Limoncello (1.5 oz shot),Rượu Limoncello (cốc nhỏ 45 ml),Beverage,Đồ uống,150,0,18,0,0,18,0,0,Snack,0
+Panna Cotta (1 serving),Panna Cotta (1 khẩu phần),Dessert,Tráng miệng,300,4,25,20,0,22,50,70,Snack,0
+Berry Coulis (1 tbsp),Sốt coulis trái cây (15 ml),Condiment,Gia vị,20,0,5,0,0.5,"46,146.00",0,0,Snack,0
+Saltimbocca (1 serving),Saltimbocca (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,380,38,5,22,0.5,1,850,120,Dinner,0
+Prosciutto (1 slice wrapper),Thịt đùi lợn muối Prosciutto (1 lát đóng gói),Protein/Meat,Chất đạm/Thịt,35,4,0,"46,144.00",0,0,280,10,Dinner,0
+Sage (2 leaves),Lá Xô thơm (2 lá),Condiment,Gia vị,1,0,0.1,0,0.1,0,0,0,Dinner,0
+Polenta (grilled 1 slice),"Bột bắp (nướng, 1 lát)",Meal/Grain,Bữa ăn/Ngũ cốc,120,"46,144.00",25,1,2,0.5,300,0,Dinner,0
+Caponata (1/2 cup),Caponata (120 ml),Meal/Vegetable,Bữa ăn/Rau củ,180,2,15,14,5,9,400,0,Dinner,0
+Eggplant (1/2 cup in caponata),Cà tím (120 ml trong món caponata),Vegetable,Rau củ,40,0.5,6,2,2,3,150,0,Dinner,0
+Pine Nuts (1/2 tbsp),Hạt thông (7.4 ml),Nut,Hạt,48,1,1,5,0.2,0.2,0,0,Dinner,0
+Raisins (1 tbsp),Nho khô (khoảng 15g),Fruit,Trái cây,27,0.3,7,0,0.3,6,1,0,Dinner,0
+Gelato (Pistachio 1/2 cup),Gelato (Hồ trăn 120 ml),Dessert,Tráng miệng,220,5,24,12,2,20,60,40,Snack,0
+Waffle Cone (1 small),Ốc quế Bánh Kẹp (1 chiếc nhỏ),Grain,Ngũ cốc,70,1,13,"46,143.00",0.5,7,30,5,Snack,0
+Cacio e Pepe (1.5 cups),Món mỳ Cacio e Pepe (355 ml),Meal/Pasta,Bữa ăn/Mì ống,500,18,65,19,4,3,700,50,Dinner,0
+Pecorino Romano (1/4 cup),Phô mai Pecorino Romano (khoảng 60 ml),Dairy,Sản phẩm từ sữa,110,"46,149.00",1,"46,150.00",0,0,450,25,Dinner,0
+Black Pepper (1/2 tsp),"Tiêu đen (khoảng 1,15 g)",Condiment,Gia vị,3,0.1,0.7,0,0.3,0,0,0,Dinner,0
+Fiorentina Steak (3oz portion),Bít tết Fiorentina (khẩu phần 85g),Protein/Meat,Chất đạm/Thịt,230,24,0,15,0,0,60,75,Dinner,0
+Olive Oil (1 tbsp drizzle),Dầu Ô-liu (rưới nhẹ 15 ml),Condiment,Gia vị,120,0,0,14,0,0,0,0,Dinner,0
+Rosemary (garnish),Hương thảo (trang trí),Condiment,Gia vị,1,0,0.2,0,0.1,0,0,0,Dinner,0
+White Beans (Tuscan style 1/2 cup),"Đậu trắng (kiểu Tuscan, 120 ml)",Legume,Đậu,150,8,20,4,7,2,350,0,Dinner,0
+Garlic (1 clove in beans),Tỏi (1 tép trong đậu),Vegetable,Rau củ,4,0.2,0.9,0,0.1,0,1,0,Dinner,0
+Sage (in beans),Cây xô thơm (trong các loại đậu),Condiment,Gia vị,1,0,0.1,0,0.1,0,0,0,Dinner,0
+Arancini (1 large ball),Arancini (1 viên lớn),Snack/Processed,Đồ ăn nhẹ/Chế biến,250,9,30,10,3,3,500,30,Snack,0
+Ragù (filling 1 tbsp),"Sốt Ragù (nhân, 15 gam)",Condiment,Gia vị,25,"46,143.00",1,"46,143.00",0.5,0.5,60,5,Snack,0
+Mozzarella (filling 0.5 oz),Mozzarella (nhân 14.17 gram),Dairy,Sản phẩm từ sữa,40,3,0.5,3,0,0.2,75,10,Snack,0
+Breadcrumbs (coating),Bột chiên xù (lớp phủ),Grain,Ngũ cốc,25,0.5,4,0.5,0.5,0.5,50,0,Snack,0
+Campari & Soda (1 drink),Campari và Soda (1 khẩu phần đồ uống),Beverage,Đồ uống,85,0,10,0,0,10,25,0,Snack,150
+Olive (garnish),Quả ô liu (phụ gia trang trí),Fruit,Trái cây,5,0,0.1,0.5,0.1,0,30,0,Snack,0
+Vitello Tonnato (1 serving),Thịt bê sốt cá ngừ (1 khẩu phần),Meal/Meat,Bữa ăn/Thịt,380,35,3,25,0.5,1,600,110,Lunch,0
+Tuna Sauce (2 tbsp),Sốt Cá Ngừ (30 ml),Condiment,Gia vị,100,4,1,9,0,0.5,200,15,Lunch,0
+Capers (garnish),Cây bạch hoa (gia vị trang trí),Condiment,Gia vị,2,0.2,0.4,0.1,0.3,0.1,200,0,Lunch,0
+Lemon Slice (garnish),Lát chanh (trang trí),Condiment,Gia vị,1,0,0.3,0,0.1,0.1,0,0,Lunch,0
+Gnocchi alla Sorrentina (1.5 cups),Gnocchi alla Sorrentina (355 ml),Meal/Pasta,Bữa ăn/Mì ống,450,15,60,18,6,9,800,40,Dinner,0
+Tomato Sauce (1/2 cup),Sốt cà chua (120 ml),Condiment,Gia vị,40,"46,143.00",7,1,2,4,350,0,Dinner,0
+Mozzarella (1 oz melted),"Phô mai Mozzarella (28,35 g đã làm tan chảy)",Dairy,Sản phẩm từ sữa,80,6,1,6,0,0.5,150,20,Dinner,0
+Basil (fresh garnish),Húng quế (rau thơm tươi trang trí),Condiment,Gia vị,1,0.1,0,0,0.1,0,0,0,Dinner,0
+Pesto (1/4 cup),Pesto (60 ml),Condiment,Gia vị,290,5,4,29,2,1,600,5,Dinner,0
+Pine Nuts (1 tbsp in pesto),Hạt thông (15 ml trong xốt Pesto),Nut,Hạt,95,2,2,10,0.5,0.5,0,0,Dinner,0
+Garlic (1/2 clove in pesto),Tỏi (1/2 tép trong sốt pesto),Vegetable,Rau củ,2,0.1,0.5,0,0,0,0,0,Dinner,0
+Trofie Pasta (1 cup cooked),Mì ống Trofie (khoảng 140 gram nấu chín),Grain,Ngũ cốc,210,7,43,1,2,1,5,0,Dinner,0
+Green Beans (1/2 cup w/ pasta),Đậu que (120 gram với mì ống),Vegetable,Rau củ,15,0.9,"46,145.00",0.1,1.3,"46,174.00",3,0,Dinner,0
+Potato (1/2 w/ pasta),Khoai tây (1/2 khẩu phần dùng kèm pasta),Vegetable,Rau củ,65,1,15,0.1,1,0.5,3,0,Dinner,0
+Espresso Martini (1 drink),Espresso Martini (1 phần uống),Beverage,Đồ uống,280,0.5,25,0,0,25,5,0,Snack,120
+Vodka (1.5 oz),"Vodka (khoảng 44,4 ml)",Beverage,Đồ uống,97,0,0,0,0,0,0,0,Snack,0
+Coffee Liqueur (1 oz),Rượu mùi Cà phê (khoảng 30 ml),Beverage,Đồ uống,100,0,15,0,0,15,2,0,Snack,0
+Espresso (1 oz in drink),Espresso (30 ml trong đồ uống),Beverage,Đồ uống,3,0.3,0,0.1,0,0,1,0,Snack,0
+Simple Syrup (1/2 oz),Siro đơn (15 ml),Condiment,Gia vị,30,0,8,0,0,8,0,0,Snack,0
+Coffee Beans (3 garnish),Hạt cà phê (3 trang trí),Snack,Đồ ăn nhẹ,2,0.1,0.3,0,0.1,0,0,0,Snack,0
+Baba Ganoush (1/4 cup),Baba Ganoush (khoảng 60 ml),Meal/Vegetable,Bữa ăn/Rau củ,100,2,8,7,4,2,300,0,Snack,0
+Pita Bread (1 white),Bánh mì Pita (1 chiếc màu trắng),Grain,Ngũ cốc,165,"46,147.00",33,"46,054.00",1.5,"46,143.00",310,0,Snack,0
+Falafel (3 pieces),Falafel (3 viên),Meal/Vegetarian,Bữa ăn/Chay,180,6,18,9,4,1,320,0,Lunch,0
+Tahini Sauce (1 tbsp),Sốt Tahini (1 tbsp),Condiment,Gia vị,30,1,"46,143.00","46,144.00",0.5,0,45,0,Lunch,0
+Pickled Turnips (2 tbsp),Củ cải muối chua (30 mL),Vegetable,Rau củ,10,0.2,2,0,0.5,1,200,0,Lunch,0
+Shawarma (Chicken 1 wrap),"Shawarma (Gà, 1 cuộn)",Meal/Processed,Bữa ăn/Chế biến,550,30,50,25,6,5,1100,80,Lunch,250
+Garlic Sauce (1 tbsp),Sốt Tỏi (15 ml),Condiment,Gia vị,90,0.1,1,10,0,0.5,80,5,Lunch,0
+Hummus (1/4 cup),Hummus (60 ml),Legume,Đậu,130,5,10,8,4,1,250,0,Lunch,0
+Tabouli (1/2 cup),Tabouli (120g),Meal/Vegetarian,Bữa ăn/Chay,120,3,15,6,4,2,300,0,Lunch,0
+Bulgur (1/4 cup in tabouli),Lúa mì bulgur (60 ml trong món salad tabouli),Grain,Ngũ cốc,76,"46,205.00","46,250.00",0.2,4.1,0.1,4,0,Lunch,0
+Parsley (1/4 cup in tabouli),"Rau mùi tây (khoảng 12,7g trong món tabouli)",Vegetable,Rau củ,5,0.3,1,0.1,0.5,0.1,5,0,Lunch,0
+Mint (1 tbsp in tabouli),Bạc hà (15 ml trong tabouli),Condiment,Gia vị,1,0.1,0.1,0,0.1,0,0,0,Lunch,0
+Lemon Juice (1 tbsp dressing),Nước cốt chanh (15 ml nước sốt),Condiment,Gia vị,4,0.1,"46,082.00",0,0.1,0.2,0,0,Lunch,0
+Olive Oil (1 tbsp dressing),Dầu ô liu (1 muỗng canh khẩu phần nước xốt),Condiment,Gia vị,120,0,0,14,0,0,0,0,Lunch,0
+Kibbeh (1 piece fried),Kibbeh (1 miếng chiên),Meal/Meat,Bữa ăn/Thịt,230,9,20,13,3,1,450,30,Snack,0
+Pine Nuts (1/2 tbsp filling),Hạt thông (7.5 ml phần nhân),Nut,Hạt,48,1,1,5,0.2,0.2,0,0,Snack,0
+Ground Lamb (1 oz filling),"Thịt cừu xay (phần nhân 28,35 g)",Protein/Meat,Chất đạm/Thịt,80,"46,147.00",0,6,0,0,20,20,Snack,0
+Bulgur (1 tbsp shell),Hạt Bulgur (1 muỗng canh vỏ),Grain,Ngũ cốc,15,0.5,"46,115.00",0,0.8,0,1,0,Snack,0
+Lentil Soup (1 cup Middle Eastern),"Súp Đậu Lăng (240 ml, Trung Đông)",Meal/Legume,Bữa ăn/Đậu,200,10,30,5,10,4,700,0,Lunch,250
+Cumin (1 tsp),Cumin (5 ml),Condiment,Gia vị,8,0.3,"46,143.00",0.5,0.4,0.1,3,0,Lunch,0
+Coriander (1 tsp),Ngò rí (1 muỗng cà phê),Condiment,Gia vị,5,0.1,1,0.2,0.5,0,1,0,Lunch,0
+Lemon Juice (1 tsp in soup),Nước cốt chanh (1 muỗng cà phê trong súp),Condiment,Gia vị,1,0,0.4,0,0,0.1,0,0,Lunch,0
+Pita Crisps (1 oz),Bánh mì dẹt Pita nướng giòn (28 g),Snack/Processed,Đồ ăn nhẹ/Chế biến,130,3,18,5,2,1,240,0,Lunch,0
+Manakeesh (Za'atar 1 small),Bánh mì dẹt Manakeesh (Za'atar 1 cái nhỏ),Meal/Vegetarian,Bữa ăn/Chay,300,7,45,10,4,2,500,0,Breakfast,0
+Za'atar (1 tbsp),Za'atar (15 ml),Condiment,Gia vị,40,1,3,3,1.5,0,150,0,Breakfast,0
+Olive Oil (1 tbsp on bread),Dầu ô liu (14 gam trên bánh mì),Condiment,Gia vị,120,0,0,14,0,0,0,0,Breakfast,0
+Labneh (2 tbsp),Labneh (30 ml),Dairy,Sản phẩm từ sữa,60,4,2,4,0,2,80,15,Breakfast,0
+Cucumber (1/4 cup side),Dưa chuột (khẩu phần 60 ml),Vegetable,Rau củ,8,0.3,"46,235.00",0,0.2,0.8,1,0,Breakfast,0
+Tomato (1/4 cup side),Cà chua (phần ăn kèm 60 ml),Vegetable,Rau củ,8,0.3,"46,235.00",0.1,0.5,"46,054.00",2,0,Breakfast,0
+Olives (5 side),Ô liu (5 quả/khẩu phần),Fruit,Trái cây,35,0.2,1,"46,145.00",0.5,0,210,0,Breakfast,0
+Mint Tea (1 cup),Trà Bạc Hà (240 ml),Beverage,Đồ uống,2,0.1,0.5,0,0,0,5,0,Breakfast,240
+Stuffed Grape Leaves (3 pcs),Lá nho nhồi (3 cái),Meal/Vegetarian,Bữa ăn/Chay,150,3,20,7,3,3,400,0,Snack,0
+Rice (1/4 cup filling),Cơm (45g khẩu phần),Grain,Ngũ cốc,51,"46,023.00","46,033.00",0.1,0.1,0,0,0,Snack,0
+Turkish Coffee (1 small cup),Cà phê Thổ Nhĩ Kỳ (1 ly nhỏ),Beverage,Đồ uống,5,0.2,0.5,0,0,0,1,0,Snack,60
+Cardamom (in coffee),Bạch đậu khấu (trong cà phê),Condiment,Gia vị,1,0,0.2,0,0.1,0,0,0,Snack,0
+Shish Tawook (2 skewers),Shish Tawook (2 xiên),Meal/Meat,Bữa ăn/Thịt,300,35,5,16,1,2,600,100,Dinner,0
+Garlic Sauce (Toum 1 tbsp),Nước Sốt Tỏi (Toum 1 muỗng canh),Condiment,Gia vị,90,0.1,1,10,0,0.5,80,5,Dinner,0
+French Fries (side),Khoai tây chiên (món ăn kèm),Vegetable/Processed,Rau củ/Chế biến,340,4,44,17,4,0.3,230,0,Dinner,0
+Pickled Cucumber (1/4 cup),Dưa chuột muối chua (59 ml),Vegetable,Rau củ,10,0.5,2,0,1,1,300,0,Dinner,0
+Fattoush Salad (1.5 cups),Salad Fattoush (300 gam),Meal/Vegetarian,Bữa ăn/Chay,250,5,25,15,6,5,500,0,Lunch,0
+Fried Pita (1/2 pita in salad),Bánh Pita chiên (1/2 chiếc bánh pita trong món salad),Grain,Ngũ cốc,80,2,12,3,1,0.5,150,0,Lunch,0
+Sumac (1/2 tsp dressing),Bột Sumac (2.5 ml sốt),Condiment,Gia vị,5,0.1,1,0.2,0.5,0,1,0,Lunch,0
+Pomegranate Molasses (1 tsp),Mật lựu (1 tsp),Condiment,Gia vị,15,0,4,0,0,4,0,0,Lunch,0

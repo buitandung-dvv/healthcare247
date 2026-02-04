@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Facebook SDK configuration -->
+    <string name="facebook_app_id">928444909959688</string>
+    <string name="fb_login_protocol_scheme">fb928444909959688</string>
+    <string name="facebook_client_token">1b9807b69f07300f7aa7944578be1e7d</string>
+</resources>

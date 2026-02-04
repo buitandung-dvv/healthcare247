@@ -1,0 +1,816 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_sizes.dart';
+import '../../core/network/api_client.dart';
+import '../../core/network/api_config.dart';
+import '../../data/models/meal_model.dart';
+import '../../providers/language_provider.dart';
+import '../../widgets/common/common_widgets.dart';
+import 'my_meals_screen.dart';
+
+/// Add Meal Screen - Thêm bữa ăn mới với tìm kiếm food
+class AddMealScreen extends StatefulWidget {
+  final String mealType;
+  final DateTime date;
+
+  const AddMealScreen({super.key, required this.mealType, required this.date});
+
+  @override
+  State<AddMealScreen> createState() => _AddMealScreenState();
+}
+
+class _AddMealScreenState extends State<AddMealScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController(
+    text: '100',
+  );
+
+  List<Food> _searchResults = [];
+  List<Food> _allFoods = [];
+  Food? _selectedFood;
+  bool _isSearching = false;
+  bool _isLoading = true;
+  bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load foods after first frame to access context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInitialFoods();
+    });
+  }
+
+  int? _lastLanguageId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload foods when language changes
+    final lang = context.read<LanguageProvider>();
+    if (_lastLanguageId != null && _lastLanguageId != lang.languageId) {
+      _loadInitialFoods();
+    }
+    _lastLanguageId = lang.languageId;
+  }
+
+  Future<void> _loadInitialFoods() async {
+    final lang = context.read<LanguageProvider>();
+    try {
+      final response = await ApiClient.instance.get<Map<String, dynamic>>(
+        ApiConfig.foods,
+        queryParameters: {
+          'limit': '500',
+          'language_id': lang.languageId.toString(),
+        },
+      );
+
+      if (response.data != null && response.data!['data'] != null) {
+        final foods =
+            (response.data!['data'] as List)
+                .map((e) => Food.fromJson(e as Map<String, dynamic>))
+                .toList();
+        setState(() {
+          _allFoods = foods;
+          _searchResults = foods;
+          _isLoading = false;
+        });
+      } else {
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      debugPrint('Load foods error: $e');
+      setState(() => _isLoading = false);
+    }
+  }
+
+  String get _mealTypeName {
+    switch (widget.mealType) {
+      case 'breakfast':
+        return 'Bữa sáng';
+      case 'lunch':
+        return 'Bữa trưa';
+      case 'dinner':
+        return 'Bữa tối';
+      case 'snack':
+        return 'Ăn vặt';
+      default:
+        return widget.mealType;
+    }
+  }
+
+  Future<void> _searchFoods(String query) async {
+    if (query.isEmpty) {
+      setState(() => _searchResults = _allFoods);
+      return;
+    }
+    if (query.length < 2) {
+      // Filter from loaded list for quick response
+      setState(
+        () =>
+            _searchResults =
+                _allFoods
+                    .where(
+                      (f) => f.name.toLowerCase().contains(query.toLowerCase()),
+                    )
+                    .toList(),
+      );
+      return;
+    }
+
+    setState(() => _isSearching = true);
+
+    try {
+      final lang = context.read<LanguageProvider>();
+      final response = await ApiClient.instance.get<Map<String, dynamic>>(
+        '${ApiConfig.foods}/search',
+        queryParameters: {
+          'q': query,
+          'limit': '20',
+          'language_id': lang.languageId.toString(),
+        },
+      );
+
+      if (response.data != null && response.data!['data'] != null) {
+        final foods =
+            (response.data!['data'] as List)
+                .map((e) => Food.fromJson(e as Map<String, dynamic>))
+                .toList();
+        setState(() => _searchResults = foods);
+      }
+    } catch (e) {
+      debugPrint('Search error: $e');
+    } finally {
+      setState(() => _isSearching = false);
+    }
+  }
+
+  void _selectFood(Food food) {
+    setState(() {
+      _selectedFood = food;
+      _searchController.text = food.name;
+      _searchResults = [];
+    });
+  }
+
+  double get _quantity => double.tryParse(_quantityController.text) ?? 100;
+
+  double get _calculatedCalories =>
+      ((_selectedFood?.calories ?? 0) * _quantity / 100);
+
+  double get _calculatedProtein =>
+      ((_selectedFood?.protein ?? 0) * _quantity / 100);
+
+  double get _calculatedCarbs =>
+      ((_selectedFood?.carbs ?? 0) * _quantity / 100);
+
+  double get _calculatedFat => ((_selectedFood?.fat ?? 0) * _quantity / 100);
+
+  double get _calculatedFiber =>
+      ((_selectedFood?.fiber ?? 0) * _quantity / 100);
+
+  double get _calculatedCholesterol =>
+      ((_selectedFood?.cholesterol ?? 0) * _quantity / 100);
+
+  double get _calculatedCalcium =>
+      ((_selectedFood?.calcium ?? 0) * _quantity / 100);
+
+  double get _calculatedIron => ((_selectedFood?.iron ?? 0) * _quantity / 100);
+
+  double get _calculatedSodium =>
+      ((_selectedFood?.sodium ?? 0) * _quantity / 100);
+
+  double get _calculatedPotassium =>
+      ((_selectedFood?.potassium ?? 0) * _quantity / 100);
+
+  double get _calculatedPhosphorus =>
+      ((_selectedFood?.phosphorus ?? 0) * _quantity / 100);
+
+  double get _calculatedVitaminA =>
+      ((_selectedFood?.vitaminA ?? 0) * _quantity / 100);
+
+  double get _calculatedVitaminB1 =>
+      ((_selectedFood?.vitaminB1 ?? 0) * _quantity / 100);
+
+  double get _calculatedVitaminC =>
+      ((_selectedFood?.vitaminC ?? 0) * _quantity / 100);
+
+  Future<void> _saveMeal() async {
+    if (_selectedFood == null) return;
+
+    setState(() => _isSaving = true);
+
+    // Return the meal entry to parent screen
+    final entry = MealEntry(
+      name: _selectedFood!.name,
+      mealType: widget.mealType,
+      quantity: _quantity,
+      calories: _calculatedCalories,
+      protein: _calculatedProtein,
+      carbs: _calculatedCarbs,
+      fat: _calculatedFat,
+      foodId: _selectedFood!.foodId,
+    );
+
+    Navigator.pop(context, entry);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _quantityController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = context.watch<LanguageProvider>();
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: CustomAppBar(
+        title: lang.getText(
+          en: 'Add to $_mealTypeName',
+          vi: 'Thêm vào $_mealTypeName',
+        ),
+      ),
+      body: Column(
+        children: [
+          // Search Bar
+          Padding(
+            padding: AppSizes.paddingMd,
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: lang.getText(
+                  en: 'Search foods...',
+                  vi: 'Tìm thực phẩm...',
+                ),
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon:
+                    _isSearching
+                        ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        )
+                        : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                ),
+                filled: true,
+                fillColor: AppColors.card,
+              ),
+              onChanged: (value) => _searchFoods(value),
+            ),
+          ),
+
+          // Search Results or Selected Food Details
+          Expanded(
+            child:
+                _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _searchResults.isNotEmpty
+                    ? _buildSearchResults()
+                    : _selectedFood != null
+                    ? _buildFoodDetails(lang)
+                    : _buildEmptyState(lang),
+          ),
+
+          // Add Button
+          if (_selectedFood != null)
+            Container(
+              padding: AppSizes.paddingMd,
+              child: SizedBox(
+                width: double.infinity,
+                child: PrimaryButton(
+                  text: lang.getText(
+                    en: 'Add ${_calculatedCalories.toInt()} kcal',
+                    vi: 'Thêm ${_calculatedCalories.toInt()} kcal',
+                  ),
+                  onPressed: _isSaving ? null : _saveMeal,
+                  icon: Icons.add,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    return ListView.builder(
+      padding: AppSizes.paddingHorizontalMd,
+      itemCount: _searchResults.length,
+      itemBuilder: (context, index) {
+        final food = _searchResults[index];
+        return ListTile(
+          title: Text(food.name),
+          subtitle: Text(
+            '${food.calories?.toInt() ?? 0} kcal / 100g • ${food.categoryName ?? ''}',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
+          trailing: Icon(Icons.add_circle_outline, color: AppColors.primary),
+          onTap: () => _selectFood(food),
+        );
+      },
+    );
+  }
+
+  Widget _buildFoodDetails(LanguageProvider lang) {
+    return SingleChildScrollView(
+      padding: AppSizes.paddingMd,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Selected Food Card
+          Container(
+            padding: AppSizes.paddingMd,
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+              border: Border.all(color: AppColors.primary),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _selectedFood!.name,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        setState(() {
+                          _selectedFood = null;
+                          _searchController.clear();
+                          _searchResults = _allFoods; // Restore food list
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                if (_selectedFood!.categoryName != null)
+                  Text(
+                    _selectedFood!.categoryName!,
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: AppSizes.lg),
+
+          // Quantity Input
+          Text(
+            lang.getText(en: 'Quantity (grams)', vi: 'Khối lượng (gram)'),
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: AppSizes.sm),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.remove_circle_outline),
+                onPressed: () {
+                  final current = _quantity;
+                  if (current > 10) {
+                    _quantityController.text =
+                        (current - 10).toInt().toString();
+                    setState(() {});
+                  }
+                },
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _quantityController,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    suffix: const Text('g'),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                    ),
+                  ),
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add_circle_outline),
+                onPressed: () {
+                  _quantityController.text =
+                      (_quantity + 10).toInt().toString();
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
+
+          // Quick Quantity Buttons
+          const SizedBox(height: AppSizes.sm),
+          Wrap(
+            spacing: AppSizes.sm,
+            children:
+                [50, 100, 150, 200, 250].map((q) {
+                  return ChoiceChip(
+                    label: Text('${q}g'),
+                    selected: _quantity == q,
+                    onSelected: (selected) {
+                      if (selected) {
+                        _quantityController.text = q.toString();
+                        setState(() {});
+                      }
+                    },
+                  );
+                }).toList(),
+          ),
+
+          const SizedBox(height: AppSizes.xl),
+
+          // Nutrition Preview
+          Text(
+            lang.getText(en: 'Nutrition Info', vi: 'Thông tin dinh dưỡng'),
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: AppSizes.md),
+          _buildNutritionGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNutritionGrid() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Main Macros Section - Large cards
+        Container(
+          padding: const EdgeInsets.all(AppSizes.md),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.primary.withValues(alpha: 0.1),
+                AppColors.secondary.withValues(alpha: 0.05),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.local_fire_department,
+                    color: AppColors.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Macros',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildMacroCard(
+                      'Calories',
+                      _calculatedCalories.toInt().toString(),
+                      'kcal',
+                      AppColors.caloriesColor,
+                      Icons.local_fire_department,
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.sm),
+                  Expanded(
+                    child: _buildMacroCard(
+                      'Protein',
+                      _calculatedProtein.toStringAsFixed(1),
+                      'g',
+                      AppColors.proteinColor,
+                      Icons.egg_alt,
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.sm),
+                  Expanded(
+                    child: _buildMacroCard(
+                      'Carbs',
+                      _calculatedCarbs.toStringAsFixed(1),
+                      'g',
+                      AppColors.carbsColor,
+                      Icons.bakery_dining,
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.sm),
+                  Expanded(
+                    child: _buildMacroCard(
+                      'Fat',
+                      _calculatedFat.toStringAsFixed(1),
+                      'g',
+                      AppColors.fatColor,
+                      Icons.water_drop,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: AppSizes.md),
+
+        // Minerals Section
+        _buildNutritionSection(
+          title: 'Minerals',
+          icon: Icons.scatter_plot,
+          color: Colors.teal,
+          items: [
+            _NutritionItem(
+              'Fiber',
+              _calculatedFiber.toStringAsFixed(1),
+              'g',
+              Colors.green,
+            ),
+            _NutritionItem(
+              'Cholest.',
+              _calculatedCholesterol.toStringAsFixed(0),
+              'mg',
+              Colors.purple,
+            ),
+            _NutritionItem(
+              'Calcium',
+              _calculatedCalcium.toStringAsFixed(0),
+              'mg',
+              Colors.teal,
+            ),
+            _NutritionItem(
+              'Iron',
+              _calculatedIron.toStringAsFixed(1),
+              'mg',
+              Colors.brown,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: AppSizes.sm),
+
+        // Electrolytes Section
+        _buildNutritionSection(
+          title: 'Electrolytes',
+          icon: Icons.bolt,
+          color: Colors.orange,
+          items: [
+            _NutritionItem(
+              'Sodium',
+              _calculatedSodium.toStringAsFixed(0),
+              'mg',
+              Colors.orange,
+            ),
+            _NutritionItem(
+              'Potassium',
+              _calculatedPotassium.toStringAsFixed(0),
+              'mg',
+              Colors.deepOrange,
+            ),
+            _NutritionItem(
+              'Phosph.',
+              _calculatedPhosphorus.toStringAsFixed(0),
+              'mg',
+              Colors.indigo,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: AppSizes.sm),
+
+        // Vitamins Section
+        _buildNutritionSection(
+          title: 'Vitamins',
+          icon: Icons.brightness_7,
+          color: Colors.amber,
+          items: [
+            _NutritionItem(
+              'Vit. A',
+              _calculatedVitaminA.toStringAsFixed(0),
+              'mcg',
+              Colors.amber,
+            ),
+            _NutritionItem(
+              'Vit. B1',
+              _calculatedVitaminB1.toStringAsFixed(2),
+              'mg',
+              Colors.lime.shade700,
+            ),
+            _NutritionItem(
+              'Vit. C',
+              _calculatedVitaminC.toStringAsFixed(1),
+              'mg',
+              Colors.redAccent,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNutritionSection({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required List<_NutritionItem> items,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.sm),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: color, size: 16),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.sm),
+          Row(
+            children:
+                items.map((item) {
+                  return Expanded(
+                    child: _buildMiniCard(
+                      item.label,
+                      item.value,
+                      item.unit,
+                      item.color,
+                    ),
+                  );
+                }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMacroCard(
+    String label,
+    String value,
+    String unit,
+    Color color,
+    IconData icon,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 16),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            unit,
+            style: TextStyle(color: color.withValues(alpha: 0.7), fontSize: 11),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiniCard(String label, String value, String unit, Color color) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(width: 2),
+              Text(
+                unit,
+                style: TextStyle(
+                  color: color.withValues(alpha: 0.7),
+                  fontSize: 9,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 9),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(LanguageProvider lang) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search,
+            size: 64,
+            color: AppColors.textSecondary.withValues(alpha: 0.5),
+          ),
+          const SizedBox(height: AppSizes.md),
+          Text(
+            lang.getText(
+              en: 'Search for foods to add',
+              vi: 'Tìm thực phẩm để thêm',
+            ),
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Helper class for nutrition section items
+class _NutritionItem {
+  final String label;
+  final String value;
+  final String unit;
+  final Color color;
+
+  const _NutritionItem(this.label, this.value, this.unit, this.color);
+}
