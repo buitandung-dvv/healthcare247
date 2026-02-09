@@ -112,12 +112,8 @@ class WorkoutPlanProvider with ChangeNotifier {
         orderIndex: orderIndex,
       );
 
-      if (detail != null) {
-        // Refresh plans to show update
-        await loadUserPlans();
-        return true;
-      }
-      return false;
+      // Don't reload plans here - caller should reload once after all exercises added
+      return detail != null;
     } catch (e) {
       debugPrint('Error adding exercise to plan: $e');
       return false;

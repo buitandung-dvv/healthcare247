@@ -21,15 +21,16 @@ class ExerciseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkCard : Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.08),
+              color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.08),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),

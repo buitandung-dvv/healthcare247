@@ -33,6 +33,7 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
   // We will assume "Save" creates the plan and adds details.
 
   final List<_StagedExercise> _stagedExercises = [];
+  final Set<int> _selectedDays = {1}; // Default to Monday (1=Mon, 7=Sun)
 
   @override
   void initState() {
@@ -54,10 +55,11 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
 
   void _loadExistingExercises() async {
     final exerciseProvider = context.read<ExerciseProvider>();
+    final langProvider = context.read<LanguageProvider>();
 
-    // Ensure exercises are loaded
+    // Ensure exercises are loaded with correct language
     if (exerciseProvider.exercises.isEmpty) {
-      await exerciseProvider.loadExercises();
+      await exerciseProvider.loadExercises(languageId: langProvider.languageId);
     }
 
     if (!mounted) return;
@@ -104,9 +106,10 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
     final planProvider = context.watch<WorkoutPlanProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: AppBar(
         title: Text(
           widget.existingPlan == null
@@ -139,42 +142,174 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: lang.getText(en: 'Plan Name', vi: 'Tên kế hoạch'),
-                  hintText: lang.getText(
-                    en: 'e.g., Full Body Monday',
-                    vi: 'VD: Tập toàn thân thứ 2',
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+              // Plan Name Input
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return lang.getText(
-                      en: 'Please enter a name',
-                      vi: 'Vui lòng nhập tên',
-                    );
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: _nameController,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: lang.getText(
+                      en: 'Plan Name',
+                      vi: 'Tên kế hoạch',
+                    ),
+                    hintText: lang.getText(
+                      en: 'e.g., Full Body Monday',
+                      vi: 'VD: Tập toàn thân thứ 2',
+                    ),
+                    prefixIcon: Container(
+                      margin: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.primary, const Color(0xFF667EEA)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.edit_note_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.grey[200]!,
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                        width: 1.5,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                  ),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return lang.getText(
+                        en: 'Please enter a name',
+                        vi: 'Vui lòng nhập tên',
+                      );
+                    }
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: AppSizes.md),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: lang.getText(
-                    en: 'Description (Optional)',
-                    vi: 'Mô tả (Tùy chọn)',
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+
+              // Description Input
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                maxLines: 2,
+                child: TextFormField(
+                  controller: _descriptionController,
+                  style: const TextStyle(fontSize: 15),
+                  decoration: InputDecoration(
+                    labelText: lang.getText(
+                      en: 'Description (Optional)',
+                      vi: 'Mô tả (Tùy chọn)',
+                    ),
+                    hintText: lang.getText(
+                      en: 'Add notes about this plan...',
+                      vi: 'Thêm ghi chú về kế hoạch này...',
+                    ),
+                    prefixIcon: Container(
+                      margin: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.description_outlined,
+                        color: Colors.grey[600],
+                        size: 20,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.grey[200]!,
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: AppColors.primary,
+                        width: 2,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                  ),
+                  maxLines: 2,
+                ),
               ),
+              const SizedBox(height: AppSizes.lg),
+
+              // Day selector
+              Text(
+                lang.getText(en: 'Training Days', vi: 'Ngày tập'),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: AppSizes.sm),
+              _buildDaySelector(lang),
               const SizedBox(height: AppSizes.xl),
 
               Row(
@@ -566,7 +701,12 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
                                     title: Text(exercise.name),
                                     subtitle: Row(
                                       children: [
-                                        Text(exercise.category),
+                                        Text(
+                                          _translateCategory(
+                                            exercise.category,
+                                            context.read<LanguageProvider>(),
+                                          ),
+                                        ),
                                         if (existingCount > 0) ...[
                                           const SizedBox(width: 8),
                                           Container(
@@ -685,6 +825,21 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
     );
   }
 
+  String _translateCategory(String category, LanguageProvider lang) {
+    if (lang.currentLanguage != 'vi') return category;
+
+    const translations = {
+      'strength': 'Sức mạnh',
+      'stretching': 'Kéo giãn',
+      'plyometrics': 'Bật nhảy',
+      'cardio': 'Cardio',
+      'powerlifting': 'Cử tạ',
+      'strongman': 'Strongman',
+      'olympic_weightlifting': 'Cử tạ Olympic',
+    };
+    return translations[category.toLowerCase()] ?? category;
+  }
+
   Widget _buildNumberInput(String label, int value, Function(int) onChanged) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -702,6 +857,149 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
               onPressed: () => onChanged(value + 1),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDaySelector(LanguageProvider lang) {
+    final dayNames =
+        lang.currentLanguage == 'vi'
+            ? ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+            : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    final fullDayNames =
+        lang.currentLanguage == 'vi'
+            ? ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']
+            : [
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday',
+            ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Selected days summary
+        if (_selectedDays.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              _selectedDays.length == 7
+                  ? lang.getText(en: 'Every day', vi: 'Mỗi ngày')
+                  : _selectedDays.map((d) => fullDayNames[d - 1]).join(', '),
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey[600],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        // Day chips in a row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(7, (index) {
+            final day = index + 1;
+            final isSelected = _selectedDays.contains(day);
+            final isWeekend = day >= 6;
+
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: index == 0 ? 0 : 3,
+                  right: index == 6 ? 0 : 3,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isSelected) {
+                        if (_selectedDays.length > 1) {
+                          _selectedDays.remove(day);
+                        }
+                      } else {
+                        _selectedDays.add(day);
+                      }
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: 52,
+                    decoration: BoxDecoration(
+                      gradient:
+                          isSelected
+                              ? LinearGradient(
+                                colors:
+                                    isWeekend
+                                        ? [
+                                          const Color(0xFFFF6B6B),
+                                          const Color(0xFFEE5A24),
+                                        ]
+                                        : [
+                                          AppColors.primary,
+                                          const Color(0xFF667EEA),
+                                        ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              )
+                              : null,
+                      color: isSelected ? null : Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color:
+                            isSelected
+                                ? Colors.transparent
+                                : isWeekend
+                                ? Colors.orange.withValues(alpha: 0.3)
+                                : Colors.grey[300]!,
+                        width: 1.5,
+                      ),
+                      boxShadow:
+                          isSelected
+                              ? [
+                                BoxShadow(
+                                  color: (isWeekend
+                                          ? Colors.orange
+                                          : AppColors.primary)
+                                      .withValues(alpha: 0.35),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ]
+                              : null,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (isSelected)
+                          const Icon(
+                            Icons.check_circle,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                        Text(
+                          dayNames[index],
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color:
+                                isSelected
+                                    ? Colors.white
+                                    : isWeekend
+                                    ? Colors.orange[700]
+                                    : Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -803,19 +1101,25 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
       planId = plan.planId;
     }
 
-    // Add all exercises to plan
-    for (int i = 0; i < _stagedExercises.length; i++) {
-      final item = _stagedExercises[i];
-      await provider.addExerciseToPlan(
-        planId: planId,
-        dayOfWeek: 1, // Default to Monday for now
-        exerciseId: item.exercise.exerciseId,
-        sets: item.sets,
-        reps: item.reps,
-        restDuration: item.restDuration,
-        orderIndex: i,
-      );
+    // Add all exercises to plan for each selected day
+    final sortedDays = _selectedDays.toList()..sort();
+    for (final day in sortedDays) {
+      for (int i = 0; i < _stagedExercises.length; i++) {
+        final item = _stagedExercises[i];
+        await provider.addExerciseToPlan(
+          planId: planId,
+          dayOfWeek: day,
+          exerciseId: item.exercise.exerciseId,
+          sets: item.sets,
+          reps: item.reps,
+          restDuration: item.restDuration,
+          orderIndex: i,
+        );
+      }
     }
+
+    // Reload plans once after all exercises added
+    await provider.loadUserPlans();
 
     if (mounted) {
       Navigator.pop(context);

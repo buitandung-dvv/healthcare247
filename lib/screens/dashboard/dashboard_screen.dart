@@ -11,6 +11,7 @@ import '../../providers/water_tracking_provider.dart';
 import '../../widgets/common/common_widgets.dart';
 import '../../widgets/common/loading_skeleton.dart';
 import '../../widgets/common/app_animations.dart';
+import '../../widgets/greeting/greeting_icon_widget.dart';
 import '../../widgets/charts/chart_widgets.dart';
 import '../../widgets/cards/activity_feed_card.dart';
 import '../../widgets/progress/animated_progress_ring.dart';
@@ -344,7 +345,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final progress = dashboard.todayProgress;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child:
             dashboard.isLoading
@@ -409,16 +410,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    auth.currentUser?.displayName ?? 'User',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                  Flexible(
+                    child: Text(
+                      auth.currentUser?.displayName ?? 'User',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const SizedBox(width: AppSizes.xs),
-                  Text(
-                    GreetingHelper.getTimeEmoji(),
-                    style: const TextStyle(fontSize: 24),
-                  ),
+                  // Time of day icon with dynamic styling
+                  const GreetingIconWidget(size: 24),
                 ],
               ),
             ],
@@ -427,21 +430,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               IconButton(
                 onPressed: () => lang.toggleLanguage(),
-                icon: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSizes.sm,
-                    vertical: AppSizes.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-                  ),
-                  child: Text(
-                    lang.currentLanguage.toUpperCase(),
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                icon: Text(
+                  lang.currentLanguage.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -1016,21 +1009,7 @@ class _QuickActionCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    color.withValues(alpha: 0.2),
-                    color.withValues(alpha: 0.05),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: color, size: AppSizes.iconMd),
-            ),
+            Icon(icon, color: color, size: AppSizes.iconMd),
             const SizedBox(height: AppSizes.sm),
             Text(
               title,
@@ -1116,14 +1095,7 @@ class _MealTypeChip extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: color.withAlpha(30),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: color, size: 24),
-              ),
+              Icon(icon, color: color, size: 24),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(

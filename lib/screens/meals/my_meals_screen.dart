@@ -163,9 +163,10 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: CustomAppBar(title: lang.getText(en: 'Food', vi: 'Thực phẩm')),
       body:
           _isLoading
@@ -435,13 +436,16 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
     LanguageProvider lang,
   ) {
     final totalCalories = meals.fold(0.0, (sum, m) => sum + m.calories);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSizes.md),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: isDark ? AppColors.darkCard : AppColors.card,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.border,
+        ),
       ),
       child: Column(
         children: [

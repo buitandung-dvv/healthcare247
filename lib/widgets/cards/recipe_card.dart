@@ -21,15 +21,16 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkCard : Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.secondary.withValues(alpha: 0.1),
+              color: AppColors.secondary.withValues(alpha: isDark ? 0.2 : 0.1),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -161,7 +162,10 @@ class RecipeCard extends StatelessWidget {
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color:
+                            isDark
+                                ? AppColors.darkCard.withValues(alpha: 0.9)
+                                : Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
@@ -170,7 +174,10 @@ class RecipeCard extends StatelessWidget {
                           Icon(
                             Icons.public,
                             size: 12,
-                            color: AppColors.textSecondary,
+                            color:
+                                isDark
+                                    ? AppColors.textWhite
+                                    : AppColors.textSecondary,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -179,7 +186,10 @@ class RecipeCard extends StatelessWidget {
                               recipe.area!,
                             ),
                             style: TextStyle(
-                              color: AppColors.textSecondary,
+                              color:
+                                  isDark
+                                      ? AppColors.textWhite
+                                      : AppColors.textSecondary,
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                             ),

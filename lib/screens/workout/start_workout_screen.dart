@@ -512,66 +512,125 @@ class _StartWorkoutScreenState extends State<StartWorkoutScreen> {
           ),
         ),
         if (_showFilters)
-          Container(
-            padding: const EdgeInsets.fromLTRB(
-              AppSizes.md,
-              0,
-              AppSizes.md,
-              AppSizes.md,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  lang.getText(en: 'Level', vi: 'Cấp độ'),
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+          Builder(
+            builder: (context) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              return Container(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSizes.md,
+                  0,
+                  AppSizes.md,
+                  AppSizes.md,
                 ),
-                const SizedBox(height: AppSizes.xs),
-                Wrap(
-                  spacing: AppSizes.xs,
-                  children:
-                      ['beginner', 'intermediate', 'expert'].map((level) {
-                        return ChoiceChip(
-                          label: Text(level),
-                          selected: _selectedLevel == level,
-                          onSelected:
-                              (selected) => setState(
-                                () => _selectedLevel = selected ? level : null,
-                              ),
-                        );
-                      }).toList(),
-                ),
-                const SizedBox(height: AppSizes.sm),
-                Text(
-                  lang.getText(en: 'Muscle', vi: 'Nhóm cơ'),
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: AppSizes.xs),
-                SizedBox(
-                  height: 40,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children:
-                        provider.muscles.map((muscle) {
-                          final name = muscle['name']?.toString() ?? '';
-                          return Padding(
-                            padding: const EdgeInsets.only(right: AppSizes.xs),
-                            child: ChoiceChip(
-                              label: Text(name),
-                              selected: _selectedMuscle == name,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      lang.getText(en: 'Level', vi: 'Cấp độ'),
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: AppSizes.xs),
+                    Wrap(
+                      spacing: AppSizes.xs,
+                      children:
+                          ['beginner', 'intermediate', 'expert'].map((level) {
+                            return ChoiceChip(
+                              label: Text(level),
+                              selected: _selectedLevel == level,
                               onSelected:
                                   (selected) => setState(
                                     () =>
-                                        _selectedMuscle =
-                                            selected ? name : null,
+                                        _selectedLevel =
+                                            selected ? level : null,
                                   ),
-                            ),
-                          );
-                        }).toList(),
-                  ),
+                              backgroundColor:
+                                  isDark ? AppColors.darkCard : null,
+                              selectedColor: AppColors.primary.withValues(
+                                alpha: 0.2,
+                              ),
+                              side: BorderSide(
+                                color:
+                                    _selectedLevel == level
+                                        ? AppColors.primary
+                                        : (isDark
+                                            ? AppColors.darkBorder
+                                            : Colors.grey.shade300),
+                              ),
+                              labelStyle: TextStyle(
+                                color:
+                                    _selectedLevel == level
+                                        ? AppColors.primary
+                                        : (isDark
+                                            ? AppColors.textWhite
+                                            : AppColors.textPrimary),
+                                fontWeight:
+                                    _selectedLevel == level
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                    const SizedBox(height: AppSizes.sm),
+                    Text(
+                      lang.getText(en: 'Muscle', vi: 'Nhóm cơ'),
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: AppSizes.xs),
+                    SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children:
+                            provider.muscles.map((muscle) {
+                              final name = muscle['name']?.toString() ?? '';
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  right: AppSizes.xs,
+                                ),
+                                child: ChoiceChip(
+                                  label: Text(name),
+                                  selected: _selectedMuscle == name,
+                                  onSelected:
+                                      (selected) => setState(
+                                        () =>
+                                            _selectedMuscle =
+                                                selected ? name : null,
+                                      ),
+                                  backgroundColor:
+                                      isDark ? AppColors.darkCard : null,
+                                  selectedColor: AppColors.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  side: BorderSide(
+                                    color:
+                                        _selectedMuscle == name
+                                            ? AppColors.primary
+                                            : (isDark
+                                                ? AppColors.darkBorder
+                                                : Colors.grey.shade300),
+                                  ),
+                                  labelStyle: TextStyle(
+                                    color:
+                                        _selectedMuscle == name
+                                            ? AppColors.primary
+                                            : (isDark
+                                                ? AppColors.textWhite
+                                                : AppColors.textPrimary),
+                                    fontWeight:
+                                        _selectedMuscle == name
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
       ],
     );

@@ -57,6 +57,7 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       // Use lazy builder instead of IndexedStack
@@ -64,11 +65,13 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
       bottomNavigationBar: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.15),
+              color: isDark
+                  ? AppColors.darkShadow.withValues(alpha: 0.3)
+                  : AppColors.primary.withValues(alpha: 0.15),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -141,6 +144,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return RepaintBoundary(
       child: GestureDetector(
         onTap: onTap,
@@ -157,12 +161,16 @@ class _NavItem extends StatelessWidget {
                   vertical: isActive ? 8 : 4,
                 ),
                 decoration: BoxDecoration(
-                  gradient: isActive ? AppColors.primaryGradient : null,
+                  gradient: isActive
+                      ? (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient)
+                      : null,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
                   isActive ? activeIcon : icon,
-                  color: isActive ? Colors.white : AppColors.textSecondary,
+                  color: isActive
+                      ? Colors.white
+                      : (isDark ? AppColors.darkTextSecondary : AppColors.textSecondary),
                   size: 22,
                 ),
               ),
@@ -171,7 +179,9 @@ class _NavItem extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 10,
-                  color: isActive ? AppColors.primary : AppColors.textSecondary,
+                  color: isActive
+                      ? (isDark ? AppColors.darkPrimary : AppColors.primary)
+                      : (isDark ? AppColors.darkTextSecondary : AppColors.textSecondary),
                   fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
                 ),
                 maxLines: 1,

@@ -40,9 +40,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: CustomAppBar(
         title: lang.getText(en: 'Your Progress', vi: 'Tiến độ của bạn'),
       ),
@@ -530,6 +531,7 @@ class _AchievementBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 100,
       margin: const EdgeInsets.only(right: AppSizes.md),
@@ -542,10 +544,13 @@ class _AchievementBadge extends StatelessWidget {
               color:
                   isUnlocked
                       ? color.withValues(alpha: 0.15)
-                      : AppColors.background,
+                      : (isDark ? AppColors.darkCard : AppColors.background),
               shape: BoxShape.circle,
               border: Border.all(
-                color: isUnlocked ? color : AppColors.border,
+                color:
+                    isUnlocked
+                        ? color
+                        : (isDark ? AppColors.darkBorder : AppColors.border),
                 width: 2,
               ),
             ),
@@ -559,7 +564,7 @@ class _AchievementBadge extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isUnlocked ? AppColors.textPrimary : AppColors.textHint,
+              color: isUnlocked ? null : AppColors.textHint,
             ),
             textAlign: TextAlign.center,
             maxLines: 2,
@@ -585,12 +590,13 @@ class _AchievementListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListTile(
       leading: CircleAvatar(
         backgroundColor:
             isUnlocked
                 ? AppColors.primary.withValues(alpha: 0.2)
-                : AppColors.background,
+                : (isDark ? AppColors.darkCard : AppColors.background),
         child: Icon(
           icon,
           color: isUnlocked ? AppColors.primary : AppColors.textHint,
@@ -599,7 +605,7 @@ class _AchievementListItem extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          color: isUnlocked ? AppColors.textPrimary : AppColors.textHint,
+          color: isUnlocked ? null : AppColors.textHint,
           fontWeight: isUnlocked ? FontWeight.w600 : FontWeight.normal,
         ),
       ),

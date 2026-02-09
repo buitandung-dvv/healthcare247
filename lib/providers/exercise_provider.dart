@@ -96,18 +96,21 @@ class ExerciseProvider extends ChangeNotifier {
   List<String> get categories {
     if (_categories.isNotEmpty) return _categories;
     // Extract từ exercises đã load
-    final extracted = _exercises.map((e) => e.category).toSet().toList()..sort();
+    final extracted =
+        _exercises.map((e) => e.category).toSet().toList()..sort();
     return extracted;
   }
 
   List<String> get equipments {
     if (_equipments.isNotEmpty) return _equipments;
     // Extract từ exercises đã load
-    final extracted = _exercises
-        .where((e) => e.equipment != null)
-        .map((e) => e.equipment!)
-        .toSet()
-        .toList()..sort();
+    final extracted =
+        _exercises
+            .where((e) => e.equipment != null)
+            .map((e) => e.equipment!)
+            .toSet()
+            .toList()
+          ..sort();
     return extracted;
   }
 
@@ -126,8 +129,14 @@ class ExerciseProvider extends ChangeNotifier {
   /// Load danh sách exercises từ Database
   /// [languageId]: 1 = English, 2 = Vietnamese
   Future<void> loadExercises({int languageId = 1, bool refresh = false}) async {
+    // Auto-refresh if language changed
+    if (_cachedLanguageId != languageId && _exercises.isNotEmpty) {
+      refresh = true;
+    }
+
     if (refresh) {
       _exercises.clear();
+      _cachedLanguageId = languageId;
     }
 
     // Nếu đã có dữ liệu và không refresh thì bỏ qua
@@ -330,7 +339,8 @@ class ExerciseProvider extends ChangeNotifier {
 
     return _exercises.where((exercise) {
       // Level filter - exercise phải match một trong các levels được chọn
-      if (_filter.levels.isNotEmpty && !_filter.levels.contains(exercise.level)) {
+      if (_filter.levels.isNotEmpty &&
+          !_filter.levels.contains(exercise.level)) {
         return false;
       }
       // Equipment filter - exercise phải match một trong các equipments được chọn
@@ -339,14 +349,17 @@ class ExerciseProvider extends ChangeNotifier {
         return false;
       }
       // Category filter - exercise phải match một trong các categories được chọn
-      if (_filter.categories.isNotEmpty && !_filter.categories.contains(exercise.category)) {
+      if (_filter.categories.isNotEmpty &&
+          !_filter.categories.contains(exercise.category)) {
         return false;
       }
       // Muscle filter - exercise phải có ít nhất một muscle trong danh sách được chọn
       if (_filter.muscles.isNotEmpty) {
-        final hasMatchingMuscle = _filter.muscles.any((muscle) =>
-            exercise.primaryMuscles.contains(muscle) ||
-            exercise.secondaryMuscles.contains(muscle));
+        final hasMatchingMuscle = _filter.muscles.any(
+          (muscle) =>
+              exercise.primaryMuscles.contains(muscle) ||
+              exercise.secondaryMuscles.contains(muscle),
+        );
         if (!hasMatchingMuscle) {
           return false;
         }

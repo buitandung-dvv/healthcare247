@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Greeting Helper - Tạo lời chào dựa trên thời gian trong ngày
 class GreetingHelper {
   GreetingHelper._();
@@ -58,18 +60,67 @@ class GreetingHelper {
     }
   }
 
-  /// Get icon for current time of day
-  static String getTimeEmoji() {
+  /// Get time of day period (morning, afternoon, evening, night)
+  static String getTimeOfDay() {
     final hour = DateTime.now().hour;
 
     if (hour >= 5 && hour < 12) {
-      return '🌅'; // Morning
+      return 'morning';
     } else if (hour >= 12 && hour < 17) {
-      return '☀️'; // Afternoon
+      return 'afternoon';
     } else if (hour >= 17 && hour < 21) {
-      return '🌆'; // Evening
+      return 'evening';
     } else {
-      return '🌙'; // Night
+      return 'night';
+    }
+  }
+
+  /// Get icon for current time of day
+  static String getTimeEmoji() {
+    final timeOfDay = getTimeOfDay();
+
+    switch (timeOfDay) {
+      case 'morning':
+        return '🌅';
+      case 'afternoon':
+        return '☀️';
+      case 'evening':
+        return '🌆';
+      case 'night':
+        return '🌙';
+      default:
+        return '☀️';
+    }
+  }
+
+  /// Get Material Icon data for current time of day
+  /// Get Material Icon data for current time of day
+  static Map<String, dynamic> getTimeIcon() {
+    final timeOfDay = getTimeOfDay();
+
+    switch (timeOfDay) {
+      case 'morning':
+        return {
+          'icon': Icons.wb_sunny_outlined,
+          'color': const Color(0xFFFF9800), // Orange
+        };
+      case 'afternoon':
+        return {
+          'icon': Icons.wb_sunny,
+          'color': const Color(0xFFFFC107), // Amber
+        };
+      case 'evening':
+        return {
+          'icon': Icons.wb_twilight,
+          'color': const Color(0xFFFF7043), // Deep Orange
+        };
+      case 'night':
+        return {
+          'icon': Icons.nights_stay,
+          'color': const Color(0xFF5C6BC0), // Indigo
+        };
+      default:
+        return {'icon': Icons.wb_sunny, 'color': const Color(0xFFFFC107)};
     }
   }
 

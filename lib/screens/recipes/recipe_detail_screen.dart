@@ -196,9 +196,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
     final recipe = widget.recipe;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       body: CustomScrollView(
         slivers: [
           // App Bar with Video Playback
@@ -472,12 +473,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   Widget _buildNutritionCard(BuildContext context, LanguageProvider lang) {
     final nutrition = widget.recipe.nutritionInfo!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: AppSizes.paddingMd,
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: isDark ? AppColors.darkCard : AppColors.card,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.border,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

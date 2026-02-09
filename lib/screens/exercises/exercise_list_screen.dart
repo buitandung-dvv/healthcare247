@@ -58,8 +58,10 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
   Widget build(BuildContext context) {
     final langProvider = context.watch<LanguageProvider>();
     final exerciseProvider = context.watch<ExerciseProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : null,
       appBar: CustomAppBar(
         title: langProvider.getText(
           en: 'Exercise Library',
@@ -247,11 +249,14 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
           }
 
           final exercise = paginatedExercises[index];
-          return RepaintBoundary(
-            child: ExerciseCard(
-              key: ValueKey(exercise.exerciseId),
-              exercise: exercise,
-              onTap: () => _navigateToDetail(context, exercise),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: AppSizes.md),
+            child: RepaintBoundary(
+              child: ExerciseCard(
+                key: ValueKey(exercise.exerciseId),
+                exercise: exercise,
+                onTap: () => _navigateToDetail(context, exercise),
+              ),
             ),
           );
         },
@@ -263,6 +268,7 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
     ExerciseProvider provider,
     LanguageProvider lang,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.only(top: AppSizes.md, bottom: AppSizes.lg),
       padding: const EdgeInsets.symmetric(
@@ -270,11 +276,11 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
         horizontal: AppSizes.md,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: isDark ? AppColors.darkCard : AppColors.surface,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -814,6 +820,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               allOptions.map((option) {
                 final isSelected = selectedValues.contains(option);
                 final isAvailable = availableOptions.contains(option);
+                final isDark = Theme.of(context).brightness == Brightness.dark;
 
                 return FilterChip(
                   label: Text(translateOption(option)),
@@ -824,14 +831,28 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                           : null,
                   selectedColor: AppColors.primary.withValues(alpha: 0.2),
                   checkmarkColor: AppColors.primary,
-                  disabledColor: Colors.grey.withValues(alpha: 0.1),
+                  backgroundColor: isDark ? AppColors.darkCard : null,
+                  disabledColor:
+                      isDark
+                          ? AppColors.darkCard.withValues(alpha: 0.5)
+                          : Colors.grey.withValues(alpha: 0.1),
+                  side: BorderSide(
+                    color:
+                        isSelected
+                            ? AppColors.primary
+                            : (isDark
+                                ? AppColors.darkBorder
+                                : Colors.grey.shade300),
+                  ),
                   labelStyle: TextStyle(
                     color:
                         !isAvailable && !isSelected
                             ? AppColors.textHint
                             : isSelected
                             ? AppColors.primary
-                            : AppColors.textPrimary,
+                            : (isDark
+                                ? AppColors.textWhite
+                                : AppColors.textPrimary),
                     fontWeight:
                         isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),

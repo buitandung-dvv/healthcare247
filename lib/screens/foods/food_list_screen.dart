@@ -42,9 +42,11 @@ class _FoodListScreenState extends State<FoodListScreen> {
   Widget build(BuildContext context) {
     final langProvider = context.watch<LanguageProvider>();
     final foodProvider = context.watch<FoodProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor:
+          isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -154,7 +156,7 @@ class _FoodListScreenState extends State<FoodListScreen> {
               padding: const EdgeInsets.all(16),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? AppColors.darkCard : Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -221,7 +223,11 @@ class _FoodListScreenState extends State<FoodListScreen> {
           // Pagination
           if (foodProvider.totalPages > 1)
             SliverToBoxAdapter(
-              child: _buildPaginationControls(foodProvider, langProvider),
+              child: _buildPaginationControls(
+                foodProvider,
+                langProvider,
+                isDark,
+              ),
             ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 20)),
@@ -331,12 +337,13 @@ class _FoodListScreenState extends State<FoodListScreen> {
   Widget _buildPaginationControls(
     FoodProvider provider,
     LanguageProvider lang,
+    bool isDark,
   ) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

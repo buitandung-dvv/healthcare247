@@ -36,9 +36,9 @@ class CircularProgressCard extends StatelessWidget {
         children: [
           Text(
             current.toInt().toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           Text(
             '/${goal.toInt()}$unit',
@@ -51,10 +51,7 @@ class CircularProgressCard extends StatelessWidget {
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: AppSizes.sm),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        child: Text(title, style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -89,15 +86,12 @@ class LinearProgressBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text(label, style: Theme.of(context).textTheme.bodyMedium),
             Text(
               '${current.toInt()}/${goal.toInt()}$unit',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -127,9 +121,9 @@ class LinearProgressBar extends StatelessWidget {
           const SizedBox(height: AppSizes.xs),
           Text(
             '${(_progress * 100).toInt()}%',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: color,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: color),
           ),
         ],
       ],
@@ -208,21 +202,22 @@ class WeeklyBarChart extends StatelessWidget {
           ),
           borderData: FlBorderData(show: false),
           gridData: const FlGridData(show: false),
-          barGroups: data.asMap().entries.map((entry) {
-            return BarChartGroupData(
-              x: entry.key,
-              barRods: [
-                BarChartRodData(
-                  toY: entry.value,
-                  color: barColor,
-                  width: 20,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(AppSizes.radiusSm),
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
+          barGroups:
+              data.asMap().entries.map((entry) {
+                return BarChartGroupData(
+                  x: entry.key,
+                  barRods: [
+                    BarChartRodData(
+                      toY: entry.value,
+                      color: barColor,
+                      width: 20,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(AppSizes.radiusSm),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
         ),
       ),
     );
@@ -249,9 +244,7 @@ class MacroPieChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_total == 0) {
-      return Center(
-        child: Text(emptyText ?? 'No data'),
-      );
+      return Center(child: Text(emptyText ?? 'No data'));
     }
 
     return Row(
@@ -349,16 +342,10 @@ class _LegendItem extends StatelessWidget {
         Container(
           width: 12,
           height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: AppSizes.sm),
-        Text(
-          '$label: $value',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        Text('$label: $value', style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }
@@ -383,14 +370,15 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: AppSizes.paddingMd,
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: isDark ? AppColors.darkCard : AppColors.card,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
+            color: isDark ? AppColors.darkShadow : AppColors.shadow,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -404,33 +392,26 @@ class StatCard extends StatelessWidget {
               color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: AppSizes.iconLg,
-            ),
+            child: Icon(icon, color: color, size: AppSizes.iconLg),
           ),
           const SizedBox(width: AppSizes.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(title, style: Theme.of(context).textTheme.bodySmall),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.textHint,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: AppColors.textHint),
                   ),
               ],
             ),
@@ -440,4 +421,3 @@ class StatCard extends StatelessWidget {
     );
   }
 }
-

@@ -226,9 +226,10 @@ class _AddMealScreenState extends State<AddMealScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: CustomAppBar(
         title: lang.getText(
           en: 'Add to $_mealTypeName',
@@ -263,7 +264,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   borderRadius: BorderRadius.circular(AppSizes.radiusMd),
                 ),
                 filled: true,
-                fillColor: AppColors.card,
+                fillColor: isDark ? AppColors.darkCard : AppColors.card,
               ),
               onChanged: (value) => _searchFoods(value),
             ),
@@ -322,6 +323,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
   }
 
   Widget _buildFoodDetails(LanguageProvider lang) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: AppSizes.paddingMd,
       child: Column(
@@ -331,7 +333,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
           Container(
             padding: AppSizes.paddingMd,
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: isDark ? AppColors.darkCard : AppColors.card,
               borderRadius: BorderRadius.circular(AppSizes.radiusMd),
               border: Border.all(color: AppColors.primary),
             ),
@@ -636,12 +638,17 @@ class _AddMealScreenState extends State<AddMealScreen> {
     required Color color,
     required List<_NutritionItem> items,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(AppSizes.sm),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: isDark ? AppColors.darkCard : AppColors.card,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+        border: Border.all(
+          color: (isDark ? AppColors.darkBorder : AppColors.border).withValues(
+            alpha: 0.5,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -686,14 +693,15 @@ class _AddMealScreenState extends State<AddMealScreen> {
     Color color,
     IconData icon,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.15),
+            color: color.withValues(alpha: isDark ? 0.25 : 0.15),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

@@ -6,6 +6,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../widgets/common/common_widgets.dart';
 import '../../services/profile_image_service.dart';
 import '../../widgets/dialogs/image_position_picker.dart';
@@ -252,9 +253,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final lang = context.watch<LanguageProvider>();
     final auth = context.watch<AuthProvider>();
     final user = auth.currentUser;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       body: Stack(
         children: [
           // Fixed background for collapsed app bar - shows BOTTOM of image
@@ -756,6 +758,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             subtitle: lang.isEnglish ? 'English' : 'Tiếng Việt',
             onTap: () {
               _showLanguageDialog(context, lang);
+            },
+          ),
+          const Divider(height: 1),
+          _SettingsSwitchItem(
+            icon: Icons.dark_mode_outlined,
+            title: lang.getText(en: 'Dark Mode', vi: 'Chế độ tối'),
+            value: context.watch<ThemeProvider>().isDarkMode,
+            onChanged: (value) {
+              final themeProvider = context.read<ThemeProvider>();
+              if (value) {
+                themeProvider.useDarkTheme();
+              } else {
+                themeProvider.useLightTheme();
+              }
             },
           ),
           const Divider(height: 1),
@@ -1276,12 +1292,49 @@ class _SettingsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListTile(
-      leading: Icon(icon, color: AppColors.textSecondary),
+      leading: Icon(
+        icon,
+        color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+      ),
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle!) : null,
-      trailing: const Icon(Icons.chevron_right, color: AppColors.textHint),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: isDark ? AppColors.darkTextHint : AppColors.textHint,
+      ),
       onTap: onTap,
     );
   }
 }
+
+class _SettingsSwitchItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _SettingsSwitchItem({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return SwitchListTile(
+      secondary: Icon(
+        icon,
+        color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+      ),
+      title: Text(title),
+      value: value,
+      onChanged: onChanged,
+      activeColor: isDark ? AppColors.darkPrimary : AppColors.primary,
+    );
+  }
+}
+

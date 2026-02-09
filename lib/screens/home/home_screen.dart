@@ -6,6 +6,7 @@ import '../../providers/dashboard_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../widgets/common/common_widgets.dart';
 import '../../widgets/common/weekly_calendar_strip.dart';
+import '../../widgets/greeting/greeting_icon_widget.dart';
 import '../../widgets/cards/gradient_banner_card.dart';
 import '../../widgets/charts/chart_widgets.dart';
 import '../main/main_navigation_screen.dart';
@@ -36,8 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final langProvider = context.watch<LanguageProvider>();
     final dashboardProvider = context.watch<DashboardProvider>();
     final progress = dashboardProvider.todayProgress;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : null,
       body: SafeArea(
         child:
             dashboardProvider.isLoading
@@ -137,11 +140,18 @@ class _HomeScreenState extends State<HomeScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              greeting,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+            Row(
+              children: [
+                Text(
+                  greeting,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: AppSizes.xs),
+                // Dynamic time of day icon
+                const GreetingIconWidget(size: 18),
+              ],
             ),
             const SizedBox(height: AppSizes.xs),
             Text(

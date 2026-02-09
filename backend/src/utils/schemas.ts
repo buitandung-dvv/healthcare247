@@ -108,7 +108,7 @@ export const createPlanSchema = z.object({
 });
 
 export const addPlanDetailSchema = z.object({
-    day_of_week: z.number().int().min(0, 'Day must be 0-6').max(6, 'Day must be 0-6'),
+    day_of_week: z.number().int().min(1, 'Day must be 1-7').max(7, 'Day must be 1-7'),
     exercise_id: z.number().int().positive().optional(),
     recipe_id: z.number().int().positive().optional(), // Changed from meal_id
     sets: z.number().int().min(1).max(50).optional(),

@@ -35,12 +35,13 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     final lang = context.watch<LanguageProvider>();
     // Watch ExerciseProvider to rebuild when exercises load
     context.watch<ExerciseProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? AppColors.darkBackground : Colors.white,
       appBar: AppBar(
         title: Text(widget.plan.name ?? widget.plan.planType ?? 'Plan Detail'),
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : Colors.white,
         elevation: 0,
         foregroundColor: AppColors.textPrimary,
         actions: [
@@ -105,7 +106,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AppColors.darkCard : Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),

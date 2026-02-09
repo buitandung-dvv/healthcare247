@@ -57,9 +57,10 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
     final recipeProvider = context.watch<RecipeProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: CustomAppBar(
         title: lang.getText(en: 'Recipe Library', vi: 'Thư viện công thức'),
         actions: [
@@ -202,11 +203,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
           }
 
           final recipe = paginatedRecipes[index];
-          return RepaintBoundary(
-            child: RecipeCard(
-              key: ValueKey(recipe.recipeId),
-              recipe: recipe,
-              onTap: () => _navigateToDetail(context, recipe),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: AppSizes.md),
+            child: RepaintBoundary(
+              child: RecipeCard(
+                key: ValueKey(recipe.recipeId),
+                recipe: recipe,
+                onTap: () => _navigateToDetail(context, recipe),
+              ),
             ),
           );
         },
@@ -218,6 +222,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
     RecipeProvider provider,
     LanguageProvider lang,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.only(top: AppSizes.md, bottom: AppSizes.lg),
       padding: const EdgeInsets.symmetric(
@@ -225,11 +230,11 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
         horizontal: AppSizes.md,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: isDark ? AppColors.darkCard : AppColors.surface,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -710,6 +715,7 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
               allOptions.map((option) {
                 final isSelected = selectedValues.contains(option);
                 final isAvailable = availableOptions.contains(option);
+                final isDark = Theme.of(context).brightness == Brightness.dark;
 
                 return FilterChip(
                   label: Text(translateOption(option)),
@@ -720,14 +726,28 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                           : null,
                   selectedColor: selectedColor.withValues(alpha: 0.2),
                   checkmarkColor: selectedColor,
-                  disabledColor: Colors.grey.withValues(alpha: 0.1),
+                  backgroundColor: isDark ? AppColors.darkCard : null,
+                  disabledColor:
+                      isDark
+                          ? AppColors.darkCard.withValues(alpha: 0.5)
+                          : Colors.grey.withValues(alpha: 0.1),
+                  side: BorderSide(
+                    color:
+                        isSelected
+                            ? selectedColor
+                            : (isDark
+                                ? AppColors.darkBorder
+                                : Colors.grey.shade300),
+                  ),
                   labelStyle: TextStyle(
                     color:
                         !isAvailable && !isSelected
                             ? AppColors.textHint
                             : isSelected
                             ? selectedColor
-                            : AppColors.textPrimary,
+                            : (isDark
+                                ? AppColors.textWhite
+                                : AppColors.textPrimary),
                     fontWeight:
                         isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),

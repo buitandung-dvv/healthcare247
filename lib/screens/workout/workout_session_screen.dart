@@ -230,7 +230,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.darkCard
+                            : AppColors.background,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -253,33 +256,55 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
             actions: [
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final provider = context.read<WorkoutPlanProvider>();
-                    final dashboardProvider = context.read<DashboardProvider>();
-                    final authProvider = context.read<AuthProvider>();
-                    Navigator.pop(context);
-                    await provider.completeSession();
-                    await dashboardProvider.loadDashboardData(
-                      authProvider.userId,
+                child: Builder(
+                  builder: (context) {
+                    return ElevatedButton(
+                      onPressed: () async {
+                        final provider = context.read<WorkoutPlanProvider>();
+                        final dashboardProvider =
+                            context.read<DashboardProvider>();
+                        final authProvider = context.read<AuthProvider>();
+
+                        // Check if session still exists
+                        if (provider.activeSession == null) {
+                          Navigator.pop(context);
+                          if (context.mounted) Navigator.pop(context);
+                          return;
+                        }
+
+                        // Close dialog first
+                        Navigator.pop(context);
+
+                        try {
+                          final success = await provider.completeSession();
+                          if (success) {
+                            await dashboardProvider.loadDashboardData(
+                              authProvider.userId,
+                            );
+                          }
+                        } catch (e) {
+                          debugPrint('Error completing session: $e');
+                        }
+
+                        if (context.mounted) Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        lang.getText(en: 'Finish', vi: 'Hoàn thành'),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     );
-                    if (context.mounted) Navigator.pop(context);
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    lang.getText(en: 'Finish', vi: 'Hoàn thành'),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
               ),
             ],
@@ -292,6 +317,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     final provider = context.watch<WorkoutPlanProvider>();
     final session = provider.activeSession;
     final lang = context.watch<LanguageProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (session == null) {
       return Scaffold(
@@ -310,7 +336,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
 
     if (session.details.isEmpty) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor:
+            isDark ? AppColors.darkBackground : AppColors.background,
         body: SafeArea(child: _buildFreestyleView(session, lang)),
       );
     }
@@ -320,7 +347,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     // Determine which view to show
     if (_isReady) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkBackground : Colors.white,
         body: SafeArea(child: _buildReadyView(session, currentDetail, lang)),
       );
     }
@@ -330,7 +357,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? AppColors.darkBackground : Colors.white,
       body: SafeArea(child: _buildWorkoutView(session, currentDetail, lang)),
     );
   }
@@ -534,58 +561,70 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
             ),
 
             // Next exercise info bar
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          labelText,
+            Builder(
+              builder: (context) {
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkCard : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              labelText,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            Text(
+                              displayDetail.exerciseName ?? 'Exercise',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    isDark
+                                        ? AppColors.textWhite
+                                        : AppColors.textPrimary,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          'x ${displayDetail.targetReps}',
                           style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                             color: AppColors.primary,
                           ),
                         ),
-                        Text(
-                          displayDetail.exerciseName ?? 'Exercise',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      'x ${displayDetail.targetReps}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
 
             const SizedBox(height: 12),
@@ -1142,8 +1181,27 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
               ElevatedButton(
                 onPressed: () async {
                   final provider = context.read<WorkoutPlanProvider>();
+                  final dashboardProvider = context.read<DashboardProvider>();
+                  final authProvider = context.read<AuthProvider>();
+
+                  // Check if session exists
+                  if (provider.activeSession == null) {
+                    Navigator.pop(context);
+                    if (context.mounted) Navigator.pop(context);
+                    return;
+                  }
+
                   Navigator.pop(context);
-                  await provider.completeSession();
+                  try {
+                    final success = await provider.completeSession();
+                    if (success) {
+                      await dashboardProvider.loadDashboardData(
+                        authProvider.userId,
+                      );
+                    }
+                  } catch (e) {
+                    debugPrint('Error completing session: $e');
+                  }
                   if (context.mounted) Navigator.pop(context);
                 },
                 child: Text(lang.getText(en: 'Finish', vi: 'Kết thúc')),

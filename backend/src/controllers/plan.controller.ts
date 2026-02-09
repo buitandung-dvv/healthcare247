@@ -82,8 +82,8 @@ export class PlanController {
         order_index
       } = req.body;
 
-      if (day_of_week === undefined || day_of_week < 0 || day_of_week > 6) {
-        ApiResponse.badRequest(res, 'Valid day_of_week (0-6) is required');
+      if (day_of_week === undefined || day_of_week < 1 || day_of_week > 7) {
+        ApiResponse.badRequest(res, 'Valid day_of_week (1-7) is required');
         return;
       }
 

@@ -10,6 +10,7 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -17,11 +18,13 @@ class LoadingWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AppColors.darkCard : Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.15),
+                  color: AppColors.primary.withValues(
+                    alpha: isDark ? 0.3 : 0.15,
+                  ),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -167,12 +170,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
       title: Text(title),
       centerTitle: centerTitle,
       actions: actions,
       leading: leading,
-      backgroundColor: AppColors.surface,
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.surface,
       elevation: 0,
     );
   }
@@ -200,13 +204,14 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow.withValues(alpha: 0.08),
+            color: AppColors.shadow.withValues(alpha: isDark ? 0.2 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),

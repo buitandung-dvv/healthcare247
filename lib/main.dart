@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'core/constants/app_colors.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/language_provider.dart';
 import 'providers/auth_provider.dart';
@@ -149,6 +150,17 @@ class _AppContentState extends State<_AppContent> {
     final themeProvider = context.watch<ThemeProvider>();
     // Language provider for future i18n support
     context.watch<LanguageProvider>();
+
+    // Update system UI overlay style based on theme
+    final isDark = themeProvider.isDarkMode;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: isDark ? AppColors.darkBackground : Colors.white,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      ),
+    );
 
     return MaterialApp(
       title: 'HealthCare',
