@@ -529,9 +529,22 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     final secs = (_restSeconds % 60).toString().padLeft(2, '0');
     final progress =
         _currentRestTotal > 0 ? _restSeconds / _currentRestTotal : 0.0;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      color: AppColors.primary,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors:
+              isDark
+                  ? [AppColors.darkBackground, AppColors.darkSurface]
+                  : [
+                    AppColors.primary,
+                    AppColors.primary.withValues(alpha: 0.85),
+                  ],
+        ),
+      ),
       child: SafeArea(
         child: Column(
           children: [
@@ -560,71 +573,90 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
               ),
             ),
 
-            // Next exercise info bar
-            Builder(
-              builder: (context) {
-                final isDark = Theme.of(context).brightness == Brightness.dark;
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
+            // Next exercise info bar - theme-aware
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color:
+                    isDark
+                        ? AppColors.darkCard.withValues(alpha: 0.9)
+                        : Colors.white.withValues(alpha: 0.95),
+                borderRadius: BorderRadius.circular(16),
+                border:
+                    isDark
+                        ? Border.all(color: AppColors.darkBorder, width: 1)
+                        : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.15),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
                   ),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkCard : Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              labelText,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            Text(
-                              displayDetail.exerciseName ?? 'Exercise',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color:
-                                    isDark
-                                        ? AppColors.textWhite
-                                        : AppColors.textPrimary,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          'x ${displayDetail.targetReps}',
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          labelText,
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                isDark
+                                    ? AppColors.secondary
+                                    : AppColors.primary,
+                            letterSpacing: 0.5,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+                        Text(
+                          displayDetail.exerciseName ?? 'Exercise',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color:
+                                isDark
+                                    ? AppColors.textWhite
+                                    : AppColors.textPrimary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              },
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: (isDark ? AppColors.secondary : AppColors.primary)
+                          .withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: (isDark
+                                ? AppColors.secondary
+                                : AppColors.primary)
+                            .withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      'x ${displayDetail.targetReps}',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? AppColors.secondary : AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 12),
@@ -713,16 +745,19 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                     child: OutlinedButton(
                       onPressed: () => _addRestTime(20),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white, width: 2),
+                        side: BorderSide(
+                          color: isDark ? AppColors.secondary : Colors.white,
+                          width: 2,
+                        ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         '+20s',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: isDark ? AppColors.secondary : Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -735,8 +770,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                     child: ElevatedButton(
                       onPressed: _skipRest,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: AppColors.primary,
+                        backgroundColor:
+                            isDark ? AppColors.secondary : Colors.white,
+                        foregroundColor:
+                            isDark ? Colors.black : AppColors.primary,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
@@ -745,7 +782,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                       ),
                       child: Text(
                         lang.getText(en: 'Skip', vi: 'Bỏ qua'),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),

@@ -299,52 +299,64 @@ class _ProgressScreenState extends State<ProgressScreen> {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: AppSizes.sm),
-        Row(
-          children: [
-            Expanded(
-              child: StatCard(
-                title: lang.getText(en: 'Workouts', vi: 'Bài tập'),
-                value: workouts,
-                icon: Icons.fitness_center,
-                color: AppColors.primary,
-                subtitle: lang.getText(en: 'Total', vi: 'Tổng cộng'),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: StatCard(
+                  title: lang.getText(en: 'Workouts', vi: 'Bài tập'),
+                  value: workouts,
+                  icon: Icons.fitness_center,
+                  color: AppColors.primary,
+                  subtitle: lang.getText(en: 'Total', vi: 'Tổng cộng'),
+                ),
               ),
-            ),
-            const SizedBox(width: AppSizes.sm),
-            Expanded(
-              child: StatCard(
-                title: lang.getText(en: 'Streak', vi: 'Chuỗi ngày'),
-                value: streak,
-                icon: Icons.local_fire_department,
-                color: AppColors.secondary,
-                subtitle: lang.getText(en: 'Days', vi: 'Ngày'),
+              const SizedBox(width: AppSizes.sm),
+              Expanded(
+                child: StatCard(
+                  title: lang.getText(en: 'Streak', vi: 'Chuỗi ngày'),
+                  value: streak,
+                  icon: Icons.local_fire_department,
+                  color: AppColors.secondary,
+                  subtitle: lang.getText(en: 'Days', vi: 'Ngày'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: AppSizes.sm),
-        Row(
-          children: [
-            Expanded(
-              child: StatCard(
-                title: lang.getText(en: 'Avg Calories', vi: 'TB Calories'),
-                value: avgCalories > 0 ? avgCalories.toStringAsFixed(0) : '-',
-                icon: Icons.restaurant,
-                color: AppColors.caloriesColor,
-                subtitle: lang.getText(en: 'Per day', vi: 'Mỗi ngày'),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: StatCard(
+                  title: lang.getText(
+                    en: 'Avg Calories',
+                    vi: 'Calories Trung bình',
+                  ),
+                  value: avgCalories > 0 ? avgCalories.toStringAsFixed(0) : '-',
+                  icon: Icons.restaurant,
+                  color: AppColors.caloriesColor,
+                  subtitle: lang.getText(en: 'Per day', vi: 'Mỗi ngày'),
+                ),
               ),
-            ),
-            const SizedBox(width: AppSizes.sm),
-            Expanded(
-              child: StatCard(
-                title: lang.getText(en: 'Weight Change', vi: 'Thay đổi'),
-                value: provider.hasWeightData ? '${weightChangeStr}kg' : '-',
-                icon: Icons.monitor_weight,
-                color: AppColors.info,
-                subtitle: lang.getText(en: 'Total', vi: 'Tổng'),
+              const SizedBox(width: AppSizes.sm),
+              Expanded(
+                child: StatCard(
+                  title: lang.getText(
+                    en: 'Weight Change',
+                    vi: 'Thay đổi cân nặng',
+                  ),
+                  value: provider.hasWeightData ? '${weightChangeStr}kg' : '-',
+                  icon: Icons.monitor_weight,
+                  color: AppColors.info,
+                  subtitle: lang.getText(en: 'Total', vi: 'Tổng'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

@@ -231,7 +231,12 @@ class TrackingRepository {
           final data = e as Map<String, dynamic>;
           return DailyProgress(
             date: DateTime.parse(data['date'].toString()),
+            caloriesConsumed:
+                (data['caloriesConsumed'] as num?)?.toDouble() ?? 0,
             caloriesBurned: (data['caloriesBurned'] as num?)?.toDouble() ?? 0,
+            protein: (data['protein'] as num?)?.toDouble() ?? 0,
+            carbs: (data['carbs'] as num?)?.toDouble() ?? 0,
+            fat: (data['fat'] as num?)?.toDouble() ?? 0,
             workoutsCompleted: data['exercisesCompleted'] as int? ?? 0,
             mealsLogged: data['mealsLogged'] as int? ?? 0,
           );

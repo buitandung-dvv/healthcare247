@@ -526,6 +526,10 @@ export class TrackingService {
   async getWeeklyStats(userId: number): Promise<{
     date: Date;
     caloriesBurned: number;
+    caloriesConsumed: number;
+    protein: number;
+    carbs: number;
+    fat: number;
     exerciseMinutes: number;
     exercisesCompleted: number;
     mealsLogged: number;
@@ -547,7 +551,11 @@ export class TrackingService {
           COALESCE(SUM(et.calories_burned), 0) as calories_burned,
           COALESCE(SUM(et.duration), 0) as exercise_minutes,
           COUNT(DISTINCT CONCAT(et.user_id, '-', et.exercise_id, '-', et.tracked_at)) as exercises_completed,
-          COUNT(DISTINCT CONCAT(mt.user_id, '-', mt.tracked_date, '-', mt.meal_type, '-', mt.created_at)) as meals_logged
+          COUNT(DISTINCT CONCAT(mt.user_id, '-', mt.tracked_date, '-', mt.meal_type, '-', mt.created_at)) as meals_logged,
+          COALESCE(SUM(mt.calories), 0) as calories_consumed,
+          COALESCE(SUM(mt.protein), 0) as protein,
+          COALESCE(SUM(mt.carbs), 0) as carbs,
+          COALESCE(SUM(mt.fat), 0) as fat
         FROM DateRange dr
         LEFT JOIN Exercise_Tracking et ON dr.date = CAST(et.tracked_at AS DATE) AND et.user_id = @user_id
         LEFT JOIN Meal_Tracking mt ON dr.date = mt.tracked_date AND mt.user_id = @user_id
@@ -558,12 +566,20 @@ export class TrackingService {
     return result.recordset.map((r: {
       date: Date;
       calories_burned: number;
+      calories_consumed: number;
+      protein: number;
+      carbs: number;
+      fat: number;
       exercise_minutes: number;
       exercises_completed: number;
       meals_logged: number;
     }) => ({
       date: r.date,
       caloriesBurned: r.calories_burned,
+      caloriesConsumed: r.calories_consumed,
+      protein: r.protein,
+      carbs: r.carbs,
+      fat: r.fat,
       exerciseMinutes: r.exercise_minutes,
       exercisesCompleted: r.exercises_completed,
       mealsLogged: r.meals_logged,

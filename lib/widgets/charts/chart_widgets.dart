@@ -373,9 +373,12 @@ class StatCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: AppSizes.paddingMd,
+      constraints: const BoxConstraints(minHeight: 80),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.card,
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border:
+            isDark ? Border.all(color: AppColors.darkBorder, width: 1) : null,
         boxShadow: [
           BoxShadow(
             color: isDark ? AppColors.darkShadow : AppColors.shadow,
@@ -389,7 +392,7 @@ class StatCard extends StatelessWidget {
           Container(
             padding: AppSizes.paddingSm,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
+              color: color.withValues(alpha: isDark ? 0.25 : 0.15),
               borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
             child: Icon(icon, color: color, size: AppSizes.iconLg),
@@ -398,20 +401,34 @@ class StatCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(title, style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: isDark ? AppColors.textSecondary : null,
+                    fontSize: 11,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Text(
                   value,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.textWhite : null,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelSmall?.copyWith(color: AppColors.textHint),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: isDark ? AppColors.textHint : AppColors.textHint,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
               ],
             ),
