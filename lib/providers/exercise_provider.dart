@@ -27,6 +27,7 @@ class ExerciseProvider extends ChangeNotifier {
   // Cache management
   bool _filterOptionsLoaded = false;
   int _cachedLanguageId = 1;
+  bool _isLoaded = false; // For lazy loading per tab
 
   // Debounce timer cho search
   Timer? _searchDebounce;
@@ -37,6 +38,27 @@ class ExerciseProvider extends ChangeNotifier {
 
   ExerciseProvider({ExerciseRepository? repository})
     : _repository = repository ?? ExerciseRepository();
+
+  /// Lazy load - only load if not already loaded
+  Future<void> loadIfNeeded({int languageId = 1}) async {
+    if (_isLoaded && _cachedLanguageId == languageId) {
+      debugPrint(
+        '⏭️ ExerciseProvider.loadIfNeeded() - already loaded, skipping',
+      );
+      return;
+    }
+    debugPrint('🔄 ExerciseProvider.loadIfNeeded() - loading...');
+    await loadExercises(languageId: languageId);
+    await loadFilterOptions(languageId: languageId);
+    _isLoaded = true;
+    debugPrint('✅ ExerciseProvider loaded');
+  }
+
+  /// Invalidate cache - force reload on next loadIfNeeded
+  void invalidate() {
+    _isLoaded = false;
+    debugPrint('🔄 ExerciseProvider invalidated');
+  }
 
   List<Exercise> get exercises => _exercises;
   Exercise? get selectedExercise => _selectedExercise;

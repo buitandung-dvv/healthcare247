@@ -16,6 +16,9 @@ class DashboardProvider extends ChangeNotifier {
   String? _errorMessage;
   bool _hasData = false; // Track if user has real data
 
+  // Callback for notifying when data is updated (for invalidating other providers)
+  VoidCallback? onDataUpdated;
+
   DailyProgress get todayProgress => _todayProgress;
   List<DailyProgress> get weeklyProgress => _weeklyProgress;
   List<ExerciseTracking> get recentActivities => _recentActivities;
@@ -150,6 +153,7 @@ class DashboardProvider extends ChangeNotifier {
         mealsLogged: _todayProgress.mealsLogged + 1,
       );
       notifyListeners();
+      onDataUpdated?.call(); // Notify to invalidate related providers
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();
@@ -188,6 +192,7 @@ class DashboardProvider extends ChangeNotifier {
         mealsLogged: _todayProgress.mealsLogged,
       );
       notifyListeners();
+      onDataUpdated?.call(); // Notify to invalidate related providers
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();

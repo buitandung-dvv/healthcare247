@@ -216,13 +216,13 @@ export class WorkoutSessionService {
       await pool.request()
         .input('user_id', sql.Int, userId)
         .input('exercise_id', sql.Int, detail.exercise_id)
-        .input('duration_minutes', sql.Int, durationMinutes || 1)
+        .input('duration', sql.Int, durationMinutes || 1)
         .input('calories_burned', sql.Decimal(10, 2), estimatedCalories || 0)
-        .input('date', sql.Date, new Date())
+        .input('tracked_at', sql.DateTime, new Date())
         .query(`
           INSERT INTO Exercise_Tracking 
-          (user_id, exercise_id, duration_minutes, calories_burned, date)
-          VALUES (@user_id, @exercise_id, @duration_minutes, @calories_burned, @date)
+          (user_id, exercise_id, duration, calories_burned, tracked_at)
+          VALUES (@user_id, @exercise_id, @duration, @calories_burned, @tracked_at)
         `);
     }
 

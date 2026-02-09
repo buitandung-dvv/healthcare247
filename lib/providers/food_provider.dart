@@ -70,6 +70,30 @@ class FoodProvider extends ChangeNotifier {
   FoodProvider({FoodRepository? repository})
     : _repository = repository ?? FoodRepository();
 
+  // Lazy loading flag
+  bool _isLoaded = false;
+
+  /// Lazy load - only load if not already loaded
+  Future<void> loadIfNeeded({int languageId = 1}) async {
+    if (_isLoaded && _cachedLanguageId == languageId) {
+      debugPrint('⏭️ FoodProvider.loadIfNeeded() - already loaded, skipping');
+      return;
+    }
+    debugPrint('🔄 FoodProvider.loadIfNeeded() - loading...');
+    await Future.wait([
+      loadFoods(languageId: languageId),
+      loadCategories(languageId: languageId),
+    ]);
+    _isLoaded = true;
+    debugPrint('✅ FoodProvider loaded');
+  }
+
+  /// Invalidate cache - force reload on next loadIfNeeded
+  void invalidate() {
+    _isLoaded = false;
+    debugPrint('🔄 FoodProvider invalidated');
+  }
+
   List<Food> get foods => _foods;
   FoodFilter get filter => _filter;
   bool get isLoading => _isLoading;

@@ -40,7 +40,10 @@ class _StartWorkoutScreenState extends State<StartWorkoutScreen> {
   @override
   void initState() {
     super.initState();
-    _loadExercises();
+    // Defer to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadExercises();
+    });
   }
 
   Future<void> _loadExercises() async {

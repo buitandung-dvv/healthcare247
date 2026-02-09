@@ -34,6 +34,9 @@ ios/Runner/GoogleService-Info.plist
 firebase.json
 .firebaserc
 
+# Android strings with Facebook keys
+android/app/src/main/res/values/strings.xml
+
 # Backend sensitive files (also in backend/.gitignore)
 backend/.env
 backend/google-services.json

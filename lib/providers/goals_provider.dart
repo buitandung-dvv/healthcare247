@@ -14,6 +14,30 @@ class GoalsProvider extends ChangeNotifier {
   GoalsProvider({GoalsRepository? repository})
     : _repository = repository ?? GoalsRepository();
 
+  // Lazy loading
+  bool _isLoaded = false;
+  int? _loadedUserId;
+
+  /// Lazy load - only load if not already loaded
+  Future<void> loadIfNeeded(int userId) async {
+    if (_isLoaded && _loadedUserId == userId) {
+      debugPrint('⏭️ GoalsProvider.loadIfNeeded() - already loaded, skipping');
+      return;
+    }
+    debugPrint('🔄 GoalsProvider.loadIfNeeded() - loading...');
+    await loadUserGoals(userId);
+    _isLoaded = true;
+    _loadedUserId = userId;
+    debugPrint('✅ GoalsProvider loaded');
+  }
+
+  /// Invalidate cache - force reload on next loadIfNeeded
+  void invalidate() {
+    _isLoaded = false;
+    _loadedUserId = null;
+    debugPrint('🔄 GoalsProvider invalidated');
+  }
+
   // Getters
   UserGoals? get userGoals => _userGoals;
   bool get isLoading => _isLoading;

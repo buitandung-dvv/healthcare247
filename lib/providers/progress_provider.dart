@@ -31,6 +31,32 @@ class ProgressProvider extends ChangeNotifier {
   int _currentStreak = 0;
   int _daysUsingApp = 0;
 
+  // Lazy loading
+  bool _isLoaded = false;
+  int? _loadedUserId;
+
+  /// Lazy load - only load if not already loaded
+  Future<void> loadIfNeeded(int userId) async {
+    if (_isLoaded && _loadedUserId == userId) {
+      debugPrint(
+        '⏭️ ProgressProvider.loadIfNeeded() - already loaded, skipping',
+      );
+      return;
+    }
+    debugPrint('🔄 ProgressProvider.loadIfNeeded() - loading...');
+    await loadProgressData(userId);
+    _isLoaded = true;
+    _loadedUserId = userId;
+    debugPrint('✅ ProgressProvider loaded');
+  }
+
+  /// Invalidate cache - force reload on next loadIfNeeded
+  void invalidate() {
+    _isLoaded = false;
+    _loadedUserId = null;
+    debugPrint('🔄 ProgressProvider invalidated');
+  }
+
   // Getters
   List<WeightTracking> get weightHistory => _weightHistory;
   List<DailyProgress> get weeklyProgress => _weeklyProgress;

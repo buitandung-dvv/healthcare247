@@ -36,6 +36,23 @@ class RecipeProvider extends ChangeNotifier {
   RecipeProvider({RecipeRepository? repository})
     : _repository = repository ?? RecipeRepository();
 
+  /// Lazy load - only load if not already loaded
+  Future<void> loadIfNeeded({int languageId = 1}) async {
+    if (_initialDataLoaded && _cachedLanguageId == languageId) {
+      debugPrint('⏭️ RecipeProvider.loadIfNeeded() - already loaded, skipping');
+      return;
+    }
+    debugPrint('🔄 RecipeProvider.loadIfNeeded() - loading...');
+    await loadInitialData(languageId: languageId);
+    debugPrint('✅ RecipeProvider loaded');
+  }
+
+  /// Invalidate cache - force reload on next loadIfNeeded
+  void invalidate() {
+    _initialDataLoaded = false;
+    debugPrint('🔄 RecipeProvider invalidated');
+  }
+
   List<Recipe> get recipes => _recipes;
   Recipe? get selectedRecipe => _selectedRecipe;
   RecipeFilter get filter => _filter;
@@ -290,7 +307,8 @@ class RecipeProvider extends ChangeNotifier {
 
     return _recipes.where((recipe) {
       // Category filter - recipe phải match một trong các categories được chọn
-      if (_filter.categories.isNotEmpty && !_filter.categories.contains(recipe.category)) {
+      if (_filter.categories.isNotEmpty &&
+          !_filter.categories.contains(recipe.category)) {
         return false;
       }
       // Area filter - recipe phải match một trong các areas được chọn

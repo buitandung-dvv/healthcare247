@@ -112,15 +112,21 @@ class _AppContentState extends State<_AppContent> {
   @override
   void initState() {
     super.initState();
-    // Register language change callback after first frame
+    // Register callbacks after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _registerLanguageChangeCallback();
+      _registerDataUpdateCallback();
     });
   }
 
   void _registerLanguageChangeCallback() {
     final languageProvider = context.read<LanguageProvider>();
     languageProvider.addLanguageChangeListener(_onLanguageChanged);
+  }
+
+  void _registerDataUpdateCallback() {
+    final dashboardProvider = context.read<DashboardProvider>();
+    dashboardProvider.onDataUpdated = _onDashboardDataUpdated;
   }
 
   void _onLanguageChanged(int languageId) {
@@ -132,12 +138,20 @@ class _AppContentState extends State<_AppContent> {
     recipeProvider.reloadForLanguage(languageId);
   }
 
+  void _onDashboardDataUpdated() {
+    // Invalidate ProgressProvider so it reloads fresh data next time
+    context.read<ProgressProvider>().invalidate();
+    debugPrint('🔄 Dashboard data updated → ProgressProvider invalidated');
+  }
+
   @override
   void dispose() {
-    // Remove callback when disposing
+    // Remove callbacks when disposing
     try {
       final languageProvider = context.read<LanguageProvider>();
       languageProvider.removeLanguageChangeListener(_onLanguageChanged);
+      final dashboardProvider = context.read<DashboardProvider>();
+      dashboardProvider.onDataUpdated = null;
     } catch (_) {
       // Provider might already be disposed
     }
@@ -157,8 +171,10 @@ class _AppContentState extends State<_AppContent> {
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        systemNavigationBarColor: isDark ? AppColors.darkBackground : Colors.white,
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor:
+            isDark ? AppColors.darkBackground : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
     );
 
