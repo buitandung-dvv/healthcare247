@@ -10,7 +10,7 @@ export class PlanService {
     const plansResult = await pool.request()
       .input('user_id', sql.Int, userId)
       .query(`
-        SELECT plan_id, user_id, name, plan_type, description, created_at
+        SELECT plan_id, user_id, name, plan_type, description, schedule_days, created_at
         FROM Plans
         WHERE user_id = @user_id
         ORDER BY created_at DESC
@@ -27,7 +27,6 @@ export class PlanService {
         .query(`
           SELECT
             pd.plan_id,
-            pd.day_of_week,
             pd.exercise_id,
             pd.recipe_id,
             pd.sets,
@@ -41,7 +40,7 @@ export class PlanService {
           LEFT JOIN Exercise_Translations et ON pd.exercise_id = et.exercise_id AND et.language_id = @language_id
           LEFT JOIN Recipe_Translations rt ON pd.recipe_id = rt.recipe_id AND rt.language_id = @language_id
           WHERE pd.plan_id IN (${planIds.join(',')})
-          ORDER BY pd.day_of_week, pd.order_index
+          ORDER BY pd.order_index
         `);
 
       // Group details by plan_id
@@ -69,7 +68,7 @@ export class PlanService {
     const planResult = await pool.request()
       .input('plan_id', sql.Int, planId)
       .query(`
-        SELECT plan_id, user_id, name, plan_type, description, created_at
+        SELECT plan_id, user_id, name, plan_type, description, schedule_days, created_at
         FROM Plans
         WHERE plan_id = @plan_id
       `);
@@ -87,7 +86,6 @@ export class PlanService {
       .query(`
         SELECT
           pd.plan_id,
-          pd.day_of_week,
           pd.exercise_id,
           pd.recipe_id,
           pd.sets,
@@ -101,7 +99,7 @@ export class PlanService {
         LEFT JOIN Exercise_Translations et ON pd.exercise_id = et.exercise_id AND et.language_id = @language_id
         LEFT JOIN Recipe_Translations rt ON pd.recipe_id = rt.recipe_id AND rt.language_id = @language_id
         WHERE pd.plan_id = @plan_id
-        ORDER BY pd.day_of_week, pd.order_index
+        ORDER BY pd.order_index
       `);
 
     return {
@@ -115,7 +113,8 @@ export class PlanService {
     userId: number,
     planType?: string,
     description?: string,
-    name?: string
+    name?: string,
+    scheduleDays?: string
   ): Promise<Plan> {
     const pool = getPool();
 
@@ -124,10 +123,11 @@ export class PlanService {
       .input('name', sql.NVarChar, name || null)
       .input('plan_type', sql.NVarChar, planType || null)
       .input('description', sql.NVarChar, description || null)
+      .input('schedule_days', sql.NVarChar, scheduleDays || null)
       .query(`
-        INSERT INTO Plans (user_id, name, plan_type, description)
+        INSERT INTO Plans (user_id, name, plan_type, description, schedule_days)
         OUTPUT INSERTED.*
-        VALUES (@user_id, @name, @plan_type, @description)
+        VALUES (@user_id, @name, @plan_type, @description, @schedule_days)
       `);
 
     return result.recordset[0];
@@ -136,9 +136,8 @@ export class PlanService {
   // Add detail to plan
   async addPlanDetail(
     planId: number,
-    dayOfWeek: number,
     exerciseId?: number,
-    recipeId?: number, // Changed from mealId to match database schema
+    recipeId?: number,
     sets?: number,
     reps?: number,
     restDuration?: number,
@@ -148,7 +147,6 @@ export class PlanService {
 
     const result = await pool.request()
       .input('plan_id', sql.Int, planId)
-      .input('day_of_week', sql.Int, dayOfWeek)
       .input('exercise_id', sql.Int, exerciseId || null)
       .input('recipe_id', sql.Int, recipeId || null)
       .input('sets', sql.Int, sets || 3)
@@ -157,12 +155,12 @@ export class PlanService {
       .input('order_index', sql.Int, orderIndex || 0)
       .query(`
         INSERT INTO Plan_Details (
-          plan_id, day_of_week, exercise_id, recipe_id,
+          plan_id, exercise_id, recipe_id,
           sets, reps, rest_duration, order_index
         )
         OUTPUT INSERTED.*
         VALUES (
-          @plan_id, @day_of_week, @exercise_id, @recipe_id,
+          @plan_id, @exercise_id, @recipe_id,
           @sets, @reps, @rest_duration, @order_index
         )
       `);
@@ -197,7 +195,7 @@ export class PlanService {
   async updatePlan(
     planId: number,
     userId: number,
-    data: { name?: string; description?: string }
+    data: { name?: string; description?: string; scheduleDays?: string }
   ): Promise<Plan | null> {
     const pool = getPool();
 
@@ -214,6 +212,10 @@ export class PlanService {
     if (data.description !== undefined) {
       setClauses.push('description = @description');
       request.input('description', sql.NVarChar, data.description);
+    }
+    if (data.scheduleDays !== undefined) {
+      setClauses.push('schedule_days = @schedule_days');
+      request.input('schedule_days', sql.NVarChar, data.scheduleDays);
     }
 
     if (setClauses.length === 0) {

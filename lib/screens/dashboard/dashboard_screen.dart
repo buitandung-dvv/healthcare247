@@ -19,6 +19,7 @@ import '../../widgets/water/water_tracking_widget.dart';
 import '../main/main_navigation_screen.dart';
 import '../workout/start_workout_screen.dart';
 import '../workout/workout_plans_screen.dart';
+import '../workout/plan_detail_screen.dart';
 import '../activity/activity_history_screen.dart';
 import '../meals/my_meals_screen.dart';
 import '../meals/add_meal_screen.dart';
@@ -332,12 +333,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     nav?.switchToTab(1);
   }
 
-  void _navigateToProgress(BuildContext context) {
-    // Navigate to Progress tab (index 3)
-    final nav = context.findAncestorStateOfType<MainNavigationScreenState>();
-    nav?.switchToTab(3);
-  }
-
   @override
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
@@ -584,7 +579,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icons.calendar_today,
                 title: lang.getText(en: 'View Plan', vi: 'Xem kế hoạch'),
                 color: AppColors.info,
-                onTap: () => _navigateToProgress(context),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutPlansScreen(),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -752,11 +754,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Card(
                     child: InkWell(
                       onTap: () {
-                        // Navigate to workout plans screen
+                        // Navigate to plan detail screen
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const WorkoutPlansScreen(),
+                            builder: (context) => PlanDetailScreen(plan: plan),
                           ),
                         );
                       },
@@ -780,12 +782,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 4),
-                            Text(
-                              '${plan.details.length} ${lang.getText(en: 'exercises', vi: 'bài tập')}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColors.textSecondary,
-                              ),
+                            Builder(
+                              builder: (context) {
+                                // Count unique exercises (not duplicated across days)
+                                final uniqueCount =
+                                    plan.details
+                                        .map((d) => d.exerciseId)
+                                        .where((id) => id != null)
+                                        .toSet()
+                                        .length;
+                                return Text(
+                                  '$uniqueCount ${lang.getText(en: 'exercises', vi: 'bài tập')}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),

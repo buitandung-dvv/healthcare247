@@ -62,44 +62,51 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               ),
             ),
 
-          // Exercise list
+          // Exercise list - show all exercises (allow duplicates for interleaved workouts)
           Expanded(
-            child:
-                widget.plan.details.isEmpty
-                    ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.fitness_center,
-                            size: 64,
-                            color: Colors.grey[300],
+            child: Builder(
+              builder: (context) {
+                final allDetails = widget.plan.details;
+
+                if (allDetails.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.fitness_center,
+                          size: 64,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          lang.getText(
+                            en: 'No exercises in this plan',
+                            vi: 'Chưa có bài tập nào',
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            lang.getText(
-                              en: 'No exercises in this plan',
-                              vi: 'Chưa có bài tập nào',
-                            ),
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 16,
-                            ),
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 16,
                           ),
-                        ],
-                      ),
-                    )
-                    : ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      itemCount: widget.plan.details.length,
-                      itemBuilder: (context, index) {
-                        final detail = widget.plan.details[index];
-                        return _buildExerciseCard(context, detail, index, lang);
-                      },
+                        ),
+                      ],
                     ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  itemCount: allDetails.length,
+                  itemBuilder: (context, index) {
+                    final detail = allDetails[index];
+                    return _buildExerciseCard(context, detail, index, lang);
+                  },
+                );
+              },
+            ),
           ),
 
           // Start button
@@ -262,17 +269,50 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   }
 
   void _startWorkout(BuildContext context) async {
+    final lang = context.read<LanguageProvider>();
     final provider = context.read<WorkoutPlanProvider>();
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const Center(child: CircularProgressIndicator()),
+    );
+
+    debugPrint('Starting workout with planId: ${widget.plan.planId}');
+
     final success = await provider.startSession(
       planId: widget.plan.planId,
       name: widget.plan.name ?? widget.plan.planType,
     );
 
-    if (!context.mounted || !success) return;
+    // Hide loading
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const WorkoutSessionScreen()),
-    );
+    if (!context.mounted) return;
+
+    if (success) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const WorkoutSessionScreen()),
+      );
+    } else {
+      // Show error message
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            provider.error ??
+                lang.getText(
+                  en: 'Failed to start workout. Please try again.',
+                  vi: 'Không thể bắt đầu tập. Vui lòng thử lại.',
+                ),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

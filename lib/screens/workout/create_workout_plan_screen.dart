@@ -64,8 +64,16 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
 
     if (!mounted) return;
 
-    final details = widget.existingPlan!.details;
+    final plan = widget.existingPlan!;
+    final details = plan.details;
 
+    // Load schedule days from plan
+    if (plan.scheduleDays.isNotEmpty) {
+      _selectedDays.clear();
+      _selectedDays.addAll(plan.scheduleDays);
+    }
+
+    // Load all exercises from plan details (allow duplicates for interleaved workouts)
     for (final detail in details) {
       if (detail.exerciseId != null) {
         // Find exercise in provider
@@ -81,18 +89,18 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
               ),
         );
 
-        setState(() {
-          _stagedExercises.add(
-            _StagedExercise(
-              exercise: exercise,
-              sets: detail.sets ?? 3,
-              reps: detail.reps ?? 10,
-              restDuration: detail.restDuration ?? 60,
-            ),
-          );
-        });
+        _stagedExercises.add(
+          _StagedExercise(
+            exercise: exercise,
+            sets: detail.sets ?? 3,
+            reps: detail.reps ?? 10,
+            restDuration: detail.restDuration ?? 60,
+          ),
+        );
       }
     }
+
+    setState(() {});
   }
 
   @override
@@ -1044,8 +1052,9 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
     int planId;
 
     if (isEditing) {
-      // Update existing plan
+      // Update existing plan with schedule
       planId = widget.existingPlan!.planId;
+      final scheduleDays = _selectedDays.toList()..sort();
       final success = await provider.updatePlan(
         planId,
         name: _nameController.text,
@@ -1053,6 +1062,7 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
             _descriptionController.text.isEmpty
                 ? null
                 : _descriptionController.text,
+        scheduleDays: scheduleDays.join(','),
       );
 
       if (!success) {
@@ -1074,13 +1084,15 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
       // Delete old details and add new ones
       await provider.clearPlanDetails(planId);
     } else {
-      // Create new plan
+      // Create new plan with schedule
+      final scheduleDays = _selectedDays.toList()..sort();
       final plan = await provider.createPlan(
         _nameController.text,
         description:
             _descriptionController.text.isEmpty
                 ? null
                 : _descriptionController.text,
+        scheduleDays: scheduleDays.join(','),
       );
 
       if (plan == null) {
@@ -1101,21 +1113,17 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
       planId = plan.planId;
     }
 
-    // Add all exercises to plan for each selected day
-    final sortedDays = _selectedDays.toList()..sort();
-    for (final day in sortedDays) {
-      for (int i = 0; i < _stagedExercises.length; i++) {
-        final item = _stagedExercises[i];
-        await provider.addExerciseToPlan(
-          planId: planId,
-          dayOfWeek: day,
-          exerciseId: item.exercise.exerciseId,
-          sets: item.sets,
-          reps: item.reps,
-          restDuration: item.restDuration,
-          orderIndex: i,
-        );
-      }
+    // Add all exercises to plan (schedule is stored in plan.schedule_days, not per exercise)
+    for (int i = 0; i < _stagedExercises.length; i++) {
+      final item = _stagedExercises[i];
+      await provider.addExerciseToPlan(
+        planId: planId,
+        exerciseId: item.exercise.exerciseId,
+        sets: item.sets,
+        reps: item.reps,
+        restDuration: item.restDuration,
+        orderIndex: i,
+      );
     }
 
     // Reload plans once after all exercises added

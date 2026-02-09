@@ -54,8 +54,8 @@ export class PlanController {
         return;
       }
 
-      const { name, plan_type, description } = req.body;
-      const plan = await planService.createPlan(req.userId, plan_type, description, name);
+      const { name, plan_type, description, schedule_days } = req.body;
+      const plan = await planService.createPlan(req.userId, plan_type, description, name, schedule_days);
       ApiResponse.created(res, plan, 'Plan created successfully');
     } catch (error) {
       console.error('❌ Create plan error:', error);
@@ -73,23 +73,16 @@ export class PlanController {
       }
 
       const {
-        day_of_week,
         exercise_id,
-        recipe_id, // Changed from meal_id to match database schema
+        recipe_id,
         sets,
         reps,
         rest_duration,
         order_index
       } = req.body;
 
-      if (day_of_week === undefined || day_of_week < 1 || day_of_week > 7) {
-        ApiResponse.badRequest(res, 'Valid day_of_week (1-7) is required');
-        return;
-      }
-
       const detail = await planService.addPlanDetail(
         planId,
-        day_of_week,
         exercise_id,
         recipe_id,
         sets,
@@ -170,8 +163,12 @@ export class PlanController {
         return;
       }
 
-      const { name, description } = req.body;
-      const updated = await planService.updatePlan(planId, req.userId, { name, description });
+      const { name, description, schedule_days } = req.body;
+      const updated = await planService.updatePlan(planId, req.userId, {
+        name,
+        description,
+        scheduleDays: schedule_days
+      });
 
       if (!updated) {
         ApiResponse.notFound(res, 'Plan');

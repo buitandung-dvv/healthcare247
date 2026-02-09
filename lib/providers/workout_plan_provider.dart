@@ -35,12 +35,17 @@ class WorkoutPlanProvider with ChangeNotifier {
   }
 
   /// Create a new workout plan
-  Future<Plan?> createPlan(String name, {String? description}) async {
+  Future<Plan?> createPlan(
+    String name, {
+    String? description,
+    String? scheduleDays,
+  }) async {
     _setLoading(true);
     try {
       final plan = await _planRepository.createPlan(
         name,
         description: description,
+        scheduleDays: scheduleDays,
       );
       if (plan != null) {
         _userPlans.insert(0, plan);
@@ -60,6 +65,7 @@ class WorkoutPlanProvider with ChangeNotifier {
     int planId, {
     String? name,
     String? description,
+    String? scheduleDays,
   }) async {
     _setLoading(true);
     try {
@@ -67,6 +73,7 @@ class WorkoutPlanProvider with ChangeNotifier {
         planId,
         name: name,
         description: description,
+        scheduleDays: scheduleDays,
       );
       if (success) {
         // Refresh plans to show update
@@ -94,7 +101,6 @@ class WorkoutPlanProvider with ChangeNotifier {
   /// Add exercise to plan
   Future<bool> addExerciseToPlan({
     required int planId,
-    required int dayOfWeek,
     required int exerciseId,
     int sets = 3,
     int reps = 10,
@@ -104,7 +110,6 @@ class WorkoutPlanProvider with ChangeNotifier {
     try {
       final detail = await _planRepository.addPlanDetail(
         planId: planId,
-        dayOfWeek: dayOfWeek,
         exerciseId: exerciseId,
         sets: sets,
         reps: reps,

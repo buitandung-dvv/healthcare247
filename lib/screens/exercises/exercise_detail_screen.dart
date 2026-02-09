@@ -1684,7 +1684,12 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
     final name = _newPlanController.text.trim();
     if (name.isEmpty) return;
 
-    final newPlan = await widget.planProvider.createPlan(name);
+    // Convert selected days to schedule string
+    final scheduleDays = _selectedDays.toList()..sort();
+    final newPlan = await widget.planProvider.createPlan(
+      name,
+      scheduleDays: scheduleDays.isNotEmpty ? scheduleDays.join(',') : null,
+    );
     if (newPlan != null && mounted) {
       await _addToPlan(newPlan.planId);
     }
@@ -1693,7 +1698,6 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
   Future<void> _addToPlan(int planId) async {
     final success = await widget.planProvider.addExerciseToPlan(
       planId: planId,
-      dayOfWeek: 1, // Default to Monday (database requires 1-7)
       exerciseId: widget.exercise.exerciseId,
     );
 

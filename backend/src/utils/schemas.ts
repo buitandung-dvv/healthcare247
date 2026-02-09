@@ -105,12 +105,12 @@ export const createPlanSchema = z.object({
     name: z.string().max(255).optional(),
     plan_type: z.enum(['workout', 'meal', 'combined']).optional(),
     description: z.string().max(500).optional().nullable(),
+    schedule_days: z.string().max(20).optional().nullable(), // "1,3,5" format
 });
 
 export const addPlanDetailSchema = z.object({
-    day_of_week: z.number().int().min(1, 'Day must be 1-7').max(7, 'Day must be 1-7'),
     exercise_id: z.number().int().positive().optional(),
-    recipe_id: z.number().int().positive().optional(), // Changed from meal_id
+    recipe_id: z.number().int().positive().optional(),
     sets: z.number().int().min(1).max(50).optional(),
     reps: z.number().int().min(1).max(100).optional(),
     rest_duration: z.number().int().min(0).max(600).optional(),

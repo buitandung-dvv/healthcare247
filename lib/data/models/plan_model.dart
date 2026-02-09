@@ -5,6 +5,7 @@ class Plan {
   final String? name; // Tên kế hoạch
   final String? planType;
   final String? description;
+  final List<int> scheduleDays; // Các ngày tập (1=Mon, 7=Sun)
   final DateTime? createdAt;
 
   // Từ bảng Plan_Details
@@ -16,17 +17,32 @@ class Plan {
     this.name,
     this.planType,
     this.description,
+    this.scheduleDays = const [],
     this.createdAt,
     this.details = const [],
   });
 
   factory Plan.fromJson(Map<String, dynamic> json) {
+    // Parse schedule_days from string "1,3,5" to List<int> [1, 3, 5]
+    List<int> parsedScheduleDays = [];
+    if (json['schedule_days'] != null &&
+        json['schedule_days'].toString().isNotEmpty) {
+      parsedScheduleDays =
+          json['schedule_days']
+              .toString()
+              .split(',')
+              .map((s) => int.tryParse(s.trim()) ?? 0)
+              .where((n) => n > 0)
+              .toList();
+    }
+
     return Plan(
       planId: json['plan_id'] as int,
       userId: json['user_id'] as int?,
       name: json['name'] as String?,
       planType: json['plan_type'] as String?,
       description: json['description'] as String?,
+      scheduleDays: parsedScheduleDays,
       createdAt:
           json['created_at'] != null
               ? DateTime.tryParse(json['created_at'].toString())
@@ -46,29 +62,31 @@ class Plan {
     'name': name,
     'plan_type': planType,
     'description': description,
+    'schedule_days': scheduleDays.join(','),
     'created_at': createdAt?.toIso8601String(),
     'details': details.map((e) => e.toJson()).toList(),
   };
+
+  /// Kiểm tra plan có lịch tập vào ngày nào đó không
+  bool hasScheduleOnDay(int dayOfWeek) => scheduleDays.contains(dayOfWeek);
 }
 
 /// Plan Detail - Phản ánh bảng Plan_Details
 class PlanDetail {
   final int planId;
-  final int dayOfWeek; // 1 = Monday, ... 7 = Sunday (database uses 1-7)
   final int? exerciseId;
-  final int? recipeId; // Changed from mealId to match database
+  final int? recipeId;
 
   final int? sets;
   final int? reps;
   final int? restDuration;
   final int? orderIndex;
   final String? exerciseName;
-  final String? exerciseImage; // Single image URL from ExerciseImages table
-  final String? recipeName; // Changed from mealName
+  final String? exerciseImage;
+  final String? recipeName;
 
   PlanDetail({
     required this.planId,
-    required this.dayOfWeek,
     this.exerciseId,
     this.recipeId,
     this.sets,
@@ -81,12 +99,11 @@ class PlanDetail {
   });
 
   // Generate a unique ID from composite key
-  String get compositeId => '${planId}_${dayOfWeek}_${orderIndex ?? 0}';
+  String get compositeId => '${planId}_${exerciseId ?? 0}_${orderIndex ?? 0}';
 
   factory PlanDetail.fromJson(Map<String, dynamic> json) {
     return PlanDetail(
       planId: json['plan_id'] as int,
-      dayOfWeek: json['day_of_week'] as int,
       exerciseId: json['exercise_id'] as int?,
       recipeId: json['recipe_id'] as int?,
       sets: json['sets'] as int?,
@@ -101,7 +118,6 @@ class PlanDetail {
 
   Map<String, dynamic> toJson() => {
     'plan_id': planId,
-    'day_of_week': dayOfWeek,
     'exercise_id': exerciseId,
     'recipe_id': recipeId,
     'sets': sets,
@@ -109,27 +125,4 @@ class PlanDetail {
     'rest_duration': restDuration,
     'order_index': orderIndex,
   };
-
-  /// Lấy tên ngày trong tuần
-  String getDayName({bool vietnamese = false}) {
-    const daysEn = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
-    const daysVi = [
-      'Chủ nhật',
-      'Thứ hai',
-      'Thứ ba',
-      'Thứ tư',
-      'Thứ năm',
-      'Thứ sáu',
-      'Thứ bảy',
-    ];
-    return vietnamese ? daysVi[dayOfWeek] : daysEn[dayOfWeek];
-  }
 }

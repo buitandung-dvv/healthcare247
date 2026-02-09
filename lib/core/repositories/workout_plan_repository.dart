@@ -49,14 +49,19 @@ class WorkoutPlanRepository {
   }
 
   /// Tạo kế hoạch mới
-  Future<Plan?> createPlan(String name, {String? description}) async {
+  Future<Plan?> createPlan(
+    String name, {
+    String? description,
+    String? scheduleDays,
+  }) async {
     try {
       final response = await _apiClient.post(
         ApiConfig.plans,
         data: {
           'name': name,
-          'plan_type': 'workout', // plan_type phải là: workout, meal, combined
+          'plan_type': 'workout',
           'description': description,
+          if (scheduleDays != null) 'schedule_days': scheduleDays,
         },
       );
 
@@ -76,7 +81,6 @@ class WorkoutPlanRepository {
   /// Thêm bài tập vào kế hoạch
   Future<PlanDetail?> addPlanDetail({
     required int planId,
-    required int dayOfWeek,
     required int exerciseId,
     int sets = 3,
     int reps = 10,
@@ -87,7 +91,6 @@ class WorkoutPlanRepository {
       final response = await _apiClient.post(
         '${ApiConfig.plans}/$planId/details',
         data: {
-          'day_of_week': dayOfWeek,
           'exercise_id': exerciseId,
           'sets': sets,
           'reps': reps,
@@ -132,6 +135,7 @@ class WorkoutPlanRepository {
     int planId, {
     String? name,
     String? description,
+    String? scheduleDays,
   }) async {
     try {
       final response = await _apiClient.put(
@@ -139,6 +143,7 @@ class WorkoutPlanRepository {
         data: {
           if (name != null) 'name': name,
           if (description != null) 'description': description,
+          if (scheduleDays != null) 'schedule_days': scheduleDays,
         },
       );
 

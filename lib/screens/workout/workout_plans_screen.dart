@@ -51,6 +51,15 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
     return uniqueExerciseIds.length;
   }
 
+  // Helper to count unique exercises in a single plan
+  int _getUniqueExerciseCount(Plan plan) {
+    return plan.details
+        .map((d) => d.exerciseId)
+        .where((id) => id != null)
+        .toSet()
+        .length;
+  }
+
   @override
   Widget build(BuildContext context) {
     final planProvider = context.watch<WorkoutPlanProvider>();
@@ -193,14 +202,12 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: Builder(
                 builder: (context) {
-                  // Filter plans by selected day
+                  // Filter plans by selected day using plan.scheduleDays
                   final filteredPlans =
                       _selectedDay == 0
                           ? planProvider.userPlans
                           : planProvider.userPlans.where((plan) {
-                            return plan.details.any(
-                              (d) => d.dayOfWeek == _selectedDay,
-                            );
+                            return plan.hasScheduleOnDay(_selectedDay);
                           }).toList();
 
                   if (filteredPlans.isEmpty) {
@@ -403,64 +410,70 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context, LanguageProvider lang) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.fitness_center,
-              size: 64,
-              color: AppColors.primary.withValues(alpha: 0.5),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            lang.getText(
-              en: 'No workout plans yet',
-              vi: 'Chưa có kế hoạch tập luyện',
-            ),
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF2D3748),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            lang.getText(
-              en: 'Create your first plan to get started!',
-              vi: 'Tạo kế hoạch đầu tiên để bắt đầu!',
-            ),
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateWorkoutPlanScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-            label: Text(lang.getText(en: 'Create Plan', vi: 'Tạo kế hoạch')),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.fitness_center,
+                size: 64,
+                color: AppColors.primary.withValues(alpha: 0.5),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            Text(
+              lang.getText(
+                en: 'No workout plans yet',
+                vi: 'Chưa có kế hoạch tập luyện',
+              ),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF2D3748),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              lang.getText(
+                en: 'Create your first plan to get started!',
+                vi: 'Tạo kế hoạch đầu tiên để bắt đầu!',
+              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateWorkoutPlanScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+              label: Text(lang.getText(en: 'Create Plan', vi: 'Tạo kế hoạch')),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -489,13 +502,13 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
       }
 
       // For < 4 exercises, pick a random one from the list
-      if (plan.details.length < 4 && exerciseImageUrls.isNotEmpty) {
+      if (_getUniqueExerciseCount(plan) < 4 && exerciseImageUrls.isNotEmpty) {
         final random = Random();
         randomHeroUrl =
             exerciseImageUrls[random.nextInt(exerciseImageUrls.length)];
       }
     }
-    final bool showGrid = plan.details.length >= 4;
+    final bool showGrid = _getUniqueExerciseCount(plan) >= 4;
 
     // Generate accent color based on index
     final colors = [
@@ -509,7 +522,7 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
 
     // Calculate estimated duration (2 min per exercise approx)
     final estimatedMinutes =
-        plan.details.length * 2 +
+        _getUniqueExerciseCount(plan) * 2 +
         plan.details.fold<int>(
               0,
               (sum, d) => sum + ((d.sets ?? 3) * (d.restDuration ?? 30)),
@@ -691,7 +704,7 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
                       Flexible(
                         child: _buildInfoChip(
                           icon: Icons.fitness_center,
-                          label: '${plan.details.length}',
+                          label: '${_getUniqueExerciseCount(plan)}',
                           color: gradientColors[0],
                         ),
                       ),

@@ -468,6 +468,7 @@ CREATE TABLE Plans (
     user_id INT NOT NULL,
     plan_type NVARCHAR(50) CHECK (plan_type IN ('workout', 'meal', 'combined')),
     name NVARCHAR(255),
+    schedule_days NVARCHAR(20) NULL,
     description NVARCHAR(MAX),
     is_active BIT DEFAULT 1,
     created_at DATETIME DEFAULT GETDATE(),
@@ -476,7 +477,6 @@ CREATE TABLE Plans (
 
 CREATE TABLE Plan_Details (
     plan_id INT NOT NULL,
-    day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 7),
     exercise_id INT NULL,
     recipe_id INT NULL,                          -- Thay meal_id bằng recipe_id
     food_id INT NULL,                            -- Thêm food_id để plan có thể chứa foods
@@ -484,7 +484,6 @@ CREATE TABLE Plan_Details (
     reps INT NULL,
     rest_duration INT NULL,
     order_index INT DEFAULT 0,
-    PRIMARY KEY (plan_id, day_of_week, order_index),
     FOREIGN KEY (plan_id) REFERENCES Plans(plan_id) ON DELETE CASCADE,
     FOREIGN KEY (exercise_id) REFERENCES Exercises(exercise_id),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id),
@@ -494,6 +493,18 @@ CREATE TABLE Plan_Details (
 CREATE INDEX IX_Plans_UserId ON Plans(user_id);
 GO
 
+-- 1. Xóa Workout_Sessions trước (vì tham chiếu đến Plans)
+DELETE FROM Workout_Sessions;
+
+-- 2. Xóa Plan_Details (nếu có)
+DELETE FROM Plan_Details;
+
+-- 3. Xóa Plans
+DELETE FROM Plans;
+
+
+Select * from Plans;
+Select * from Plan_Details;
 -- =====================================================
 -- BẢNG WORKOUT SESSIONS
 -- =====================================================

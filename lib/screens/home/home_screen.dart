@@ -10,6 +10,7 @@ import '../../widgets/greeting/greeting_icon_widget.dart';
 import '../../widgets/cards/gradient_banner_card.dart';
 import '../../widgets/charts/chart_widgets.dart';
 import '../main/main_navigation_screen.dart';
+import '../workout/workout_plans_screen.dart';
 import 'date_details_screen.dart';
 
 /// Home Screen - Dashboard chính
@@ -293,6 +294,13 @@ class _HomeScreenState extends State<HomeScreen> {
     nav?.switchToTab(3);
   }
 
+  void _navigateToPlans(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const WorkoutPlansScreen()),
+    );
+  }
+
   Widget _buildOverviewCard(
     BuildContext context,
     LanguageProvider langProvider,
@@ -489,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   vi: 'Xem kế hoạch',
                 ),
                 color: AppColors.info,
-                onTap: () => _navigateToProgress(context),
+                onTap: () => _navigateToPlans(context),
               ),
             ),
           ],

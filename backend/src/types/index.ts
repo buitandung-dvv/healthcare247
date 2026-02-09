@@ -196,7 +196,6 @@ export interface Plan {
 
 export interface PlanDetail {
   plan_id: number;
-  day_of_week: number;
   exercise_id?: number;
   recipe_id?: number;
   food_id?: number;
