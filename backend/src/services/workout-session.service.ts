@@ -137,17 +137,45 @@ export class WorkoutSessionService {
     setsCompleted: number,
     repsCompleted?: string,
     weightUsed?: string,
-    notes?: string
+    notes?: string,
+    orderIndex?: number,
+    startedAt?: Date,
+    completedAt?: Date
   ): Promise<WorkoutSessionDetail | null> {
     const pool = getPool();
 
+    console.log(`🔄 Updating exercise progress: session=${sessionId}, exercise=${exerciseId}, sets=${setsCompleted}, reps=${repsCompleted}, orderIndex=${orderIndex}`);
+    console.log(`🔄 Timing: startedAt=${startedAt}, completedAt=${completedAt}`);
+
+    // If orderIndex not provided, find the first one for this exercise
+    let targetOrderIndex = orderIndex;
+    if (targetOrderIndex === undefined) {
+      const findResult = await pool.request()
+        .input('session_id', sql.Int, sessionId)
+        .input('exercise_id', sql.Int, exerciseId)
+        .query(`
+          SELECT TOP 1 order_index FROM Workout_Session_Details
+          WHERE session_id = @session_id AND exercise_id = @exercise_id
+          ORDER BY order_index
+        `);
+      if (findResult.recordset.length > 0) {
+        targetOrderIndex = findResult.recordset[0].order_index;
+      } else {
+        return null;
+      }
+    }
+
+    // Build dynamic update for started_at and completed_at
     const result = await pool.request()
       .input('session_id', sql.Int, sessionId)
       .input('exercise_id', sql.Int, exerciseId)
+      .input('order_index', sql.Int, targetOrderIndex)
       .input('sets_completed', sql.Int, setsCompleted)
       .input('reps_completed', sql.NVarChar, repsCompleted || null)
       .input('weight_used', sql.NVarChar, weightUsed || null)
       .input('notes', sql.NVarChar, notes || null)
+      .input('started_at', sql.DateTime, startedAt || null)
+      .input('completed_at', sql.DateTime, completedAt || null)
       .query(`
         UPDATE Workout_Session_Details
         SET 
@@ -155,41 +183,61 @@ export class WorkoutSessionService {
           reps_completed = @reps_completed,
           weight_used = @weight_used,
           notes = @notes,
-          completed_at = CASE 
-            WHEN @sets_completed >= target_sets THEN GETDATE() 
-            ELSE completed_at 
+          started_at = CASE
+            WHEN @started_at IS NOT NULL THEN @started_at
+            WHEN started_at IS NULL THEN GETDATE()
+            ELSE started_at
+          END,
+          completed_at = CASE
+            WHEN @completed_at IS NOT NULL THEN @completed_at
+            ELSE completed_at
           END
         OUTPUT INSERTED.*
-        WHERE session_id = @session_id AND exercise_id = @exercise_id
+        WHERE session_id = @session_id AND exercise_id = @exercise_id AND order_index = @order_index
       `);
+
+    if (result.recordset[0]) {
+      console.log(`✅ Updated: order_index=${result.recordset[0].order_index}, started_at=${result.recordset[0].started_at}, completed_at=${result.recordset[0].completed_at}, target_sets=${result.recordset[0].target_sets}`);
+    }
 
     return result.recordset[0] || null;
   }
 
   // Complete workout session
-  async completeSession(sessionId: number, notes?: string): Promise<WorkoutSession | null> {
+  async completeSession(sessionId: number, notes?: string, totalDurationSeconds?: number): Promise<WorkoutSession | null> {
     const pool = getPool();
+
+    console.log(`🏁 completeSession called: sessionId=${sessionId}, notes=${notes}, totalDurationSeconds=${totalDurationSeconds}`);
 
     // Get session with user info before completing
     const sessionQuery = await pool.request()
       .input('session_id', sql.Int, sessionId)
-      .query(`SELECT user_id FROM Workout_Sessions WHERE session_id = @session_id`);
+      .query(`SELECT user_id, started_at FROM Workout_Sessions WHERE session_id = @session_id`);
 
     if (sessionQuery.recordset.length === 0) {
       return null;
     }
     const userId = sessionQuery.recordset[0].user_id;
+    const sessionStartedAt = sessionQuery.recordset[0].started_at;
+
+    console.log(`🏁 Session started_at: ${sessionStartedAt}`);
+
+    // Use provided duration or calculate from start time
+    const duration = totalDurationSeconds || null;
+
+    console.log(`🏁 Duration to save: ${duration}s (from client: ${totalDurationSeconds})`);
 
     // Calculate total duration and complete session
     const result = await pool.request()
       .input('session_id', sql.Int, sessionId)
       .input('notes', sql.NVarChar, notes || null)
+      .input('total_duration', sql.Int, duration)
       .query(`
         UPDATE Workout_Sessions
         SET 
           status = 'completed',
           completed_at = GETDATE(),
-          total_duration = DATEDIFF(SECOND, started_at, GETDATE()),
+          total_duration = ISNULL(@total_duration, DATEDIFF(SECOND, started_at, GETDATE())),
           notes = ISNULL(@notes, notes)
         OUTPUT INSERTED.*
         WHERE session_id = @session_id AND status = 'in_progress'
@@ -198,6 +246,17 @@ export class WorkoutSessionService {
     if (result.recordset.length === 0) {
       return null;
     }
+
+    // Get the actual total duration (from DB result) - in seconds
+    const dbTotalDuration = result.recordset[0].total_duration;
+    console.log(`🏁 DB returned total_duration: ${dbTotalDuration}s`);
+
+    const actualTotalDuration = dbTotalDuration || totalDurationSeconds || 60;
+
+    // Convert to minutes for display
+    const totalDurationMinutes = Math.max(1, Math.round(actualTotalDuration / 60));
+
+    console.log(`🏁 Using actualTotalDuration: ${actualTotalDuration}s = ${totalDurationMinutes} min`);
 
     // Save each exercise to Exercise_Tracking for history
     // Log ALL exercises in the session (regardless of is_completed flag)
@@ -208,21 +267,80 @@ export class WorkoutSessionService {
         WHERE session_id = @session_id
       `);
 
+    const exerciseCount = details.recordset.length || 1;
+
+    // Fallback: divide total time by number of exercises if individual times not available
+    const fallbackDurationPerExercise = Math.max(1, Math.round(totalDurationMinutes / exerciseCount));
+
+    console.log(`📊 Total duration: ${actualTotalDuration}s (${totalDurationMinutes} min), exercises: ${exerciseCount}, fallback per exercise: ${fallbackDurationPerExercise} min`);
+
     for (const detail of details.recordset) {
-      // Estimate calories: 0.5 cal per rep (rough estimate for general exercises)
-      const estimatedCalories = (detail.actual_sets || 1) * (detail.actual_reps || 10) * 0.5;
-      const durationMinutes = Math.round((detail.duration_seconds || 60) / 60);
+      console.log('📊 Processing detail:', {
+        exercise_id: detail.exercise_id,
+        sets_completed: detail.sets_completed,
+        reps_completed: detail.reps_completed,
+        target_reps: detail.target_reps,
+        started_at: detail.started_at,
+        completed_at: detail.completed_at
+      });
+
+      // repsPerSet = số reps mỗi set (không phải tổng)
+      let repsPerSet = detail.target_reps || 10; // default to target reps
+      if (detail.reps_completed) {
+        try {
+          const parsed = JSON.parse(detail.reps_completed);
+          if (Array.isArray(parsed)) {
+            // If array, use average reps per set
+            repsPerSet = parsed.length > 0
+              ? Math.round(parsed.reduce((sum: number, r: number) => sum + (r || 0), 0) / parsed.length)
+              : detail.target_reps || 10;
+          } else {
+            repsPerSet = parseInt(detail.reps_completed) || detail.target_reps || 10;
+          }
+        } catch {
+          repsPerSet = parseInt(detail.reps_completed) || detail.target_reps || 10;
+        }
+      }
+
+      const setsCompleted = detail.sets_completed || 0;
+
+      // Tính calories dựa trên tổng số reps thực tế (sets * reps_per_set)
+      const totalRepsForCalories = setsCompleted * repsPerSet;
+      const estimatedCalories = totalRepsForCalories * 0.5;
+
+      // Calculate ACTUAL duration from started_at to completed_at
+      let durationMinutes = fallbackDurationPerExercise;
+      if (detail.started_at && detail.completed_at) {
+        const startTime = new Date(detail.started_at).getTime();
+        const endTime = new Date(detail.completed_at).getTime();
+        const diffMs = endTime - startTime;
+        if (diffMs > 0) {
+          durationMinutes = Math.max(1, Math.round(diffMs / 60000)); // Convert ms to minutes
+          console.log(`📊 Actual duration for exercise ${detail.exercise_id}: ${diffMs}ms = ${durationMinutes} min`);
+        }
+      }
+
+      console.log('💾 Saving to Exercise_Tracking:', {
+        user_id: userId,
+        exercise_id: detail.exercise_id,
+        duration: durationMinutes,
+        sets: setsCompleted,
+        reps: repsPerSet,  // Lưu reps per set, không phải tổng
+        calories: estimatedCalories
+      });
 
       await pool.request()
         .input('user_id', sql.Int, userId)
         .input('exercise_id', sql.Int, detail.exercise_id)
         .input('duration', sql.Int, durationMinutes || 1)
+        .input('sets', sql.Int, setsCompleted)
+        .input('reps', sql.Int, repsPerSet)  // Lưu reps per set
         .input('calories_burned', sql.Decimal(10, 2), estimatedCalories || 0)
         .input('tracked_at', sql.DateTime, new Date())
         .query(`
           INSERT INTO Exercise_Tracking 
-          (user_id, exercise_id, duration, calories_burned, tracked_at)
-          VALUES (@user_id, @exercise_id, @duration, @calories_burned, @tracked_at)
+          (user_id, exercise_id, duration, sets, reps, calories_burned, tracked_at)
+          VALUES (@user_id, @exercise_id, @duration, @sets, @reps, @calories_burned, @tracked_at)
         `);
     }
 

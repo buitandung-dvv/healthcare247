@@ -1,6 +1,6 @@
 -- =====================================================
--- HEALTHCARE DATABASE - OPTIMIZED SCHEMA
--- Version 2.0 - Tối ưu hóa cấu trúc
+-- HEALTHCARE DATABASE
+-- Version 2.0
 -- =====================================================
 
 USE master;
@@ -478,8 +478,8 @@ CREATE TABLE Plans (
 CREATE TABLE Plan_Details (
     plan_id INT NOT NULL,
     exercise_id INT NULL,
-    recipe_id INT NULL,                          -- Thay meal_id bằng recipe_id
-    food_id INT NULL,                            -- Thêm food_id để plan có thể chứa foods
+    recipe_id INT NULL,
+    food_id INT NULL,
     sets INT NULL,
     reps INT NULL,
     rest_duration INT NULL,
@@ -524,6 +524,9 @@ CREATE TABLE Workout_Sessions (
     FOREIGN KEY (plan_id) REFERENCES Plans(plan_id),
     FOREIGN KEY (exercise_id) REFERENCES Exercises(exercise_id)
 );
+
+Select * from Workout_Sessions;
+Select * from Workout_Session_Details;
 
 CREATE TABLE Workout_Session_Details (
     session_id INT NOT NULL,

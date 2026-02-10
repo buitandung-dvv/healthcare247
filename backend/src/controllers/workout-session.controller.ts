@@ -86,7 +86,15 @@ export class WorkoutSessionController {
                 return;
             }
 
-            const { sets_completed, reps_completed, weight_used, notes } = req.body;
+            console.log('📦 Full request body:', JSON.stringify(req.body));
+
+            const { sets_completed, reps_completed, weight_used, notes, order_index, started_at, completed_at } = req.body;
+
+            console.log('📦 Extracted:', { started_at, completed_at, order_index, sets_completed });
+            console.log('📦 Types:', {
+                started_at_type: typeof started_at,
+                completed_at_type: typeof completed_at
+            });
 
             const detail = await workoutSessionService.updateExerciseProgress(
                 sessionId,
@@ -94,7 +102,10 @@ export class WorkoutSessionController {
                 sets_completed,
                 reps_completed,
                 weight_used,
-                notes
+                notes,
+                order_index,
+                started_at ? new Date(started_at) : undefined,
+                completed_at ? new Date(completed_at) : undefined
             );
 
             if (!detail) {
@@ -118,9 +129,11 @@ export class WorkoutSessionController {
                 return;
             }
 
-            const { notes } = req.body;
+            const { notes, total_duration } = req.body;
 
-            const session = await workoutSessionService.completeSession(sessionId, notes);
+            console.log(`📊 Completing session ${sessionId} with total_duration: ${total_duration}s`);
+
+            const session = await workoutSessionService.completeSession(sessionId, notes, total_duration);
 
             if (!session) {
                 ApiResponse.notFound(res, 'Session (or already completed)');

@@ -858,8 +858,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   activity.exerciseName ??
                   lang.getText(en: 'Workout', vi: 'Buổi tập'),
               subtitle: lang.getText(
-                en: '${activity.sets ?? 0} sets • ${activity.reps ?? 0} reps',
-                vi: '${activity.sets ?? 0} set • ${activity.reps ?? 0} lần',
+                en: '${activity.sets ?? 0} sets × ${activity.reps ?? 0} reps',
+                vi: '${activity.sets ?? 0} set × ${activity.reps ?? 0} lần',
               ),
               duration: '${activity.duration ?? 0} min',
               calories: '${(activity.caloriesBurned ?? 0).round()} cal',

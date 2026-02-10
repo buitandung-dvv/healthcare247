@@ -78,17 +78,40 @@ class WorkoutSessionRepository {
     String? repsCompleted,
     String? weightUsed,
     String? notes,
+    int? orderIndex,
+    DateTime? startedAt,
+    DateTime? completedAt,
   }) async {
     try {
+      // VERSION MARKER
+      debugPrint('🔥🔥🔥 REPOSITORY VERSION 2.0 🔥🔥🔥');
+      debugPrint('📤 PARAMS: orderIndex=$orderIndex, startedAt=$startedAt, completedAt=$completedAt');
+
+      // Build request data, only include timing fields if they have values
+      final Map<String, dynamic> requestData = {
+        'sets_completed': setsCompleted,
+        'reps_completed': repsCompleted,
+        'weight_used': weightUsed,
+        'notes': notes,
+        'order_index': orderIndex,
+      };
+
+      // Only add timing fields if they have values
+      if (startedAt != null) {
+        requestData['started_at'] = startedAt.toIso8601String();
+      }
+      if (completedAt != null) {
+        requestData['completed_at'] = completedAt.toIso8601String();
+      }
+
+      debugPrint('📤 FINAL REQUEST DATA: $requestData');
+
       final response = await _apiClient.put(
         '$_enpoint/$sessionId/exercises/$exerciseId',
-        data: {
-          'sets_completed': setsCompleted,
-          'reps_completed': repsCompleted,
-          'weight_used': weightUsed,
-          'notes': notes,
-        },
+        data: requestData,
       );
+
+      debugPrint('📥 API Response: ${response.statusCode}');
 
       if (response.statusCode == 200 && response.data != null) {
         final data = response.data as Map<String, dynamic>;
@@ -109,11 +132,17 @@ class WorkoutSessionRepository {
   Future<WorkoutSession?> completeSession(
     int sessionId, {
     String? notes,
+    int? totalDurationSeconds,
   }) async {
     try {
+      debugPrint('📤 Completing session $sessionId with duration: ${totalDurationSeconds}s');
+
       final response = await _apiClient.put(
         '$_enpoint/$sessionId/complete',
-        data: {'notes': notes},
+        data: {
+          'notes': notes,
+          'total_duration': totalDurationSeconds,
+        },
       );
 
       if (response.statusCode == 200 && response.data != null) {

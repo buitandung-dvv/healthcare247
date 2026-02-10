@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'core/constants/app_colors.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/language_provider.dart';
@@ -28,7 +27,6 @@ void main() async {
 
   // Initialize Firebase
   await Firebase.initializeApp();
-
   // Tối ưu: Chạy các tác vụ khởi tạo song song
   await Future.wait([
     // Set preferred orientations

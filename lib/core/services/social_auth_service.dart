@@ -43,33 +43,47 @@ class SocialAuthService {
   /// Đăng nhập bằng Facebook
   Future<UserCredential?> signInWithFacebook() async {
     try {
+      print('[FacebookAuth] Starting Facebook login...');
+
       // Trigger the Facebook login flow
       final LoginResult result = await FacebookAuth.instance.login(
         permissions: ['email', 'public_profile'],
       );
 
+      print('[FacebookAuth] Login status: ${result.status}');
+      print('[FacebookAuth] Message: ${result.message}');
+
       if (result.status == LoginStatus.cancelled) {
         // User cancelled the sign-in
+        print('[FacebookAuth] User cancelled login');
         return null;
       }
 
       if (result.status == LoginStatus.failed) {
+        print('[FacebookAuth] Login failed: ${result.message}');
         throw Exception('Facebook login failed: ${result.message}');
       }
 
       // Get the access token
       final AccessToken? accessToken = result.accessToken;
       if (accessToken == null) {
+        print('[FacebookAuth] Access token is null');
         throw Exception('Failed to get Facebook access token');
       }
+
+      print('[FacebookAuth] Got access token, creating Firebase credential...');
 
       // Create a credential from the access token
       final OAuthCredential facebookCredential =
           FacebookAuthProvider.credential(accessToken.tokenString);
 
       // Sign in to Firebase with the Facebook credential
-      return await _firebaseAuth.signInWithCredential(facebookCredential);
+      final userCredential = await _firebaseAuth.signInWithCredential(facebookCredential);
+      print('[FacebookAuth] Firebase sign-in successful: ${userCredential.user?.email}');
+
+      return userCredential;
     } catch (e) {
+      print('[FacebookAuth] Error: $e');
       throw Exception('Facebook sign-in failed: $e');
     }
   }

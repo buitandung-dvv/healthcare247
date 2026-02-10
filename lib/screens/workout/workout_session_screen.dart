@@ -44,6 +44,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
   bool _wasLastSet =
       false; // Track if we just completed the last set of an exercise
 
+  // Track start time for each exercise (by orderIndex)
+  final Map<int, DateTime> _exerciseStartTimes = {};
+
   @override
   void initState() {
     super.initState();
@@ -108,7 +111,14 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
         setState(() => _readySeconds--);
       } else {
         timer.cancel();
-        setState(() => _isReady = false);
+        setState(() {
+          _isReady = false;
+          // Mark start time for current exercise when ready countdown ends
+          if (!_exerciseStartTimes.containsKey(_currentExerciseIndex)) {
+            _exerciseStartTimes[_currentExerciseIndex] = DateTime.now();
+            debugPrint('⏱️ Set start time for exercise $_currentExerciseIndex: ${_exerciseStartTimes[_currentExerciseIndex]}');
+          }
+        });
       }
     });
   }
@@ -128,8 +138,45 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
 
   Future<void> _completeSet(WorkoutSessionDetail detail) async {
     final provider = context.read<WorkoutPlanProvider>();
+    final now = DateTime.now();
 
-    await provider.updateExerciseProgress(detail.exerciseId, _currentSet);
+    // VERSION MARKER - nếu thấy log này, code mới đã được load
+    debugPrint('🔥🔥🔥 VERSION 2.0 - _completeSet called 🔥🔥🔥');
+    debugPrint('🏋️ Completing set $_currentSet for exercise ${detail.exerciseId}, orderIndex=${detail.orderIndex}');
+    debugPrint('🏋️ Target reps: ${detail.targetReps}, targetSets: ${detail.targetSets}');
+    debugPrint('🏋️ _exerciseStartTimes: $_exerciseStartTimes');
+
+    // Ensure start time is set for current exercise (if not already set)
+    if (!_exerciseStartTimes.containsKey(_currentExerciseIndex)) {
+      _exerciseStartTimes[_currentExerciseIndex] = now;
+      debugPrint('🏋️ Set start time for exercise $_currentExerciseIndex: $now');
+    }
+
+    // Get the start time for this exercise
+    final startedAt = _exerciseStartTimes[_currentExerciseIndex]!;
+
+    // Check if this is the last set
+    final isLastSet = _currentSet >= detail.targetSets;
+
+    debugPrint('🏋️ _currentExerciseIndex: $_currentExerciseIndex, startedAt: $startedAt, isLastSet: $isLastSet');
+
+    // Always send startedAt on first set, send completedAt on last set
+    final sendStartedAt = (_currentSet == 1) ? startedAt : null;
+    final sendCompletedAt = isLastSet ? now : null;
+
+    debugPrint('🏋️ WILL SEND: orderIndex=${detail.orderIndex}, startedAt=$sendStartedAt, completedAt=$sendCompletedAt');
+
+    // Send sets, reps, orderIndex, and timing info
+    await provider.updateExerciseProgress(
+      detail.exerciseId,
+      _currentSet,
+      repsCompleted: detail.targetReps.toString(),
+      orderIndex: detail.orderIndex,
+      startedAt: sendStartedAt,
+      completedAt: sendCompletedAt,
+    );
+
+    debugPrint('🏋️ Update sent successfully');
 
     setState(() {
       // Check if this is the last set BEFORE incrementing
@@ -145,6 +192,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
             (provider.activeSession?.details.length ?? 0) - 1) {
           _currentExerciseIndex++;
           _currentSet = 1;
+          // Note: start time for next exercise will be set in _startReadyCountdown after rest
           _startRest(detail.restDuration);
         } else {
           _finishWorkout();
@@ -265,6 +313,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                             context.read<DashboardProvider>();
                         final authProvider = context.read<AuthProvider>();
 
+                        // Capture the total seconds before any async operations
+                        final totalSeconds = _seconds;
+
                         // Check if session still exists
                         if (provider.activeSession == null) {
                           Navigator.pop(context);
@@ -275,8 +326,15 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                         // Close dialog first
                         Navigator.pop(context);
 
+                        // Pop the session screen immediately before state changes
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+
                         try {
-                          final success = await provider.completeSession();
+                          final success = await provider.completeSession(
+                            totalDurationSeconds: totalSeconds,
+                          );
                           if (success) {
                             await dashboardProvider.loadDashboardData(
                               authProvider.userId,
@@ -285,8 +343,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                         } catch (e) {
                           debugPrint('Error completing session: $e');
                         }
-
-                        if (context.mounted) Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
@@ -1221,6 +1277,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                   final dashboardProvider = context.read<DashboardProvider>();
                   final authProvider = context.read<AuthProvider>();
 
+                  // Capture the total seconds before any async operations
+                  final totalSeconds = _seconds;
+
                   // Check if session exists
                   if (provider.activeSession == null) {
                     Navigator.pop(context);
@@ -1228,9 +1287,18 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                     return;
                   }
 
+                  // Close dialog first
                   Navigator.pop(context);
+
+                  // Pop the session screen immediately before state changes
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+
                   try {
-                    final success = await provider.completeSession();
+                    final success = await provider.completeSession(
+                      totalDurationSeconds: totalSeconds,
+                    );
                     if (success) {
                       await dashboardProvider.loadDashboardData(
                         authProvider.userId,
@@ -1239,7 +1307,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                   } catch (e) {
                     debugPrint('Error completing session: $e');
                   }
-                  if (context.mounted) Navigator.pop(context);
                 },
                 child: Text(lang.getText(en: 'Finish', vi: 'Kết thúc')),
               ),

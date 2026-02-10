@@ -175,6 +175,9 @@ class WorkoutPlanProvider with ChangeNotifier {
     String? repsCompleted,
     String? weightUsed,
     String? notes,
+    int? orderIndex,
+    DateTime? startedAt,
+    DateTime? completedAt,
   }) async {
     if (_activeSession == null) return;
 
@@ -186,12 +189,15 @@ class WorkoutPlanProvider with ChangeNotifier {
         repsCompleted: repsCompleted,
         weightUsed: weightUsed,
         notes: notes,
+        orderIndex: orderIndex,
+        startedAt: startedAt,
+        completedAt: completedAt,
       );
 
       if (updatedDetail != null) {
         // Update local state
         final index = _activeSession!.details.indexWhere(
-          (d) => d.exerciseId == exerciseId,
+          (d) => d.exerciseId == exerciseId && d.orderIndex == (orderIndex ?? d.orderIndex),
         );
         if (index != -1) {
           // Create a new list to ensure immutability/notification
@@ -215,7 +221,7 @@ class WorkoutPlanProvider with ChangeNotifier {
   }
 
   /// Complete current session
-  Future<bool> completeSession({String? notes}) async {
+  Future<bool> completeSession({String? notes, int? totalDurationSeconds}) async {
     if (_activeSession == null) return false;
 
     _setLoading(true);
@@ -223,6 +229,7 @@ class WorkoutPlanProvider with ChangeNotifier {
       final completedSession = await _sessionRepository.completeSession(
         _activeSession!.sessionId,
         notes: notes,
+        totalDurationSeconds: totalDurationSeconds,
       );
 
       if (completedSession != null) {

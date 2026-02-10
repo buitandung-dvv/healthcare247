@@ -68,5 +68,21 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Facebook SDK package visibility -->
+        <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
+        <provider android:authorities="com.facebook.orca.provider.PlatformProvider" />
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.facebook.orca" />
+        <!-- For Chrome Custom Tabs -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+        </intent>
     </queries>
 </manifest>

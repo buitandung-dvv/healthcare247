@@ -26,6 +26,13 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// Suppress Java compiler warnings for all subprojects
+subprojects {
+    tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.addAll(listOf("-Xlint:-options", "-Xlint:-deprecation"))
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
