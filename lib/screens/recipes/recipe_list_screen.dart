@@ -57,15 +57,24 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
     final recipeProvider = context.watch<RecipeProvider>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
-      appBar: CustomAppBar(
-        title: lang.getText(en: 'Recipe Library', vi: 'Thư viện công thức'),
+      backgroundColor: const Color(0xFFF8FAFC),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text(
+          lang.getText(en: 'Recipe Library', vi: 'Thư viện công thức'),
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1A1A2E),
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: Icon(Icons.filter_list, color: AppColors.primary),
             onPressed: () => _showFilterSheet(context),
           ),
         ],
@@ -89,11 +98,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
           ),
           const SizedBox(height: AppSizes.sm),
 
+          // Category quick-filter chips (Stitch design)
+          _buildCategoryChips(context, recipeProvider, lang),
+
           // Active Filter Chips
           if (_hasActiveFilters(recipeProvider))
             _buildActiveFilters(context, recipeProvider, lang),
 
-          // Recipe List
+          // Recipe Grid
           Expanded(child: _buildRecipeList(recipeProvider, lang)),
         ],
       ),
@@ -103,6 +115,106 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   bool _hasActiveFilters(RecipeProvider provider) {
     return provider.filter.categories.isNotEmpty ||
         provider.filter.areas.isNotEmpty;
+  }
+
+  Widget _buildCategoryChips(
+    BuildContext context,
+    RecipeProvider provider,
+    LanguageProvider lang,
+  ) {
+    final categories = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+    final labels = {
+      'Breakfast': lang.getText(en: 'Breakfast', vi: 'Bữa sáng'),
+      'Lunch': lang.getText(en: 'Lunch', vi: 'Bữa trưa'),
+      'Dinner': lang.getText(en: 'Dinner', vi: 'Bữa tối'),
+      'Snack': lang.getText(en: 'Snack', vi: 'Snack'),
+    };
+    final selectedCategories = provider.filter.categories;
+    final isNoneSelected = selectedCategories.isEmpty;
+
+    return SizedBox(
+      height: 42,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: AppSizes.paddingHorizontalMd,
+        children: [
+          // "Tất cả"
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () {
+                if (!isNoneSelected) {
+                  provider.setFilter(
+                    provider.filter.copyWith(categories: []),
+                    languageId: lang.languageId,
+                  );
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: isNoneSelected ? AppColors.primary : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color:
+                        isNoneSelected
+                            ? AppColors.primary
+                            : Colors.grey.shade300,
+                  ),
+                ),
+                child: Text(
+                  lang.getText(en: 'All', vi: 'Tất cả'),
+                  style: TextStyle(
+                    color: isNoneSelected ? Colors.white : Colors.grey.shade700,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ...categories.map((cat) {
+            final isSelected = selectedCategories.contains(cat);
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: GestureDetector(
+                onTap: () {
+                  provider.setFilter(
+                    provider.filter.toggleCategory(cat),
+                    languageId: lang.languageId,
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primary : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color:
+                          isSelected ? AppColors.primary : Colors.grey.shade300,
+                    ),
+                  ),
+                  child: Text(
+                    labels[cat] ?? cat,
+                    style: TextStyle(
+                      color: isSelected ? Colors.white : Colors.grey.shade700,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 
   Widget _buildActiveFilters(
@@ -184,36 +296,36 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
     // Lấy recipes cho trang hiện tại
     final paginatedRecipes = provider.paginatedRecipes;
 
-    // Total items: paginated recipes + pagination widget (if needed)
-    final hasPagination = provider.totalPages > 1;
-    final itemCount = paginatedRecipes.length + (hasPagination ? 1 : 0);
-
     return RefreshIndicator(
       onRefresh: () async => _loadInitialData(),
-      child: ListView.builder(
+      child: CustomScrollView(
         controller: _scrollController,
-        padding: AppSizes.paddingMd,
-        itemCount: itemCount,
-        cacheExtent: 500,
-        addAutomaticKeepAlives: true,
-        itemBuilder: (context, index) {
-          // Last item is pagination controls
-          if (hasPagination && index == paginatedRecipes.length) {
-            return _buildPaginationControls(provider, lang);
-          }
-
-          final recipe = paginatedRecipes[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.md),
-            child: RepaintBoundary(
-              child: RecipeCard(
-                key: ValueKey(recipe.recipeId),
-                recipe: recipe,
-                onTap: () => _navigateToDetail(context, recipe),
+        slivers: [
+          // 2-column grid (Stitch design)
+          SliverPadding(
+            padding: AppSizes.paddingMd,
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 14,
+                crossAxisSpacing: 14,
+                childAspectRatio: 0.62,
               ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final recipe = paginatedRecipes[index];
+                return RepaintBoundary(
+                  child: RecipeCard(
+                    key: ValueKey(recipe.recipeId),
+                    recipe: recipe,
+                    onTap: () => _navigateToDetail(context, recipe),
+                  ),
+                );
+              }, childCount: paginatedRecipes.length),
             ),
-          );
-        },
+          ),
+          // Pagination controls
+          SliverToBoxAdapter(child: _buildPaginationControls(provider, lang)),
+        ],
       ),
     );
   }
@@ -223,60 +335,111 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
     LanguageProvider lang,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final totalItems = provider.filteredRecipes.length;
+    final startItem =
+        totalItems == 0
+            ? 0
+            : (provider.currentPage - 1) * RecipeProvider.itemsPerPage + 1;
+    final endItem = (provider.currentPage * RecipeProvider.itemsPerPage).clamp(
+      0,
+      totalItems,
+    );
+
     return Container(
       margin: const EdgeInsets.only(top: AppSizes.md, bottom: AppSizes.lg),
       padding: const EdgeInsets.symmetric(
-        vertical: AppSizes.sm,
+        vertical: 24,
         horizontal: AppSizes.md,
       ),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        color: isDark ? AppColors.darkCard : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color:
+              isDark
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.grey.withValues(alpha: 0.1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-            blurRadius: 4,
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
-          // Previous button
-          IconButton(
-            onPressed:
-                provider.hasPreviousPage
-                    ? () => _goToPageAndScrollTop(
-                      provider,
-                      provider.currentPage - 1,
-                    )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildNavButton(
+                icon: Icons.chevron_left,
+                onTap: provider.hasPreviousPage
+                    ? () => _goToPageAndScrollTop(provider, provider.currentPage - 1)
                     : null,
-            icon: const Icon(Icons.chevron_left),
-            iconSize: 24,
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                isDark: isDark,
+              ),
+              const SizedBox(width: 8),
+              // Page numbers
+              ..._buildPageNumbers(provider),
+              const SizedBox(width: 8),
+              _buildNavButton(
+                icon: Icons.chevron_right,
+                onTap: provider.hasNextPage
+                    ? () => _goToPageAndScrollTop(provider, provider.currentPage + 1)
+                    : null,
+                isDark: isDark,
+                isNext: true,
+              ),
+            ],
           ),
-
-          // Page numbers (limited to 5)
-          ..._buildPageNumbers(provider),
-
-          // Next button
-          IconButton(
-            onPressed:
-                provider.hasNextPage
-                    ? () => _goToPageAndScrollTop(
-                      provider,
-                      provider.currentPage + 1,
-                    )
-                    : null,
-            icon: const Icon(Icons.chevron_right),
-            iconSize: 24,
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+          const SizedBox(height: 16),
+          Text(
+            lang.getText(
+              en: 'SHOWING $startItem-$endItem OF $totalItems RECIPES',
+              vi:
+                  'HI\u1EC2N TH\u1ECA $startItem-$endItem TR\u00caN $totalItems C\u00d4NG TH\u1EE8C',
+            ),
+            style: TextStyle(
+              color: isDark ? Colors.grey[400] : const Color(0xFF78909C),
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1.2,
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNavButton({
+    required IconData icon,
+    required VoidCallback? onTap,
+    required bool isDark,
+    bool isNext = false,
+  }) {
+    final isDisabled = onTap == null;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.grey.withValues(alpha: 0.1),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: isDisabled
+              ? (isDark ? Colors.grey[700] : Colors.grey[400])
+              : isNext
+                  ? AppColors.primary
+                  : (isDark ? Colors.white70 : Colors.grey[600]),
+        ),
       ),
     );
   }
@@ -336,25 +499,40 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
   Widget _buildPageButton(int page, int currentPage, RecipeProvider provider) {
     final isCurrentPage = page == currentPage;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 1),
-      child: InkWell(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: GestureDetector(
         onTap: () => _goToPageAndScrollTop(provider, page),
-        borderRadius: BorderRadius.circular(AppSizes.radiusSm),
         child: Container(
-          width: 32,
-          height: 32,
+          width: 36,
+          height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isCurrentPage ? AppColors.secondary : null,
-            borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+            shape: BoxShape.circle,
+            color: isCurrentPage ? AppColors.primary : null,
+            boxShadow:
+                isCurrentPage
+                    ? [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                    : null,
           ),
           child: Text(
             '$page',
             style: TextStyle(
-              fontSize: 13,
-              color: isCurrentPage ? Colors.white : AppColors.textPrimary,
-              fontWeight: isCurrentPage ? FontWeight.bold : FontWeight.normal,
+              fontSize: 14,
+              color:
+                  isCurrentPage
+                      ? Colors.white
+                      : isDark
+                      ? Colors.white
+                      : AppColors.textPrimary,
+              fontWeight: isCurrentPage ? FontWeight.bold : FontWeight.w600,
             ),
           ),
         ),
@@ -424,13 +602,31 @@ class _FilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: AppSizes.sm),
-      child: Chip(
-        label: Text(label),
-        deleteIcon: const Icon(Icons.close, size: 16),
-        onDeleted: onDeleted,
-        backgroundColor: AppColors.secondary.withValues(alpha: 0.1),
-        labelStyle: const TextStyle(color: AppColors.secondary),
+      padding: const EdgeInsets.only(right: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(9999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: onDeleted,
+              child: const Icon(Icons.close, size: 16, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -603,21 +799,35 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
           Row(
             children: [
               Expanded(
-                child: SecondaryButton(
-                  text: widget.lang.getText(en: 'Clear', vi: 'Xóa'),
-                  onPressed: () {
+                child: GestureDetector(
+                  onTap: () {
                     setState(() {
                       _tempFilter = const RecipeFilter();
                     });
                   },
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(9999),
+                      border: Border.all(color: const Color(0xFFF1F5F9)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        widget.lang.getText(en: 'Clear', vi: 'Xóa'),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: AppSizes.md),
               Expanded(
-                child: PrimaryButton(
-                  text: widget.lang.getText(en: 'Apply', vi: 'Áp dụng'),
-                  onPressed: () {
-                    // Lấy languageId từ context
+                child: GestureDetector(
+                  onTap: () {
                     final langProvider = context.read<LanguageProvider>();
                     widget.provider.setFilter(
                       _tempFilter,
@@ -625,6 +835,31 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                     );
                     Navigator.pop(context);
                   },
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                      ),
+                      borderRadius: BorderRadius.circular(9999),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1565C0).withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        widget.lang.getText(en: 'Apply', vi: 'Áp dụng'),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

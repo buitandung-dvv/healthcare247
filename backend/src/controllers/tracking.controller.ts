@@ -395,6 +395,22 @@ export class TrackingController {
     }
   }
 
+  // Get weekly water summary
+  async getWeeklyWaterSummary(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      if (!req.userId) {
+        ApiResponse.unauthorized(res);
+        return;
+      }
+
+      const data = await trackingService.getWeeklyWaterSummary(req.userId);
+      ApiResponse.success(res, data);
+    } catch (error) {
+      console.error('❌ Get weekly water summary error:', error);
+      ApiResponse.serverError(res, 'Failed to get weekly water summary');
+    }
+  }
+
   // ============ DASHBOARD ============
 
   // Get daily stats

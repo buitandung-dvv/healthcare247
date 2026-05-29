@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../widgets/buttons/gradient_button.dart';
 
 /// Body goals step - Focus areas with centered image
 class BodyGoalsStep extends StatelessWidget {
@@ -116,30 +117,9 @@ class BodyGoalsStep extends StatelessWidget {
         // Bottom button
         Padding(
           padding: const EdgeInsets.all(AppSizes.lg),
-          child: SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: selectedGoals.isNotEmpty ? onNext : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor:
-                    isDark ? AppColors.darkBorder : AppColors.border,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusFull),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'TIẾP THEO',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
-              ),
-            ),
+          child: GradientButton(
+            text: 'TIẾP THEO',
+            onPressed: selectedGoals.isNotEmpty ? onNext : null,
           ),
         ),
       ],

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
 
-/// Weekly goal step - Days per week (like example UI)
+/// Weekly goal step — Stitch design: day circle toggles (T2-CN) + recommendation tip
 class WeeklyGoalStep extends StatefulWidget {
   final int daysPerWeek;
   final String startDay;
@@ -24,7 +23,21 @@ class WeeklyGoalStep extends StatefulWidget {
 }
 
 class _WeeklyGoalStepState extends State<WeeklyGoalStep> {
-  bool _showDayPicker = false;
+  // Track which days are selected (T2=Mon through CN=Sun)
+  final Set<int> _selectedDays = {0, 2, 4}; // Default: T2, T4, T6
+
+  static const _dayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+  void _toggleDay(int index) {
+    setState(() {
+      if (_selectedDays.contains(index)) {
+        _selectedDays.remove(index);
+      } else {
+        _selectedDays.add(index);
+      }
+    });
+    widget.onDaysChanged(_selectedDays.length);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,300 +45,214 @@ class _WeeklyGoalStepState extends State<WeeklyGoalStep> {
     final textColor =
         isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSizes.lg),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: AppSizes.xl),
+          const SizedBox(height: 24),
           Text(
-            'Đặt mục tiêu hàng tuần\ncủa bạn',
+            'Bạn muốn tập vào ngày nào?',
             style: TextStyle(
               fontSize: 26,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
               color: textColor,
-              height: 1.3,
             ),
           ),
-          const SizedBox(height: AppSizes.sm),
+          const SizedBox(height: 8),
           Text(
-            'Chúng tôi khuyến nghị tập luyện ít nhất 3 ngày mỗi tuần để có kết quả tốt hơn',
+            'Chúng tôi sẽ nhắc bạn vào những ngày này',
             style: TextStyle(
-              fontSize: AppSizes.fontMd,
+              fontSize: 14,
               color:
                   isDark
                       ? AppColors.darkTextSecondary
-                      : AppColors.textSecondary,
-              height: 1.4,
+                      : const Color(0xFF64748B),
             ),
           ),
-          const SizedBox(height: AppSizes.xxl),
-          // Days selector
-          Row(
-            children: [
-              Text('🗓️', style: const TextStyle(fontSize: 20)),
-              const SizedBox(width: AppSizes.sm),
-              Text(
-                'Ngày tập luyện hàng tuần',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  color:
-                      isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.textSecondary,
-                ),
+
+          const SizedBox(height: 32),
+
+          // Day circles — Stitch design: 2 rows (4+3)
+          _buildDayGrid(isDark),
+
+          const SizedBox(height: 24),
+
+          // Selected count
+          Center(
+            child: Text(
+              'Bạn đã chọn ${_selectedDays.length} ngày/tuần',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primary,
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: AppSizes.md),
-          // Day number grid
-          Wrap(
-            spacing: AppSizes.sm,
-            runSpacing: AppSizes.sm,
-            children: List.generate(7, (index) {
-              final day = index + 1;
-              final isSelected = widget.daysPerWeek == day;
-              return _DayButton(
-                day: day,
-                isSelected: isSelected,
-                onTap: () => widget.onDaysChanged(day),
-                isDark: isDark,
-              );
-            }),
-          ),
-          const SizedBox(height: AppSizes.xl),
-          // Start day picker
-          InkWell(
-            onTap: () => setState(() => _showDayPicker = !_showDayPicker),
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-            child: Container(
-              padding: const EdgeInsets.all(AppSizes.md),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCard : Colors.white,
-                borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.border,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Text('📅', style: const TextStyle(fontSize: 20)),
-                  const SizedBox(width: AppSizes.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ngày đầu tiên của tuần',
-                          style: TextStyle(
-                            fontSize: AppSizes.fontSm,
-                            color:
-                                isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.textSecondary,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _getDayName(widget.startDay),
-                          style: TextStyle(
-                            fontSize: AppSizes.fontMd,
-                            fontWeight: FontWeight.w500,
-                            color: textColor,
-                          ),
-                        ),
-                      ],
+
+          const SizedBox(height: 16),
+
+          // Recommendation tip — Stitch design
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E293B) : const Color(0xFFEBF5FF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                const Text('💡', style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Khuyến nghị: 3-5 ngày/tuần cho mục tiêu của bạn',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color:
+                          isDark
+                              ? AppColors.darkTextSecondary
+                              : const Color(0xFF1565C0),
+                      height: 1.4,
                     ),
                   ),
-                  Icon(
-                    _showDayPicker
-                        ? Icons.arrow_drop_up_rounded
-                        : Icons.arrow_drop_down_rounded,
-                    color:
-                        isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.textSecondary,
+                ),
+              ],
+            ),
+          ),
+
+          const Spacer(),
+
+          // Gradient "Hoàn tất" button
+          GestureDetector(
+            onTap: _selectedDays.isNotEmpty ? widget.onComplete : null,
+            child: Container(
+              width: double.infinity,
+              height: 56,
+              decoration: BoxDecoration(
+                gradient:
+                    _selectedDays.isNotEmpty
+                        ? const LinearGradient(
+                          colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                        )
+                        : LinearGradient(
+                          colors: [
+                            const Color(0xFF42A5F5).withValues(alpha: 0.4),
+                            const Color(0xFF1565C0).withValues(alpha: 0.4),
+                          ],
+                        ),
+                borderRadius: BorderRadius.circular(9999),
+                boxShadow:
+                    _selectedDays.isNotEmpty
+                        ? [
+                          BoxShadow(
+                            color: const Color(
+                              0xFF1565C0,
+                            ).withValues(alpha: 0.3),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
+                          ),
+                        ]
+                        : null,
+              ),
+              child: const Center(
+                child: Text(
+                  'Hoàn tất',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-            ),
-          ),
-          if (_showDayPicker) _buildDayPickerSheet(isDark),
-          const SizedBox(height: AppSizes.xxl),
-          // Complete button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: widget.onComplete,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusFull),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'HOÀN TẤT',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: AppSizes.lg),
+          const SizedBox(height: 12),
+          Center(
+            child: Text(
+              'Quay lại',
+              style: TextStyle(
+                fontSize: 15,
+                color:
+                    isDark
+                        ? AppColors.darkTextSecondary
+                        : const Color(0xFF94A3B8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
 
-  Widget _buildDayPickerSheet(bool isDark) {
-    return Container(
-      margin: const EdgeInsets.only(top: AppSizes.sm),
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.border,
+  Widget _buildDayGrid(bool isDark) {
+    return Column(
+      children: [
+        // First row: T2, T3, T4, T5
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List.generate(4, (i) => _buildDayCircle(i, isDark)),
         ),
-      ),
-      child: Column(
-        children: [
-          _DayPickerOption(
-            label: 'Chủ Nhật',
-            value: 'sunday',
-            isSelected: widget.startDay == 'sunday',
-            onTap: () {
-              widget.onStartDayChanged('sunday');
-              setState(() => _showDayPicker = false);
-            },
-            isDark: isDark,
-          ),
-          _DayPickerOption(
-            label: 'Thứ Hai',
-            value: 'monday',
-            isSelected: widget.startDay == 'monday',
-            onTap: () {
-              widget.onStartDayChanged('monday');
-              setState(() => _showDayPicker = false);
-            },
-            isDark: isDark,
-          ),
-        ],
-      ),
+        const SizedBox(height: 16),
+        // Second row: T6, T7, CN
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ...List.generate(3, (i) => _buildDayCircle(i + 4, isDark)),
+            // Empty placeholder for alignment
+            const SizedBox(width: 70, height: 70),
+          ],
+        ),
+      ],
     );
   }
 
-  String _getDayName(String day) {
-    switch (day) {
-      case 'sunday':
-        return 'Chủ Nhật';
-      case 'monday':
-        return 'Thứ Hai';
-      default:
-        return 'Thứ Hai';
-    }
-  }
-}
+  Widget _buildDayCircle(int index, bool isDark) {
+    final isSelected = _selectedDays.contains(index);
 
-class _DayButton extends StatelessWidget {
-  final int day;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final bool isDark;
-
-  const _DayButton({
-    required this.day,
-    required this.isSelected,
-    required this.onTap,
-    required this.isDark,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : Colors.transparent,
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-            border: Border.all(
+    return GestureDetector(
+      onTap: () => _toggleDay(index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.transparent,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color:
+                isSelected
+                    ? AppColors.primary
+                    : (isDark
+                        ? const Color(0xFF475569)
+                        : const Color(0xFFCBD5E1)),
+            width: 2,
+          ),
+          boxShadow:
+              isSelected
+                  ? [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                  : null,
+        ),
+        child: Center(
+          child: Text(
+            _dayLabels[index],
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
               color:
                   isSelected
-                      ? AppColors.primary
-                      : (isDark ? AppColors.darkBorder : AppColors.border),
-              width: 1.5,
-            ),
-          ),
-          child: Center(
-            child: Text(
-              '$day',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color:
-                    isSelected
-                        ? Colors.white
-                        : (isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.textPrimary),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DayPickerOption extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final bool isDark;
-
-  const _DayPickerOption({
-    required this.label,
-    required this.value,
-    required this.isSelected,
-    required this.onTap,
-    required this.isDark,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  color:
-                      isDark
+                      ? Colors.white
+                      : (isDark
                           ? AppColors.darkTextPrimary
-                          : AppColors.textPrimary,
-                ),
-              ),
+                          : const Color(0xFF334155)),
             ),
-            if (isSelected)
-              Icon(Icons.check_rounded, color: AppColors.primary, size: 20),
-          ],
+          ),
         ),
       ),
     );

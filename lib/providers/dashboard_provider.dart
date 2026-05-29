@@ -19,6 +19,10 @@ class DashboardProvider extends ChangeNotifier {
   // Callback for notifying when data is updated (for invalidating other providers)
   VoidCallback? onDataUpdated;
 
+  // Counter tăng mỗi lần có meal mới — dùng để trigger reload ở MyMealsScreen
+  int _mealVersion = 0;
+  int get mealVersion => _mealVersion;
+
   DailyProgress get todayProgress => _todayProgress;
   List<DailyProgress> get weeklyProgress => _weeklyProgress;
   List<ExerciseTracking> get recentActivities => _recentActivities;
@@ -152,6 +156,7 @@ class DashboardProvider extends ChangeNotifier {
         workoutsPlanned: _todayProgress.workoutsPlanned,
         mealsLogged: _todayProgress.mealsLogged + 1,
       );
+      _mealVersion++;
       notifyListeners();
       onDataUpdated?.call(); // Notify to invalidate related providers
     } catch (e) {

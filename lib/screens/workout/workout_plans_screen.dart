@@ -581,7 +581,7 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
                                 imageUrl:
                                     randomHeroUrl ?? exerciseImageUrls.first,
                                 fit: BoxFit.cover,
-                                errorWidget: (_, __, ___) => const SizedBox(),
+                                errorWidget: (_, _, _) => const SizedBox(),
                               ),
                     ),
                     // Gradient overlay
@@ -777,7 +777,7 @@ class _WorkoutPlansScreenState extends State<WorkoutPlansScreen> {
                   imageUrl: url,
                   fit: BoxFit.cover,
                   errorWidget:
-                      (_, __, ___) => Container(
+                      (_, _, _) => Container(
                         color: Colors.white24,
                         child: const Icon(
                           Icons.fitness_center,

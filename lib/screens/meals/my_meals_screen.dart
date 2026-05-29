@@ -17,8 +17,8 @@ class MyMealsScreen extends StatefulWidget {
   @override
   State<MyMealsScreen> createState() => _MyMealsScreenState();
 }
-
-class _MyMealsScreenState extends State<MyMealsScreen> {
+class _MyMealsScreenState extends State<MyMealsScreen>
+    with WidgetsBindingObserver {
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
   final List<MealEntry> _meals = [];
@@ -26,11 +26,42 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
   double _totalProtein = 0;
   double _totalCarbs = 0;
   double _totalFat = 0;
+  int _lastMealVersion = -1;
+  DashboardProvider? _dashboardProvider;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadMeals();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _dashboardProvider = context.read<DashboardProvider>();
+      _dashboardProvider!.addListener(_onDashboardChanged);
+      _lastMealVersion = _dashboardProvider!.mealVersion;
+    });
+  }
+
+  void _onDashboardChanged() {
+    if (!mounted) return;
+    final version = _dashboardProvider?.mealVersion ?? _lastMealVersion;
+    if (version != _lastMealVersion) {
+      _lastMealVersion = version;
+      _loadMeals();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadMeals();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _dashboardProvider?.removeListener(_onDashboardChanged);
+    super.dispose();
   }
 
   Future<void> _loadMeals() async {
@@ -115,48 +146,17 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
   }
 
   Future<void> _addMeal(String mealType) async {
-    // Read providers before async call to avoid context issues
-    final auth = context.read<AuthProvider>();
-    final dashboard = context.read<DashboardProvider>();
-
     final result = await Navigator.push<MealEntry>(
       context,
       MaterialPageRoute(
-        builder:
-            (context) => AddMealScreen(mealType: mealType, date: _selectedDate),
+        builder: (context) =>
+            AddMealScreen(mealType: mealType, date: _selectedDate),
       ),
     );
 
-    if (result != null) {
-      // Save to backend via DashboardProvider
-      await dashboard.logMeal(
-        userId: auth.userId,
-        mealType: mealType,
-        mealName: result.name,
-        calories: result.calories,
-        protein: result.protein,
-        carbs: result.carbs,
-        fat: result.fat,
-        quantity: result.quantity,
-      );
-
-      // Update local state
-      setState(() {
-        _meals.add(result);
-        _calculateTotals();
-      });
-
-      // Show success message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Đã thêm ${result.name} (${result.calories.toInt()} kcal)',
-            ),
-            backgroundColor: AppColors.success,
-          ),
-        );
-      }
+    // AddMealScreen đã tự lưu API, chỉ cần reload lại danh sách
+    if (result != null && mounted) {
+      await _loadMeals();
     }
   }
 
@@ -167,7 +167,32 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
-      appBar: CustomAppBar(title: lang.getText(en: 'Food', vi: 'Thực phẩm')),
+      appBar: AppBar(
+        backgroundColor: (isDark
+                ? AppColors.darkBackground
+                : AppColors.background)
+            .withValues(alpha: 0.8),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text(
+          lang.getText(en: 'Food', vi: 'Thực phẩm'),
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : const Color(0xFF0F172A),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => _navigateToRecipes(context),
+            icon: Icon(
+              Icons.menu_book_outlined,
+              color: AppColors.primary,
+              size: 22,
+            ),
+          ),
+        ],
+      ),
       body:
           _isLoading
               ? const LoadingWidget()
@@ -233,7 +258,7 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
         gradient: const LinearGradient(
           colors: [AppColors.primary, AppColors.secondary],
         ),
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
       ),
       child: Column(
         children: [
@@ -354,7 +379,7 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         boxShadow: [
           BoxShadow(
             color: AppColors.secondary.withValues(alpha: 0.3),
@@ -367,7 +392,7 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () => _navigateToRecipes(context),
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusCard),
           child: Padding(
             padding: AppSizes.paddingMd,
             child: Row(
@@ -442,7 +467,7 @@ class _MyMealsScreenState extends State<MyMealsScreen> {
       margin: const EdgeInsets.only(bottom: AppSizes.md),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.card,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.border,
         ),

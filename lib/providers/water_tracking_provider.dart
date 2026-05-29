@@ -11,11 +11,13 @@ class WaterTrackingProvider extends ChangeNotifier {
 
   DailyWaterIntake _dailyIntake = const DailyWaterIntake();
   List<WaterTracking> _todayHistory = [];
+  List<Map<String, dynamic>> _weeklyData = [];
   bool _isLoading = false;
   String? _errorMessage;
 
   DailyWaterIntake get dailyIntake => _dailyIntake;
   List<WaterTracking> get todayHistory => _todayHistory;
+  List<Map<String, dynamic>> get weeklyData => _weeklyData;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -34,15 +36,18 @@ class WaterTrackingProvider extends ChangeNotifier {
           endDate: DateTime.now(),
           limit: 20,
         ),
+        _repository.getWeeklyWaterSummary(userId: userId),
       ]);
 
       final daily = results[0] as DailyWaterIntake?;
       final history = results[1] as List<WaterTracking>;
+      final weekly = results[2] as List<Map<String, dynamic>>;
 
       if (daily != null) {
         _dailyIntake = daily;
       }
       _todayHistory = history;
+      _weeklyData = weekly;
     } catch (e) {
       debugPrint('❌ Load water intake error: $e');
       _errorMessage = e.toString();
@@ -97,20 +102,20 @@ class WaterTrackingProvider extends ChangeNotifier {
   }
 
   /// Xóa entry nước uống
-  Future<bool> deleteEntry(int trackingId) async {
+  Future<bool> deleteEntry(int trackingId, {DateTime? trackedAt}) async {
     try {
       final success = await _repository.deleteWaterEntry(
         trackingId: trackingId,
+        trackedAt: trackedAt,
       );
       if (success) {
         final entry = _todayHistory.firstWhere(
-          (e) => e.trackingId == trackingId,
-          orElse:
-              () => WaterTracking(
-                userId: 0,
-                amountMl: 0,
-                trackedAt: DateTime.now(),
-              ),
+          (e) => e.trackingId == trackingId || e.trackedAt == trackedAt,
+          orElse: () => WaterTracking(
+            userId: 0,
+            amountMl: 0,
+            trackedAt: DateTime.now(),
+          ),
         );
 
         _dailyIntake = DailyWaterIntake(
@@ -121,7 +126,9 @@ class WaterTrackingProvider extends ChangeNotifier {
                   _dailyIntake.goalMl)
               .clamp(0, 1),
         );
-        _todayHistory.removeWhere((e) => e.trackingId == trackingId);
+        _todayHistory.removeWhere(
+          (e) => e.trackingId == trackingId || e.trackedAt == trackedAt,
+        );
         notifyListeners();
         return true;
       }

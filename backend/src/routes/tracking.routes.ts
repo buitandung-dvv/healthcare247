@@ -36,6 +36,7 @@ router.delete('/weight/:id', (req, res) => trackingController.deleteWeightTracki
 // Water tracking
 router.get('/water', (req, res) => trackingController.getWaterHistory(req, res));
 router.get('/water/daily', (req, res) => trackingController.getDailyWaterIntake(req, res));
+router.get('/water/weekly', (req, res) => trackingController.getWeeklyWaterSummary(req, res));
 router.post('/water', validateBody(waterTrackingSchema), (req, res) => trackingController.logWater(req, res));
 router.delete('/water/:id', (req, res) => trackingController.deleteWaterTracking(req, res));
 

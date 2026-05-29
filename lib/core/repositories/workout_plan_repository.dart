@@ -61,7 +61,7 @@ class WorkoutPlanRepository {
           'name': name,
           'plan_type': 'workout',
           'description': description,
-          if (scheduleDays != null) 'schedule_days': scheduleDays,
+          'schedule_days': ?scheduleDays,
         },
       );
 
@@ -141,9 +141,9 @@ class WorkoutPlanRepository {
       final response = await _apiClient.put(
         '${ApiConfig.plans}/$planId',
         data: {
-          if (name != null) 'name': name,
-          if (description != null) 'description': description,
-          if (scheduleDays != null) 'schedule_days': scheduleDays,
+          'name': ?name,
+          'description': ?description,
+          'schedule_days': ?scheduleDays,
         },
       );
 

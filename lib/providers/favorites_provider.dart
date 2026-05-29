@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../core/repositories/favorites_repository.dart';
 import '../data/models/favorite_model.dart';
 
-/// Favorites Provider - Quản lý thực phẩm và công thức yêu thích của người dùng
+/// Favorites Provider - Quản lý thực phẩm, công thức và bài tập yêu thích
 class FavoritesProvider extends ChangeNotifier {
   final FavoritesRepository _repository;
 
@@ -19,6 +19,13 @@ class FavoritesProvider extends ChangeNotifier {
   String? _recipesErrorMessage;
   int _recipesCurrentPage = 1;
   int _recipesTotalPages = 1;
+
+  // Favorite Exercises
+  final List<FavoriteExercise> _favoriteExercises = [];
+  bool _isLoadingExercises = false;
+  String? _exercisesErrorMessage;
+  int _exercisesCurrentPage = 1;
+  int _exercisesTotalPages = 1;
 
   // Loading state
   bool _isAddingToFavorites = false;
@@ -46,6 +53,15 @@ class FavoritesProvider extends ChangeNotifier {
   int get recipesTotalPages => _recipesTotalPages;
   bool get hasPreviousRecipesPage => _recipesCurrentPage > 1;
   bool get hasNextRecipesPage => _recipesCurrentPage < _recipesTotalPages;
+
+  // Getters - Exercises
+  List<FavoriteExercise> get favoriteExercises => _favoriteExercises;
+  bool get isLoadingExercises => _isLoadingExercises;
+  String? get exercisesErrorMessage => _exercisesErrorMessage;
+  int get exercisesCurrentPage => _exercisesCurrentPage;
+  int get exercisesTotalPages => _exercisesTotalPages;
+  bool get hasPreviousExercisesPage => _exercisesCurrentPage > 1;
+  bool get hasNextExercisesPage => _exercisesCurrentPage < _exercisesTotalPages;
 
   // Getters - Loading states
   bool get isAddingToFavorites => _isAddingToFavorites;
@@ -103,6 +119,32 @@ class FavoritesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Load favorite exercises - paginable
+  Future<void> loadFavoriteExercises({int page = 1}) async {
+    _isLoadingExercises = true;
+    _exercisesErrorMessage = null;
+    notifyListeners();
+
+    try {
+      final result = await _repository.getFavoriteExercises(
+        page: page,
+        limit: itemsPerPage,
+      );
+
+      _favoriteExercises.clear();
+      _favoriteExercises.addAll(result.items);
+      _exercisesCurrentPage = result.page;
+      _exercisesTotalPages = (result.totalCount / itemsPerPage).ceil();
+      _isLoadingExercises = false;
+      _exercisesErrorMessage = null;
+    } catch (e) {
+      _isLoadingExercises = false;
+      _exercisesErrorMessage = 'Failed to load favorite exercises: $e';
+      if (kDebugMode) print(_exercisesErrorMessage);
+    }
+    notifyListeners();
+  }
+
   /// Add food to favorites
   Future<bool> addFavoriteFood(int foodId, {String? notes}) async {
     _isAddingToFavorites = true;
@@ -129,7 +171,10 @@ class FavoritesProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final favorite = await _repository.addFavoriteRecipe(recipeId, notes: notes);
+      final favorite = await _repository.addFavoriteRecipe(
+        recipeId,
+        notes: notes,
+      );
       _favoriteRecipes.insert(0, favorite);
       _isAddingToFavorites = false;
       notifyListeners();
@@ -138,6 +183,29 @@ class FavoritesProvider extends ChangeNotifier {
       _isAddingToFavorites = false;
       _recipesErrorMessage = 'Failed to add favorite recipe: $e';
       if (kDebugMode) print(_recipesErrorMessage);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Add exercise to favorites
+  Future<bool> addFavoriteExercise(int exerciseId, {String? notes}) async {
+    _isAddingToFavorites = true;
+    notifyListeners();
+
+    try {
+      final favorite = await _repository.addFavoriteExercise(
+        exerciseId,
+        notes: notes,
+      );
+      _favoriteExercises.insert(0, favorite);
+      _isAddingToFavorites = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isAddingToFavorites = false;
+      _exercisesErrorMessage = 'Failed to add favorite exercise: $e';
+      if (kDebugMode) print(_exercisesErrorMessage);
       notifyListeners();
       return false;
     }
@@ -183,12 +251,32 @@ class FavoritesProvider extends ChangeNotifier {
     }
   }
 
+  /// Remove exercise from favorites
+  Future<bool> removeFavoriteExercise(int exerciseId) async {
+    _isRemovingFromFavorites = true;
+    notifyListeners();
+
+    try {
+      await _repository.removeFavoriteExercise(exerciseId);
+      _favoriteExercises.removeWhere((e) => e.exerciseId == exerciseId);
+      _isRemovingFromFavorites = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _isRemovingFromFavorites = false;
+      _exercisesErrorMessage = 'Failed to remove favorite exercise: $e';
+      if (kDebugMode) print(_exercisesErrorMessage);
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Check if food is favorite
   Future<bool> isFavoriteFoodAsync(int foodId) async {
     return await _repository.isFavoriteFood(foodId);
   }
 
-  /// Check if recipe is favorite (from cache)
+  /// Check if food is favorite (from cache)
   bool isFavoriteFood(int foodId) {
     return _favoriteFoods.any((f) => f.foodId == foodId);
   }
@@ -201,6 +289,16 @@ class FavoritesProvider extends ChangeNotifier {
   /// Check if recipe is favorite (from cache)
   bool isFavoriteRecipe(int recipeId) {
     return _favoriteRecipes.any((r) => r.recipeId == recipeId);
+  }
+
+  /// Check if exercise is favorite (async)
+  Future<bool> isFavoriteExerciseAsync(int exerciseId) async {
+    return await _repository.isFavoriteExercise(exerciseId);
+  }
+
+  /// Check if exercise is favorite (from cache)
+  bool isFavoriteExercise(int exerciseId) {
+    return _favoriteExercises.any((e) => e.exerciseId == exerciseId);
   }
 
   /// Next page of favorite foods
@@ -231,11 +329,26 @@ class FavoritesProvider extends ChangeNotifier {
     }
   }
 
-  /// Refresh both favorite foods and recipes
+  /// Next page of favorite exercises
+  Future<void> nextExercisesPage() async {
+    if (hasNextExercisesPage) {
+      await loadFavoriteExercises(page: _exercisesCurrentPage + 1);
+    }
+  }
+
+  /// Previous page of favorite exercises
+  Future<void> previousExercisesPage() async {
+    if (hasPreviousExercisesPage) {
+      await loadFavoriteExercises(page: _exercisesCurrentPage - 1);
+    }
+  }
+
+  /// Refresh all favorites
   Future<void> refreshAll() async {
     await Future.wait([
       loadFavoriteFoods(page: 1),
       loadFavoriteRecipes(page: 1),
+      loadFavoriteExercises(page: 1),
     ]);
   }
 
@@ -243,6 +356,7 @@ class FavoritesProvider extends ChangeNotifier {
   void clearErrorMessage() {
     _foodsErrorMessage = null;
     _recipesErrorMessage = null;
+    _exercisesErrorMessage = null;
     notifyListeners();
   }
 }

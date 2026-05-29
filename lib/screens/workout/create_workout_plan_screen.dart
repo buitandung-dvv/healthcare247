@@ -343,22 +343,65 @@ class _CreateWorkoutPlanScreenState extends State<CreateWorkoutPlanScreen> {
 
               if (_stagedExercises.isEmpty)
                 Container(
-                  padding: const EdgeInsets.all(AppSizes.xl),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 40,
+                    horizontal: 24,
+                  ),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[200]!),
-                  ),
-                  child: Text(
-                    lang.getText(
-                      en:
-                          'No exercises added yet.\nTap "Add Exercise" to start building your plan.',
-                      vi:
-                          'Chưa có bài tập nào.\nNhấn "Thêm bài tập" để xây dựng kế hoạch.',
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey.shade100,
+                      style: BorderStyle.solid,
                     ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[500]),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.02),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: AppColors.primaryGradient,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.fitness_center,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        lang.getText(
+                          en: 'No exercises added yet',
+                          vi: 'Chưa có bài tập nào',
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        lang.getText(
+                          en: 'Tap "Add Exercise" to build your plan',
+                          vi: 'Nhấn "Thêm bài tập" để xây dựng kế hoạch',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
                   ),
                 )
               else

@@ -25,7 +25,6 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final langProvider = context.read<LanguageProvider>();
       final exerciseProvider = context.read<ExerciseProvider>();
@@ -33,7 +32,8 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
         languageId: langProvider.languageId,
         refresh: true,
       );
-      // NOTE: loadFilterOptions is now deferred to when filter panel is opened
+      // Load filter options immediately so muscle group chips are visible
+      exerciseProvider.loadFilterOptions(languageId: langProvider.languageId);
     });
   }
 
@@ -44,15 +44,6 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      final langProvider = context.read<LanguageProvider>();
-      context.read<ExerciseProvider>().loadExercises(
-        languageId: langProvider.languageId,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +84,10 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
           ),
           const SizedBox(height: AppSizes.sm),
 
-          // Filter Chips
+          // Quick muscle group chips (Stitch design)
+          _buildMuscleGroupChips(context, exerciseProvider, langProvider),
+
+          // Active Filter Chips
           if (_hasActiveFilters(exerciseProvider))
             _buildActiveFilters(context, exerciseProvider),
 
@@ -111,6 +105,125 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
         provider.filter.categories.isNotEmpty ||
         provider.filter.equipments.isNotEmpty ||
         provider.filter.muscles.isNotEmpty;
+  }
+
+  Widget _buildMuscleGroupChips(
+    BuildContext context,
+    ExerciseProvider provider,
+    LanguageProvider langProvider,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final muscleList = provider.muscles;
+    final selectedMuscles = provider.filter.muscles;
+
+    return SizedBox(
+      height: 42,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: AppSizes.paddingHorizontalMd,
+        children: [
+          // "Tất cả" chip
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () {
+                if (selectedMuscles.isNotEmpty) {
+                  provider.setFilter(
+                    provider.filter.copyWith(muscles: []),
+                    languageId: langProvider.languageId,
+                  );
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color:
+                      selectedMuscles.isEmpty
+                          ? AppColors.primary
+                          : (isDark ? AppColors.darkCard : Colors.white),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color:
+                        selectedMuscles.isEmpty
+                            ? AppColors.primary
+                            : (isDark
+                                ? AppColors.darkBorder
+                                : Colors.grey.shade300),
+                  ),
+                ),
+                child: Text(
+                  langProvider.getText(en: 'All', vi: 'Tất cả'),
+                  style: TextStyle(
+                    color:
+                        selectedMuscles.isEmpty
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkTextSecondary
+                                : Colors.grey.shade700),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Muscle group chips from provider
+          ...muscleList.map((muscle) {
+            final name = muscle['name']?.toString() ?? '';
+            if (name.isEmpty) return const SizedBox.shrink();
+            final isSelected = selectedMuscles.contains(name);
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: GestureDetector(
+                onTap: () {
+                  provider.setFilter(
+                    provider.filter.toggleMuscle(name),
+                    languageId: langProvider.languageId,
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color:
+                        isSelected
+                            ? AppColors.primary
+                            : (isDark ? AppColors.darkCard : Colors.white),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color:
+                          isSelected
+                              ? AppColors.primary
+                              : (isDark
+                                  ? AppColors.darkBorder
+                                  : Colors.grey.shade300),
+                    ),
+                  ),
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                      color:
+                          isSelected
+                              ? Colors.white
+                              : (isDark
+                                  ? AppColors.darkTextSecondary
+                                  : Colors.grey.shade700),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 
   Widget _buildActiveFilters(BuildContext context, ExerciseProvider provider) {
@@ -196,13 +309,19 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
     }
 
     if (provider.errorMessage != null && provider.exercises.isEmpty) {
+      final isTimeout = provider.errorMessage!.contains('timeout') ||
+          provider.errorMessage!.contains('Timeout');
       return ErrorDisplayWidget(
-        message: provider.errorMessage!,
-        onRetry:
-            () => provider.loadExercises(
-              languageId: langProvider.languageId,
-              refresh: true,
-            ),
+        message: isTimeout
+            ? langProvider.getText(
+                en: 'Connection timed out. Please check your internet and try again.',
+                vi: 'Kết nối quá thời gian. Vui lòng kiểm tra mạng và thử lại.',
+              )
+            : provider.errorMessage!,
+        onRetry: () => provider.loadExercises(
+          languageId: langProvider.languageId,
+          refresh: true,
+        ),
       );
     }
 
@@ -225,10 +344,6 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
     // Lấy exercises cho trang hiện tại
     final paginatedExercises = provider.paginatedExercises;
 
-    // Total items: paginated exercises + pagination widget (if needed)
-    final hasPagination = provider.totalPages > 1;
-    final itemCount = paginatedExercises.length + (hasPagination ? 1 : 0);
-
     return RefreshIndicator(
       onRefresh: () async {
         await provider.loadExercises(
@@ -236,30 +351,39 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
           refresh: true,
         );
       },
-      child: ListView.builder(
+      child: CustomScrollView(
         controller: _scrollController,
-        padding: AppSizes.paddingMd,
-        itemCount: itemCount,
-        cacheExtent: 500,
-        addAutomaticKeepAlives: true,
-        itemBuilder: (context, index) {
-          // Last item is pagination controls
-          if (hasPagination && index == paginatedExercises.length) {
-            return _buildPaginationControls(provider, langProvider);
-          }
-
-          final exercise = paginatedExercises[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.md),
-            child: RepaintBoundary(
-              child: ExerciseCard(
-                key: ValueKey(exercise.exerciseId),
-                exercise: exercise,
-                onTap: () => _navigateToDetail(context, exercise),
+        slivers: [
+          // 2-column grid (similar to recipe/food design)
+          SliverPadding(
+            padding: AppSizes.paddingMd,
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 14,
+                crossAxisSpacing: 14,
+                mainAxisExtent: 260,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final exercise = paginatedExercises[index];
+                  return RepaintBoundary(
+                    child: ExerciseCard(
+                      key: ValueKey(exercise.exerciseId),
+                      exercise: exercise,
+                      onTap: () => _navigateToDetail(context, exercise),
+                    ),
+                  );
+                },
+                childCount: paginatedExercises.length,
               ),
             ),
-          );
-        },
+          ),
+          // Pagination controls
+          SliverToBoxAdapter(
+            child: _buildPaginationControls(provider, langProvider),
+          ),
+        ],
       ),
     );
   }
@@ -269,60 +393,124 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
     LanguageProvider lang,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final totalItems = provider.filteredExercises.length;
+    final startItem =
+        totalItems == 0
+            ? 0
+            : (provider.currentPage - 1) * ExerciseProvider.itemsPerPage + 1;
+    final endItem = (provider.currentPage * ExerciseProvider.itemsPerPage)
+        .clamp(0, totalItems);
+
     return Container(
       margin: const EdgeInsets.only(top: AppSizes.md, bottom: AppSizes.lg),
       padding: const EdgeInsets.symmetric(
-        vertical: AppSizes.sm,
+        vertical: 24,
         horizontal: AppSizes.md,
       ),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        color: isDark ? AppColors.darkCard : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color:
+              isDark
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.grey.withValues(alpha: 0.1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-            blurRadius: 4,
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
-          // Previous button
-          IconButton(
-            onPressed:
-                provider.hasPreviousPage
-                    ? () => _goToPageAndScrollTop(
-                      provider,
-                      provider.currentPage - 1,
-                    )
-                    : null,
-            icon: const Icon(Icons.chevron_left),
-            iconSize: 24,
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+          // Page navigation row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Previous button
+              _buildNavButton(
+                icon: Icons.chevron_left,
+                onTap:
+                    provider.hasPreviousPage
+                        ? () => _goToPageAndScrollTop(
+                          provider,
+                          provider.currentPage - 1,
+                        )
+                        : null,
+                isDark: isDark,
+              ),
+              const SizedBox(width: 8),
+
+              // Page numbers
+              ..._buildPageNumbers(provider),
+
+              const SizedBox(width: 8),
+              // Next button
+              _buildNavButton(
+                icon: Icons.chevron_right,
+                onTap:
+                    provider.hasNextPage
+                        ? () => _goToPageAndScrollTop(
+                          provider,
+                          provider.currentPage + 1,
+                        )
+                        : null,
+                isDark: isDark,
+                isNext: true,
+              ),
+            ],
           ),
-
-          // Page numbers (limited to 5)
-          ..._buildPageNumbers(provider),
-
-          // Next button
-          IconButton(
-            onPressed:
-                provider.hasNextPage
-                    ? () => _goToPageAndScrollTop(
-                      provider,
-                      provider.currentPage + 1,
-                    )
-                    : null,
-            icon: const Icon(Icons.chevron_right),
-            iconSize: 24,
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+          const SizedBox(height: 16),
+          // Status text: "Hiển thị 1-10 trên 778 bài tập"
+          Text(
+            lang.getText(
+              en: 'SHOWING $startItem-$endItem OF $totalItems EXERCISES',
+              vi: 'HIỂN THỊ $startItem-$endItem TRÊN $totalItems BÀI TẬP',
+            ),
+            style: TextStyle(
+              color: isDark ? Colors.grey[400] : const Color(0xFF78909C),
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1.2,
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNavButton({
+    required IconData icon,
+    required VoidCallback? onTap,
+    required bool isDark,
+    bool isNext = false,
+  }) {
+    final isDisabled = onTap == null;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color:
+              isDark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.grey.withValues(alpha: 0.1),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color:
+              isDisabled
+                  ? (isDark ? Colors.grey[700] : Colors.grey[400])
+                  : isNext
+                  ? AppColors.primary
+                  : (isDark ? Colors.white70 : Colors.grey[600]),
+        ),
       ),
     );
   }
@@ -386,25 +574,40 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
     ExerciseProvider provider,
   ) {
     final isCurrentPage = page == currentPage;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 1),
-      child: InkWell(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: GestureDetector(
         onTap: () => _goToPageAndScrollTop(provider, page),
-        borderRadius: BorderRadius.circular(AppSizes.radiusSm),
         child: Container(
-          width: 32,
-          height: 32,
+          width: 36,
+          height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
+            shape: BoxShape.circle,
             color: isCurrentPage ? AppColors.primary : null,
-            borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+            boxShadow:
+                isCurrentPage
+                    ? [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                    : null,
           ),
           child: Text(
             '$page',
             style: TextStyle(
-              fontSize: 13,
-              color: isCurrentPage ? Colors.white : AppColors.textPrimary,
-              fontWeight: isCurrentPage ? FontWeight.bold : FontWeight.normal,
+              fontSize: 14,
+              color:
+                  isCurrentPage
+                      ? Colors.white
+                      : isDark
+                      ? Colors.white
+                      : AppColors.textPrimary,
+              fontWeight: isCurrentPage ? FontWeight.bold : FontWeight.w600,
             ),
           ),
         ),

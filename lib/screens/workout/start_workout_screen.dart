@@ -429,12 +429,12 @@ class _StartWorkoutScreenState extends State<StartWorkoutScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            borderRadius: BorderRadius.circular(AppSizes.radiusCard),
             onTap: _isSuggesting ? null : _suggestExercises,
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -665,7 +665,7 @@ class _StartWorkoutScreenState extends State<StartWorkoutScreen> {
           margin: const EdgeInsets.only(bottom: AppSizes.sm),
           child: InkWell(
             onTap: () => _toggleExercise(exercise.exerciseId),
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            borderRadius: BorderRadius.circular(AppSizes.radiusCard),
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.sm),
               child: Row(
@@ -702,7 +702,7 @@ class _StartWorkoutScreenState extends State<StartWorkoutScreen> {
                               width: 50,
                               height: 50,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _buildPlaceholder(),
+                              errorBuilder: (_, _, _) => _buildPlaceholder(),
                             )
                             : _buildPlaceholder(),
                   ),

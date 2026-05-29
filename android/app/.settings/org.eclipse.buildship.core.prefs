@@ -1,0 +1,4 @@
+connection.project.dir=..
+eclipse.preferences.version=1
+gradle.offlineMode=false
+override.workspace.settings=false

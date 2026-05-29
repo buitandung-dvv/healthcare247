@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../widgets/buttons/gradient_button.dart';
 
 /// Motivation step - What drives you (like example UI)
 class MotivationStep extends StatelessWidget {
@@ -80,30 +81,9 @@ class MotivationStep extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.xxl),
           // Next button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: selectedMotivations.isNotEmpty ? onNext : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor:
-                    isDark ? AppColors.darkBorder : AppColors.border,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusFull),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'TIẾP THEO',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
-              ),
-            ),
+          GradientButton(
+            text: 'TIẾP THEO',
+            onPressed: selectedMotivations.isNotEmpty ? onNext : null,
           ),
           const SizedBox(height: AppSizes.lg),
         ],
@@ -131,7 +111,7 @@ class _MotivationOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor =
         isSelected
-            ? AppColors.primary.withValues(alpha: 0.1)
+            ? AppColors.selectedBg
             : isDark
             ? AppColors.darkCard
             : Colors.white;
@@ -148,13 +128,13 @@ class _MotivationOption extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.all(AppSizes.md),
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            borderRadius: BorderRadius.circular(AppSizes.radiusCard),
             border: Border.all(color: borderColor, width: isSelected ? 2 : 1),
           ),
           child: Row(

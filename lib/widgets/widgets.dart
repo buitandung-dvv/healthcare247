@@ -9,3 +9,4 @@ export 'cards/recipe_card.dart';
 export 'cards/gradient_banner_card.dart';
 export 'cards/exercise_list_item.dart';
 export 'water/water_tracking_widget.dart';
+export 'buttons/gradient_button.dart';

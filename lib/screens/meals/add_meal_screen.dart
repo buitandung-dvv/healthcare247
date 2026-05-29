@@ -5,6 +5,8 @@ import '../../core/constants/app_sizes.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/api_config.dart';
 import '../../data/models/meal_model.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/dashboard_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../widgets/common/common_widgets.dart';
 import 'my_meals_screen.dart';
@@ -13,8 +15,14 @@ import 'my_meals_screen.dart';
 class AddMealScreen extends StatefulWidget {
   final String mealType;
   final DateTime date;
+  final Food? initialFood;
 
-  const AddMealScreen({super.key, required this.mealType, required this.date});
+  const AddMealScreen({
+    super.key,
+    required this.mealType,
+    required this.date,
+    this.initialFood,
+  });
 
   @override
   State<AddMealScreen> createState() => _AddMealScreenState();
@@ -36,10 +44,18 @@ class _AddMealScreenState extends State<AddMealScreen> {
   @override
   void initState() {
     super.initState();
-    // Load foods after first frame to access context
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadInitialFoods();
-    });
+    if (widget.initialFood != null) {
+      // Pre-select food → skip search list, show detail directly
+      _selectedFood = widget.initialFood;
+      _searchController.text = widget.initialFood!.name;
+      _isLoading = false;
+      // No need to load full food list
+    } else {
+      // Load foods after first frame to access context
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadInitialFoods();
+      });
+    }
   }
 
   int? _lastLanguageId;
@@ -85,16 +101,16 @@ class _AddMealScreenState extends State<AddMealScreen> {
     }
   }
 
-  String get _mealTypeName {
+  String _mealTypeName(LanguageProvider lang) {
     switch (widget.mealType) {
       case 'breakfast':
-        return 'Bữa sáng';
+        return lang.getText(en: 'Breakfast', vi: 'Bữa sáng');
       case 'lunch':
-        return 'Bữa trưa';
+        return lang.getText(en: 'Lunch', vi: 'Bữa trưa');
       case 'dinner':
-        return 'Bữa tối';
+        return lang.getText(en: 'Dinner', vi: 'Bữa tối');
       case 'snack':
-        return 'Ăn vặt';
+        return lang.getText(en: 'Snack', vi: 'Ăn vặt');
       default:
         return widget.mealType;
     }
@@ -201,7 +217,10 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
     setState(() => _isSaving = true);
 
-    // Return the meal entry to parent screen
+    final lang = context.read<LanguageProvider>();
+    final auth = context.read<AuthProvider>();
+    final dashboard = context.read<DashboardProvider>();
+
     final entry = MealEntry(
       name: _selectedFood!.name,
       mealType: widget.mealType,
@@ -213,7 +232,50 @@ class _AddMealScreenState extends State<AddMealScreen> {
       foodId: _selectedFood!.foodId,
     );
 
-    Navigator.pop(context, entry);
+    try {
+      // Lưu lên API trực tiếp
+      await dashboard.logMeal(
+        userId: auth.userId,
+        mealType: widget.mealType,
+        mealName: entry.name,
+        calories: entry.calories,
+        protein: entry.protein,
+        carbs: entry.carbs,
+        fat: entry.fat,
+        quantity: entry.quantity,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              lang.getText(
+                en: 'Added ${entry.name} (${entry.calories.toInt()} kcal)',
+                vi: 'Đã thêm ${entry.name} (${entry.calories.toInt()} kcal)',
+              ),
+            ),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        Navigator.pop(context, entry);
+      }
+    } catch (e) {
+      debugPrint('❌ Save meal error: $e');
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              lang.getText(
+                en: 'Failed to save. Please try again.',
+                vi: 'Lưu thất bại. Vui lòng thử lại.',
+              ),
+            ),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -232,69 +294,128 @@ class _AddMealScreenState extends State<AddMealScreen> {
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: CustomAppBar(
         title: lang.getText(
-          en: 'Add to $_mealTypeName',
-          vi: 'Thêm vào $_mealTypeName',
+          en: 'Add to ${_mealTypeName(lang)}',
+          vi: 'Thêm vào ${_mealTypeName(lang)}',
         ),
       ),
       body: Column(
         children: [
-          // Search Bar
-          Padding(
-            padding: AppSizes.paddingMd,
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: lang.getText(
-                  en: 'Search foods...',
-                  vi: 'Tìm thực phẩm...',
+          // Search Bar — chỉ hiện khi không có initialFood
+          if (widget.initialFood == null)
+            Padding(
+              padding: AppSizes.paddingMd,
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: lang.getText(
+                    en: 'Search foods...',
+                    vi: 'Tìm thực phẩm...',
+                  ),
+                  hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 12),
+                    child: Icon(
+                      Icons.search,
+                      color: const Color(0xFF94A3B8),
+                      size: 22,
+                    ),
+                  ),
+                  prefixIconConstraints: const BoxConstraints(
+                    minWidth: 0,
+                    minHeight: 0,
+                  ),
+                  suffixIcon:
+                      _isSearching
+                          ? const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          )
+                          : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF42A5F5),
+                      width: 1.5,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFFF8FAFC),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                 ),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon:
-                    _isSearching
-                        ? const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                        )
-                        : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                ),
-                filled: true,
-                fillColor: isDark ? AppColors.darkCard : AppColors.card,
+                onChanged: (value) => _searchFoods(value),
               ),
-              onChanged: (value) => _searchFoods(value),
             ),
-          ),
 
           // Search Results or Selected Food Details
           Expanded(
-            child:
-                _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _searchResults.isNotEmpty
-                    ? _buildSearchResults()
-                    : _selectedFood != null
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _selectedFood != null
                     ? _buildFoodDetails(lang)
-                    : _buildEmptyState(lang),
+                    : _searchResults.isNotEmpty
+                        ? _buildSearchResults()
+                        : _buildEmptyState(lang),
           ),
 
           // Add Button
           if (_selectedFood != null)
-            Container(
+            Padding(
               padding: AppSizes.paddingMd,
-              child: SizedBox(
-                width: double.infinity,
-                child: PrimaryButton(
-                  text: lang.getText(
-                    en: 'Add ${_calculatedCalories.toInt()} kcal',
-                    vi: 'Thêm ${_calculatedCalories.toInt()} kcal',
+              child: GestureDetector(
+                onTap: _isSaving ? null : _saveMeal,
+                child: Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                    ),
+                    borderRadius: BorderRadius.circular(9999),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF1565C0).withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  onPressed: _isSaving ? null : _saveMeal,
-                  icon: Icons.add,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        lang.getText(
+                          en: 'Add ${_calculatedCalories.toInt()} kcal',
+                          vi: 'Thêm ${_calculatedCalories.toInt()} kcal',
+                        ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -351,11 +472,16 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {
-                        setState(() {
-                          _selectedFood = null;
-                          _searchController.clear();
-                          _searchResults = _allFoods; // Restore food list
-                        });
+                        if (widget.initialFood != null) {
+                          // Came from food detail sheet → go back
+                          Navigator.pop(context);
+                        } else {
+                          setState(() {
+                            _selectedFood = null;
+                            _searchController.clear();
+                            _searchResults = _allFoods;
+                          });
+                        }
                       },
                     ),
                   ],
@@ -398,7 +524,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   decoration: InputDecoration(
                     suffix: const Text('g'),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusCard),
                     ),
                   ),
                   onChanged: (_) => setState(() {}),

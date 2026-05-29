@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // Primary Colors - Blue (like example UI)
-  static const Color primary = Color(0xFF1E88E5); // Blue 600
-  static const Color primaryDark = Color(0xFF1565C0); // Blue 800
-  static const Color primaryLight = Color(0xFF64B5F6); // Blue 300
+  // Primary Colors - Medical Blue (matching Stitch #1565C0)
+  static const Color primary = Color(0xFF1565C0); // Medical Blue
+  static const Color primaryDark = Color(0xFF0D47A1); // Blue 900
+  static const Color primaryLight = Color(0xFF42A5F5); // Blue 400
   static const Color primarySoft = Color(0xFFE3F2FD); // Blue 50
 
   // Secondary Colors - Light Blue/Cyan
@@ -27,19 +27,20 @@ class AppColors {
   static const Color tertiaryLight = Color(0xFF7FEAD9);
   static const Color tertiarySoft = Color(0xFFE8FBF8);
 
-  // Background Colors
-  static const Color background = Color(0xFFF7F8FC);
+  // Background Colors (Stitch: Soft Cloud White)
+  static const Color background = Color(0xFFF5F7FA);
   static const Color backgroundAlt = Color(0xFFF0F3FF);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color card = Color(0xFFFFFFFF);
   static const Color cardElevated = Color(0xFFFAFBFF);
+  static const Color selectedBg = Color(0xFFE8EAF6); // Light Lavender
 
-  // Text Colors
-  static const Color textPrimary = Color(0xFF1D1617);
-  static const Color textSecondary = Color(0xFF7B6F72);
-  static const Color textHint = Color(0xFFADA4A5);
+  // Text Colors (Stitch: Deep Charcoal + Warm Gray)
+  static const Color textPrimary = Color(0xFF1A1A2E);
+  static const Color textSecondary = Color(0xFF78909C);
+  static const Color textHint = Color(0xFFB0BEC5);
   static const Color textWhite = Color(0xFFFFFFFF);
-  static const Color textDisabled = Color(0xFFDDDADA);
+  static const Color textDisabled = Color(0xFFCFD8DC);
 
   // Status Colors
   static const Color success = Color(0xFF42BA96);
@@ -67,9 +68,9 @@ class AppColors {
   static const Color shadow = Color(0x1A1D1617);
   static const Color shadowLight = Color(0x0D1D1617);
 
-  // Gradients - Blue fitness app gradients
+  // Gradients - Stitch Medical Blue gradients
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [Color(0xFF1E88E5), Color(0xFF42A5F5)],
+    colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -99,7 +100,7 @@ class AppColors {
   );
 
   static const LinearGradient heroGradient = LinearGradient(
-    colors: [Color(0xFF1565C0), Color(0xFF42A5F5)],
+    colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

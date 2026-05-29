@@ -8,9 +8,9 @@ import '../../providers/recipe_provider.dart';
 import '../../providers/food_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/goals_provider.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../home/home_screen.dart';
 import '../exercises/exercise_list_screen.dart';
-import '../meals/my_meals_screen.dart';
+import '../foods/food_list_screen.dart';
 import '../progress/progress_screen.dart';
 import '../profile/profile_screen.dart';
 
@@ -48,7 +48,7 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
     final langId = context.read<LanguageProvider>().languageId;
 
     switch (index) {
-      case 0: // Dashboard - handled by DashboardScreen itself
+      case 0: // Home - handled by HomeScreen itself
         break;
       case 1: // Bài tập
         context.read<ExerciseProvider>().loadIfNeeded(languageId: langId);
@@ -81,17 +81,17 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget _createScreen(int index) {
     switch (index) {
       case 0:
-        return const DashboardScreen();
+        return const HomeScreen();
       case 1:
         return const ExerciseListScreen();
       case 2:
-        return const MyMealsScreen();
+        return const FoodListScreen();
       case 3:
         return const ProgressScreen();
       case 4:
         return const ProfileScreen();
       default:
-        return const DashboardScreen();
+        return const HomeScreen();
     }
   }
 
@@ -103,64 +103,59 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
     return Scaffold(
       // Use lazy builder instead of IndexedStack
       body: _buildScreen(_currentIndex),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  isDark
-                      ? AppColors.darkShadow.withValues(alpha: 0.3)
-                      : AppColors.primary.withValues(alpha: 0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+      bottomNavigationBar: ClipRRect(
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            border: Border(
+              top: BorderSide(
+                color: isDark ? AppColors.darkBorder : const Color(0xFFE8EDF2),
+              ),
             ),
-          ],
-        ),
-        child: SafeArea(
-          child: SizedBox(
-            height: 70,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _NavItem(
-                  icon: Icons.home_outlined,
-                  activeIcon: Icons.home,
-                  label: lang.getText(en: 'Home', vi: 'Trang chủ'),
-                  isActive: _currentIndex == 0,
-                  onTap: () => _onTabChanged(0),
-                ),
-                _NavItem(
-                  icon: Icons.fitness_center_outlined,
-                  activeIcon: Icons.fitness_center,
-                  label: lang.getText(en: 'Exercises', vi: 'Bài tập'),
-                  isActive: _currentIndex == 1,
-                  onTap: () => _onTabChanged(1),
-                ),
-                _NavItem(
-                  icon: Icons.lunch_dining_outlined,
-                  activeIcon: Icons.lunch_dining,
-                  label: lang.getText(en: 'Food', vi: 'Thực phẩm'),
-                  isActive: _currentIndex == 2,
-                  onTap: () => _onTabChanged(2),
-                ),
-                _NavItem(
-                  icon: Icons.trending_up_outlined,
-                  activeIcon: Icons.trending_up,
-                  label: lang.getText(en: 'Progress', vi: 'Tiến độ'),
-                  isActive: _currentIndex == 3,
-                  onTap: () => _onTabChanged(3),
-                ),
-                _NavItem(
-                  icon: Icons.person_outline,
-                  activeIcon: Icons.person,
-                  label: lang.getText(en: 'Profile', vi: 'Hồ sơ'),
-                  isActive: _currentIndex == 4,
-                  onTap: () => _onTabChanged(4),
-                ),
-              ],
+          ),
+          child: SafeArea(
+            child: SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _NavItem(
+                    icon: Icons.home_outlined,
+                    activeIcon: Icons.home,
+                    label: lang.getText(en: 'Home', vi: 'Trang chủ'),
+                    isActive: _currentIndex == 0,
+                    onTap: () => _onTabChanged(0),
+                  ),
+                  _NavItem(
+                    icon: Icons.fitness_center_outlined,
+                    activeIcon: Icons.fitness_center,
+                    label: lang.getText(en: 'Exercises', vi: 'Bài tập'),
+                    isActive: _currentIndex == 1,
+                    onTap: () => _onTabChanged(1),
+                  ),
+                  _NavItem(
+                    icon: Icons.lunch_dining_outlined,
+                    activeIcon: Icons.lunch_dining,
+                    label: lang.getText(en: 'Food', vi: 'Thực phẩm'),
+                    isActive: _currentIndex == 2,
+                    onTap: () => _onTabChanged(2),
+                  ),
+                  _NavItem(
+                    icon: Icons.trending_up_outlined,
+                    activeIcon: Icons.trending_up,
+                    label: lang.getText(en: 'Progress', vi: 'Tiến độ'),
+                    isActive: _currentIndex == 3,
+                    onTap: () => _onTabChanged(3),
+                  ),
+                  _NavItem(
+                    icon: Icons.person_outline,
+                    activeIcon: Icons.person,
+                    label: lang.getText(en: 'Profile', vi: 'Hồ sơ'),
+                    isActive: _currentIndex == 4,
+                    onTap: () => _onTabChanged(4),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -186,7 +181,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const activeColor = AppColors.primary;
+    const inactiveColor = Color(0xFF94A3B8);
+
     return RepaintBoundary(
       child: GestureDetector(
         onTap: onTap,
@@ -196,43 +193,17 @@ class _NavItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Icon container with gradient when active
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isActive ? 16 : 8,
-                  vertical: isActive ? 8 : 4,
-                ),
-                decoration: BoxDecoration(
-                  gradient:
-                      isActive
-                          ? (isDark
-                              ? AppColors.darkPrimaryGradient
-                              : AppColors.primaryGradient)
-                          : null,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Icon(
-                  isActive ? activeIcon : icon,
-                  color:
-                      isActive
-                          ? Colors.white
-                          : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.textSecondary),
-                  size: 22,
-                ),
+              Icon(
+                isActive ? activeIcon : icon,
+                color: isActive ? activeColor : inactiveColor,
+                size: 24,
               ),
               const SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 10,
-                  color:
-                      isActive
-                          ? (isDark ? AppColors.darkPrimary : AppColors.primary)
-                          : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.textSecondary),
+                  color: isActive ? activeColor : inactiveColor,
                   fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
                 ),
                 maxLines: 1,

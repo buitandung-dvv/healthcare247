@@ -116,7 +116,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
           // Mark start time for current exercise when ready countdown ends
           if (!_exerciseStartTimes.containsKey(_currentExerciseIndex)) {
             _exerciseStartTimes[_currentExerciseIndex] = DateTime.now();
-            debugPrint('⏱️ Set start time for exercise $_currentExerciseIndex: ${_exerciseStartTimes[_currentExerciseIndex]}');
+            debugPrint(
+              '⏱️ Set start time for exercise $_currentExerciseIndex: ${_exerciseStartTimes[_currentExerciseIndex]}',
+            );
           }
         });
       }
@@ -142,14 +144,20 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
 
     // VERSION MARKER - nếu thấy log này, code mới đã được load
     debugPrint('🔥🔥🔥 VERSION 2.0 - _completeSet called 🔥🔥🔥');
-    debugPrint('🏋️ Completing set $_currentSet for exercise ${detail.exerciseId}, orderIndex=${detail.orderIndex}');
-    debugPrint('🏋️ Target reps: ${detail.targetReps}, targetSets: ${detail.targetSets}');
+    debugPrint(
+      '🏋️ Completing set $_currentSet for exercise ${detail.exerciseId}, orderIndex=${detail.orderIndex}',
+    );
+    debugPrint(
+      '🏋️ Target reps: ${detail.targetReps}, targetSets: ${detail.targetSets}',
+    );
     debugPrint('🏋️ _exerciseStartTimes: $_exerciseStartTimes');
 
     // Ensure start time is set for current exercise (if not already set)
     if (!_exerciseStartTimes.containsKey(_currentExerciseIndex)) {
       _exerciseStartTimes[_currentExerciseIndex] = now;
-      debugPrint('🏋️ Set start time for exercise $_currentExerciseIndex: $now');
+      debugPrint(
+        '🏋️ Set start time for exercise $_currentExerciseIndex: $now',
+      );
     }
 
     // Get the start time for this exercise
@@ -158,13 +166,17 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     // Check if this is the last set
     final isLastSet = _currentSet >= detail.targetSets;
 
-    debugPrint('🏋️ _currentExerciseIndex: $_currentExerciseIndex, startedAt: $startedAt, isLastSet: $isLastSet');
+    debugPrint(
+      '🏋️ _currentExerciseIndex: $_currentExerciseIndex, startedAt: $startedAt, isLastSet: $isLastSet',
+    );
 
     // Always send startedAt on first set, send completedAt on last set
     final sendStartedAt = (_currentSet == 1) ? startedAt : null;
     final sendCompletedAt = isLastSet ? now : null;
 
-    debugPrint('🏋️ WILL SEND: orderIndex=${detail.orderIndex}, startedAt=$sendStartedAt, completedAt=$sendCompletedAt');
+    debugPrint(
+      '🏋️ WILL SEND: orderIndex=${detail.orderIndex}, startedAt=$sendStartedAt, completedAt=$sendCompletedAt',
+    );
 
     // Send sets, reps, orderIndex, and timing info
     await provider.updateExerciseProgress(
@@ -885,71 +897,151 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
   }
 
   // ============ WORKOUT VIEW ============
+  // === Stitch: Workout view with exercise card, set info, and controls ===
   Widget _buildWorkoutView(
     WorkoutSession session,
     WorkoutSessionDetail detail,
     LanguageProvider lang,
   ) {
-    final minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
-    final secs = (_seconds % 60).toString().padLeft(2, '0');
-
     return Column(
       children: [
         // Header with icons
         _buildHeader(transparent: true),
 
-        // Exercise Image
+        // Exercise Image Card (Stitch rounded card with badge)
         Expanded(
           flex: 3,
-          child: _buildExerciseImage(detail.exerciseId, large: true),
-        ),
-
-        // Exercise info
-        Expanded(
-          flex: 2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    detail.exerciseName ?? 'Exercise',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: _buildExerciseImage(detail.exerciseId, large: true),
+                ),
+                // "Đang tập" badge
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      lang.getText(en: 'Active', vi: 'Đang tập'),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Icons.help_outline,
-                    size: 20,
-                    color: AppColors.textSecondary,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Set $_currentSet/${detail.targetSets} • x${detail.targetReps}',
-                style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
-              ),
-              const SizedBox(height: 24),
-
-              // Timer
-              Text(
-                '$minutes:$secs',
-                style: const TextStyle(
-                  fontSize: 56,
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 
-        // Controls
+        // Exercise info (Stitch style)
+        Expanded(
+          flex: 2,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Column(
+              children: [
+                Text(
+                  detail.exerciseName ?? 'Exercise',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                // Set info badge
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Text(
+                    'Set $_currentSet/${detail.targetSets} · ${detail.targetReps} reps',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Complete Set button (Stitch gradient)
+                GestureDetector(
+                  onTap: () => _completeSet(detail),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      gradient: AppColors.primaryGradient,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          lang.getText(
+                            en: 'Complete Set',
+                            vi: 'Hoàn thành Set',
+                          ),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Bottom controls
         Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -957,26 +1049,96 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
               _buildRoundButton(
                 icon: Icons.skip_previous,
                 onPressed: _currentExerciseIndex > 0 ? _previousExercise : null,
-                size: 56,
+                size: 52,
               ),
 
               // Pause/Play
               _buildRoundButton(
                 icon: _isPaused ? Icons.play_arrow : Icons.pause,
                 onPressed: _togglePause,
-                size: 72,
+                size: 68,
                 isPrimary: true,
               ),
 
-              // Next / Complete
+              // Next
               _buildRoundButton(
                 icon: Icons.skip_next,
                 onPressed: () => _completeSet(detail),
-                size: 56,
+                size: 52,
               ),
             ],
           ),
         ),
+
+        // Exercise list (Stitch mini checklist)
+        if (session.details.length > 1)
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            child: SizedBox(
+              height: 32,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: session.details.length,
+                itemBuilder: (context, i) {
+                  final isDone = i < _currentExerciseIndex;
+                  final isCurrent = i == _currentExerciseIndex;
+                  return Container(
+                    margin: const EdgeInsets.only(right: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          isDone
+                              ? AppColors.success.withValues(alpha: 0.1)
+                              : isCurrent
+                              ? AppColors.primary.withValues(alpha: 0.1)
+                              : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(100),
+                      border:
+                          isCurrent
+                              ? Border.all(color: AppColors.primary, width: 1.5)
+                              : null,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isDone
+                              ? Icons.check_circle
+                              : isCurrent
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_unchecked,
+                          size: 14,
+                          color:
+                              isDone
+                                  ? AppColors.success
+                                  : isCurrent
+                                  ? AppColors.primary
+                                  : Colors.grey.shade400,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${i + 1}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                isDone
+                                    ? AppColors.success
+                                    : isCurrent
+                                    ? AppColors.primary
+                                    : Colors.grey.shade400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -1016,20 +1178,71 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     );
   }
 
+  // === Stitch: Session header with timer badge ===
   Widget _buildHeader({bool transparent = false}) {
+    final minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (_seconds % 60).toString().padLeft(2, '0');
+    final lang = context.read<LanguageProvider>();
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(
-              Icons.arrow_back,
-              color: transparent ? AppColors.textPrimary : Colors.white,
+          // Back button (Stitch circle)
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color:
+                    transparent
+                        ? Colors.grey.shade100
+                        : Colors.white.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.arrow_back,
+                size: 20,
+                color: transparent ? AppColors.textPrimary : Colors.white,
+              ),
             ),
           ),
-          const SizedBox(width: 48), // Placeholder for symmetry
+          // Title
+          Expanded(
+            child: Text(
+              lang.getText(en: 'Workout Session', vi: 'Phiên tập luyện'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: transparent ? AppColors.textPrimary : Colors.white,
+              ),
+            ),
+          ),
+          // Timer badge (Stitch red timer)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColors.caloriesColor,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.timer, size: 14, color: Colors.white),
+                const SizedBox(width: 4),
+                Text(
+                  '$minutes:$secs',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

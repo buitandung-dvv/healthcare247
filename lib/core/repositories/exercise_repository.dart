@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import '../network/api_client.dart';
 import '../network/api_config.dart';
 import '../../data/models/exercise_model.dart';
@@ -33,16 +34,20 @@ class ExerciseRepository {
         ApiConfig.languageParam: languageId.toString(),
         ApiConfig.pageParam: page.toString(),
         ApiConfig.limitParam: limit.toString(),
-        if (level != null) 'level': level,
-        if (category != null) 'category': category,
-        if (equipment != null) 'equipment': equipment,
-        if (muscle != null) 'muscle': muscle,
+        'level': ?level,
+        'category': ?category,
+        'equipment': ?equipment,
+        'muscle': ?muscle,
         if (search != null && search.isNotEmpty) ApiConfig.searchParam: search,
       };
 
       final response = await _apiClient.get<Map<String, dynamic>>(
         ApiConfig.exercises,
         queryParameters: queryParams,
+        options: Options(
+          receiveTimeout: const Duration(seconds: 90),
+          sendTimeout: const Duration(seconds: 30),
+        ),
       );
 
       if (response.data != null) {

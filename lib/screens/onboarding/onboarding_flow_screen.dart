@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_sizes.dart';
 import '../../providers/auth_provider.dart';
 import 'steps/welcome_step.dart';
-import 'steps/gender_step.dart';
+
 import 'steps/body_info_step.dart';
 import 'steps/activity_level_step.dart';
 import 'steps/fitness_goal_step.dart';
@@ -47,7 +46,8 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   final PageController _pageController = PageController();
   final OnboardingData _data = OnboardingData();
   int _currentStep = 0;
-  final int _totalSteps = 8; // Added FitnessGoalStep
+  final int _totalSteps =
+      7; // Welcome + BodyInfo(+gender) + Activity + Goal + BodyGoals + Motivation + Weekly
 
   @override
   void dispose() {
@@ -191,15 +191,12 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
                 onPageChanged: (index) => setState(() => _currentStep = index),
                 children: [
                   WelcomeStep(onNext: _nextStep),
-                  GenderStep(
-                    selectedGender: _data.gender,
-                    onChanged: (v) => setState(() => _data.gender = v),
-                    onNext: _nextStep,
-                  ),
                   BodyInfoStep(
+                    gender: _data.gender,
                     height: _data.height,
                     weight: _data.weight,
                     dateOfBirth: _data.dateOfBirth,
+                    onGenderChanged: (v) => setState(() => _data.gender = v),
                     onHeightChanged: (v) => setState(() => _data.height = v),
                     onWeightChanged: (v) => setState(() => _data.weight = v),
                     onDateChanged: (v) => setState(() => _data.dateOfBirth = v),
@@ -244,55 +241,122 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   Widget _buildHeader(BuildContext context, bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.md,
-        vertical: AppSizes.sm,
-      ),
-      child: Row(
-        children: [
-          // Back button
-          if (_currentStep > 0)
-            IconButton(
-              onPressed: _previousStep,
-              icon: Icon(
-                Icons.arrow_back_ios_rounded,
-                color:
-                    isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-              ),
-            )
-          else
-            const SizedBox(width: 48),
-          // Progress indicator
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: (_currentStep + 1) / _totalSteps,
-                  backgroundColor:
-                      isDark ? AppColors.darkBorder : AppColors.border,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.primary,
-                  ),
-                  minHeight: 6,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // Welcome step: show simplified header with just skip
+    if (_currentStep == 0) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: _skipOnboarding,
+              child: Text(
+                'Bỏ qua',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
                 ),
               ),
             ),
-          ),
-          // Skip button
-          TextButton(
-            onPressed: _skipOnboarding,
-            child: Text(
-              'Bỏ qua',
-              style: TextStyle(
-                color:
-                    isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
+          ],
+        ),
+      );
+    }
+
+    // Other steps: Stitch-style header with progress bar + counter
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        children: [
+          // Top row: back button + title + skip
+          Row(
+            children: [
+              GestureDetector(
+                onTap: _previousStep,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 18,
+                    color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                  ),
+                ),
               ),
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    'HealthCare247',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: _skipOnboarding,
+                child: Text(
+                  'Bỏ qua',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Progress bar row — Stitch style
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Tiến trình hoàn thiện hồ sơ',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color:
+                        isDark
+                            ? AppColors.darkTextSecondary
+                            : const Color(0xFF64748B),
+                  ),
+                ),
+              ),
+              Text(
+                '$_currentStep/$_totalSteps',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Progress bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: _currentStep / _totalSteps,
+              minHeight: 6,
+              backgroundColor:
+                  isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+              valueColor: AlwaysStoppedAnimation(AppColors.primary),
             ),
           ),
         ],

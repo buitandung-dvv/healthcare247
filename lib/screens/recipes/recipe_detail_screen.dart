@@ -5,7 +5,6 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../data/models/recipe_model.dart';
 import '../../providers/language_provider.dart';
-import '../../widgets/common/common_widgets.dart';
 import 'youtube_player_screen.dart';
 
 /// Recipe Detail Screen - Chi tiết công thức nấu ăn
@@ -206,6 +205,30 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
+            leading: Padding(
+              padding: const EdgeInsets.all(8),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFF0F172A),
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: GestureDetector(
                 onTap: _playVideo,
@@ -445,18 +468,85 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: SecondaryButton(
-                          text: lang.getText(en: 'Save', vi: 'Lưu'),
-                          icon: Icons.bookmark_border,
-                          onPressed: () => _saveRecipe(context),
+                        child: GestureDetector(
+                          onTap: () => _saveRecipe(context),
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(9999),
+                              border: Border.all(
+                                color: const Color(0xFFF1F5F9),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.04),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.bookmark_border,
+                                  color: AppColors.primary,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  lang.getText(en: 'Save', vi: 'Lưu'),
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSizes.md),
                       Expanded(
-                        child: PrimaryButton(
-                          text: lang.getText(en: 'Add', vi: 'Thêm'),
-                          icon: Icons.add,
-                          onPressed: () => _addToMeal(context),
+                        child: GestureDetector(
+                          onTap: () => _addToMeal(context),
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                              ),
+                              borderRadius: BorderRadius.circular(9999),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF1565C0,
+                                  ).withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  lang.getText(en: 'Add', vi: 'Thêm'),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -478,7 +568,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       padding: AppSizes.paddingMd,
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.card,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.border,
         ),

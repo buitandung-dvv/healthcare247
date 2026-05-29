@@ -1,5 +1,5 @@
 import { getPool, sql } from '../config/database';
-import { FavoriteFood, FavoriteRecipe, Food, Recipe } from '../types';
+import { FavoriteFood, FavoriteRecipe, FavoriteExercise, Food, Recipe, Exercise } from '../types';
 
 export class FavoritesService {
     // ==========================================
@@ -217,6 +217,110 @@ export class FavoritesService {
     }
 
     // ==========================================
+    // FAVORITE EXERCISES
+    // ==========================================
+
+    // Get user's favorite exercises
+    async getUserFavoriteExercises(userId: number, languageId: number = 1): Promise<FavoriteExercise[]> {
+        const pool = getPool();
+
+        const result = await pool.request()
+            .input('user_id', sql.Int, userId)
+            .input('language_id', sql.Int, languageId)
+            .query(`
+        SELECT
+          fe.user_id,
+          fe.exercise_id,
+          fe.notes,
+          fe.created_at,
+          e.slug,
+          e.body_part,
+          e.equipment,
+          e.gif_url,
+          e.target_muscle,
+          e.secondary_muscles,
+          COALESCE(et.name, et_en.name) as name,
+          COALESCE(et.instructions, et_en.instructions) as instructions
+        FROM Favorite_Exercises fe
+        JOIN Exercises e ON fe.exercise_id = e.exercise_id
+        LEFT JOIN Exercise_Translations et ON e.exercise_id = et.exercise_id AND et.language_id = @language_id
+        LEFT JOIN Exercise_Translations et_en ON e.exercise_id = et_en.exercise_id AND et_en.language_id = 1
+        WHERE fe.user_id = @user_id
+        ORDER BY fe.created_at DESC
+      `);
+
+        return result.recordset.map(row => ({
+            user_id: row.user_id,
+            exercise_id: row.exercise_id,
+            notes: row.notes,
+            created_at: row.created_at,
+            exercise: {
+                exercise_id: row.exercise_id,
+                slug: row.slug,
+                body_part: row.body_part,
+                equipment: row.equipment,
+                gif_url: row.gif_url,
+                target_muscle: row.target_muscle,
+                secondary_muscles: row.secondary_muscles,
+                name: row.name,
+                instructions: row.instructions,
+                created_at: row.created_at,
+            },
+        }));
+    }
+
+    // Add exercise to favorites
+    async addFavoriteExercise(userId: number, exerciseId: number, notes?: string): Promise<boolean> {
+        const pool = getPool();
+
+        try {
+            await pool.request()
+                .input('user_id', sql.Int, userId)
+                .input('exercise_id', sql.Int, exerciseId)
+                .input('notes', sql.NVarChar, notes || null)
+                .query(`
+          IF NOT EXISTS (SELECT 1 FROM Favorite_Exercises WHERE user_id = @user_id AND exercise_id = @exercise_id)
+          INSERT INTO Favorite_Exercises (user_id, exercise_id, notes)
+          VALUES (@user_id, @exercise_id, @notes)
+        `);
+            return true;
+        } catch (error) {
+            console.error('Error adding favorite exercise:', error);
+            return false;
+        }
+    }
+
+    // Remove exercise from favorites
+    async removeFavoriteExercise(userId: number, exerciseId: number): Promise<boolean> {
+        const pool = getPool();
+
+        const result = await pool.request()
+            .input('user_id', sql.Int, userId)
+            .input('exercise_id', sql.Int, exerciseId)
+            .query(`
+        DELETE FROM Favorite_Exercises
+        WHERE user_id = @user_id AND exercise_id = @exercise_id
+      `);
+
+        return result.rowsAffected[0] > 0;
+    }
+
+    // Check if exercise is favorited
+    async isExerciseFavorited(userId: number, exerciseId: number): Promise<boolean> {
+        const pool = getPool();
+
+        const result = await pool.request()
+            .input('user_id', sql.Int, userId)
+            .input('exercise_id', sql.Int, exerciseId)
+            .query(`
+        SELECT 1 FROM Favorite_Exercises
+        WHERE user_id = @user_id AND exercise_id = @exercise_id
+      `);
+
+        return result.recordset.length > 0;
+    }
+
+    // ==========================================
     // COMBINED FAVORITES
     // ==========================================
 
@@ -224,11 +328,13 @@ export class FavoritesService {
     async getUserFavorites(userId: number, languageId: number = 1): Promise<{
         foods: FavoriteFood[];
         recipes: FavoriteRecipe[];
+        exercises: FavoriteExercise[];
     }> {
         const foods = await this.getUserFavoriteFoods(userId, languageId);
         const recipes = await this.getUserFavoriteRecipes(userId, languageId);
+        const exercises = await this.getUserFavoriteExercises(userId, languageId);
 
-        return { foods, recipes };
+        return { foods, recipes, exercises };
     }
 }
 

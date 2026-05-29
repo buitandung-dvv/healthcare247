@@ -184,14 +184,13 @@ class AppTheme {
     );
   }
 
-  static CardTheme get _cardTheme {
-    return CardTheme(
+  static CardThemeData get _cardTheme {
+    return CardThemeData(
       color: AppColors.card,
-      elevation: 4,
-      shadowColor: AppColors.shadow.withValues(alpha: 0.15),
+      elevation: 2,
+      shadowColor: AppColors.shadow.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        side: BorderSide(color: AppColors.border.withValues(alpha: 0.3)),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
       ),
     );
   }
@@ -201,13 +200,14 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.textWhite,
-        elevation: 2,
+        elevation: 0,
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.lg,
+          horizontal: AppSizes.xl,
           vertical: AppSizes.md,
         ),
+        minimumSize: const Size(double.infinity, AppSizes.buttonHeightLg),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusFull),
         ),
         textStyle: GoogleFonts.inter(
           fontSize: AppSizes.fontLg,
@@ -254,23 +254,23 @@ class AppTheme {
       filled: true,
       fillColor: AppColors.surface,
       contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.md,
-        vertical: AppSizes.md,
+        horizontal: AppSizes.lg,
+        vertical: AppSizes.md + 2,
       ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         borderSide: const BorderSide(color: AppColors.primary, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         borderSide: const BorderSide(color: AppColors.error),
       ),
       hintStyle: GoogleFonts.inter(
@@ -415,14 +415,13 @@ class AppTheme {
     );
   }
 
-  static CardTheme get _darkCardTheme {
-    return CardTheme(
+  static CardThemeData get _darkCardTheme {
+    return CardThemeData(
       color: AppColors.darkCard,
-      elevation: 4,
-      shadowColor: AppColors.darkShadow.withValues(alpha: 0.25),
+      elevation: 2,
+      shadowColor: AppColors.darkShadow.withValues(alpha: 0.15),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        side: BorderSide(color: AppColors.darkBorder.withValues(alpha: 0.4)),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
       ),
     );
   }
@@ -432,13 +431,14 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.darkPrimary,
         foregroundColor: AppColors.darkBackground,
-        elevation: 2,
+        elevation: 0,
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.lg,
+          horizontal: AppSizes.xl,
           vertical: AppSizes.md,
         ),
+        minimumSize: const Size(double.infinity, AppSizes.buttonHeightLg),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusFull),
         ),
         textStyle: GoogleFonts.inter(
           fontSize: AppSizes.fontLg,

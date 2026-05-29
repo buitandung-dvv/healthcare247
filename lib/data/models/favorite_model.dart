@@ -97,3 +97,60 @@ class FavoriteRecipe extends Equatable {
   @override
   List<Object?> get props => [userId, recipeId, createdAt];
 }
+
+/// Favorite Exercise Model - User's favorite exercises
+class FavoriteExercise extends Equatable {
+  final int userId;
+  final int exerciseId;
+  final String? notes;
+  final DateTime? createdAt;
+
+  // Optional joined data
+  final String? name;
+  final String? bodyPart;
+  final String? equipment;
+  final String? gifUrl;
+  final String? targetMuscle;
+
+  const FavoriteExercise({
+    required this.userId,
+    required this.exerciseId,
+    this.notes,
+    this.createdAt,
+    this.name,
+    this.bodyPart,
+    this.equipment,
+    this.gifUrl,
+    this.targetMuscle,
+  });
+
+  factory FavoriteExercise.fromJson(Map<String, dynamic> json) {
+    final exercise = json['exercise'] as Map<String, dynamic>?;
+    return FavoriteExercise(
+      userId: json['user_id'] as int,
+      exerciseId: json['exercise_id'] as int,
+      notes: json['notes'] as String?,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'] as String)
+              : null,
+      name: exercise?['name'] as String?,
+      bodyPart: exercise?['body_part'] as String?,
+      equipment: exercise?['equipment'] as String?,
+      gifUrl: exercise?['gif_url'] as String?,
+      targetMuscle: exercise?['target_muscle'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user_id': userId,
+      'exercise_id': exerciseId,
+      'notes': notes,
+      'created_at': createdAt?.toIso8601String(),
+    };
+  }
+
+  @override
+  List<Object?> get props => [userId, exerciseId, createdAt];
+}

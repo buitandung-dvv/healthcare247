@@ -12,6 +12,7 @@ class AuthProvider extends ChangeNotifier {
   static const String _emailKey = 'email';
   static const String _isLoggedInKey = 'is_logged_in';
   static const String _tokenKey = 'auth_token';
+  static const String _onboardingCompletedKey = 'onboarding_completed';
 
   final AuthRepository _authRepository;
   User? _currentUser;
@@ -50,6 +51,12 @@ class AuthProvider extends ChangeNotifier {
           final user = await _authRepository.getCurrentUser();
           if (user != null) {
             _currentUser = user;
+            // Cache onboarding status locally
+            _localOnboardingCompleted = user.onboardingCompleted;
+            await prefs.setBool(
+              _onboardingCompletedKey,
+              user.onboardingCompleted,
+            );
           } else {
             // Fallback to cached data
             _loadCachedUser(prefs);
@@ -81,10 +88,12 @@ class AuthProvider extends ChangeNotifier {
 
   void _loadCachedUser(SharedPreferences prefs) {
     final userId = prefs.getInt(_userIdKey) ?? 0;
+    final cachedOnboarding = prefs.getBool(_onboardingCompletedKey) ?? false;
     _currentUser = User(
       userId: userId,
       username: prefs.getString(_usernameKey) ?? '',
       email: prefs.getString(_emailKey) ?? '',
+      onboardingCompleted: cachedOnboarding,
     );
   }
 
@@ -411,7 +420,9 @@ class AuthProvider extends ChangeNotifier {
   }
 
   /// Check if user has completed onboarding
-  bool get onboardingCompleted => _currentUser?.onboardingCompleted ?? false;
+  bool get onboardingCompleted =>
+      _currentUser?.onboardingCompleted ?? _localOnboardingCompleted;
+  bool _localOnboardingCompleted = false;
 
   /// Quick update user goal from profile
   Future<bool> updateUserGoal(String goal) async {
@@ -478,23 +489,38 @@ class AuthProvider extends ChangeNotifier {
 
       if (updatedUser != null) {
         _currentUser = updatedUser;
+        // Persist onboarding completed locally as safety net
+        _localOnboardingCompleted = true;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(_onboardingCompletedKey, true);
         _isLoading = false;
         notifyListeners();
-        debugPrint('[AuthProvider] SUCCESS: User updated');
+        debugPrint(
+          '[AuthProvider] SUCCESS: User updated, onboardingCompleted=${updatedUser.onboardingCompleted}',
+        );
         return true;
       } else {
-        _errorMessage = 'Failed to save onboarding data';
+        // Even if API response is null, mark locally as completed so user isn't stuck
+        _localOnboardingCompleted = true;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(_onboardingCompletedKey, true);
         _isLoading = false;
         notifyListeners();
-        debugPrint('[AuthProvider] ERROR: updatedUser is null');
-        return false;
+        debugPrint(
+          '[AuthProvider] WARNING: updatedUser is null but marking completed locally',
+        );
+        return true;
       }
     } catch (e) {
       debugPrint('[AuthProvider] EXCEPTION: $e');
+      // Even on error, mark completed locally so user isn't stuck in loop
+      _localOnboardingCompleted = true;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_onboardingCompletedKey, true);
       _errorMessage = e.toString().replaceFirst('Exception: ', '');
       _isLoading = false;
       notifyListeners();
-      return false;
+      return true; // Return true so user can proceed
     }
   }
 

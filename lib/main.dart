@@ -212,19 +212,90 @@ class AppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
 
-    // Show loading while checking auth status
+    // Show Stitch-style splash while checking auth status
     if (authProvider.isLoading) {
       return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/app_icon.png', width: 80, height: 80),
-              const SizedBox(height: 24),
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              const Text('Đang tải HealthCare...'),
-            ],
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(flex: 3),
+                // App Icon
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/app_icon.png',
+                      width: 80,
+                      height: 80,
+                      errorBuilder:
+                          (_, _, _) => const Icon(
+                            Icons.favorite,
+                            size: 48,
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // App Name
+                const Text(
+                  'HealthCare247',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Tagline
+                Text(
+                  'Sức khỏe thông minh',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const Spacer(flex: 2),
+                // Loading indicator
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation(
+                      Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Đang tải...',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 13,
+                  ),
+                ),
+                const Spacer(flex: 1),
+              ],
+            ),
           ),
         ),
       );

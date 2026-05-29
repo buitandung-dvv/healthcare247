@@ -220,6 +220,24 @@ class RecipeCard extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                // Favorite heart (Stitch design)
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.favorite_border,
+                      size: 18,
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                ),
               ],
             ),
 
@@ -409,7 +427,7 @@ class RecipeListTile extends StatelessWidget {
           ),
 
           // Trailing
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

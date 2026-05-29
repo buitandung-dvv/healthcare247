@@ -36,7 +36,7 @@ class ActivityFeedCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSizes.md),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusCard),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
@@ -174,7 +174,7 @@ class EmptyActivityState extends StatelessWidget {
       padding: const EdgeInsets.all(AppSizes.xl),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         border: Border.all(
           color: AppColors.border.withValues(alpha: 0.5),
           style: BorderStyle.solid,

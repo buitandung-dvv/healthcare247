@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
 
-/// Body info step - Height, Weight with ruler picker style
+/// Body info step — Stitch design: Gender cards + Height/Weight rulers + DOB picker (merged)
 class BodyInfoStep extends StatefulWidget {
+  final String? gender;
   final double? height;
   final double? weight;
   final DateTime? dateOfBirth;
+  final ValueChanged<String> onGenderChanged;
   final ValueChanged<double> onHeightChanged;
   final ValueChanged<double> onWeightChanged;
   final ValueChanged<DateTime> onDateChanged;
@@ -15,9 +16,11 @@ class BodyInfoStep extends StatefulWidget {
 
   const BodyInfoStep({
     super.key,
+    this.gender,
     this.height,
     this.weight,
     this.dateOfBirth,
+    required this.onGenderChanged,
     required this.onHeightChanged,
     required this.onWeightChanged,
     required this.onDateChanged,
@@ -31,8 +34,6 @@ class BodyInfoStep extends StatefulWidget {
 class _BodyInfoStepState extends State<BodyInfoStep> {
   late double _weight;
   late double _height;
-  bool _useKg = true;
-  bool _useCm = true;
 
   late FixedExtentScrollController _weightController;
   late FixedExtentScrollController _heightController;
@@ -40,15 +41,14 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
   @override
   void initState() {
     super.initState();
-    _weight = widget.weight ?? 70.0;
+    _weight = widget.weight ?? 65.0;
     _height = widget.height ?? 170.0;
 
-    // Initialize scroll controllers
     _weightController = FixedExtentScrollController(
-      initialItem: (_weight - 30).toInt(), // Weight starts from 30kg
+      initialItem: (_weight - 30).toInt(),
     );
     _heightController = FixedExtentScrollController(
-      initialItem: (_height - 100).toInt(), // Height starts from 100cm
+      initialItem: (_height - 100).toInt(),
     );
   }
 
@@ -65,93 +65,223 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
     final textColor =
         isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
     final secondaryColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+        isDark ? AppColors.darkTextSecondary : const Color(0xFF64748B);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: AppSizes.xl),
+          const SizedBox(height: 20),
 
-          // Title
+          // Title — Stitch style
           Text(
-            'Hãy cho chúng tôi biết\nthêm về bạn',
+            'Thông tin cơ thể của bạn',
             style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
+              fontSize: 26,
+              fontWeight: FontWeight.w800,
               color: textColor,
-              height: 1.3,
             ),
           ),
-          const SizedBox(height: AppSizes.sm),
+          const SizedBox(height: 6),
           Text(
-            'Hãy cho chúng tôi biết thêm về bạn\nđể giúp tăng kết quả tập luyện',
-            style: TextStyle(
-              fontSize: AppSizes.fontMd,
-              color: secondaryColor,
-              height: 1.4,
-            ),
+            'Giúp chúng tôi tính toán chỉ số phù hợp',
+            style: TextStyle(fontSize: 14, color: secondaryColor),
           ),
 
-          const SizedBox(height: AppSizes.xxl),
+          const SizedBox(height: 24),
 
-          // Weight Section
-          _buildWeightSection(isDark, textColor, secondaryColor),
+          // ── GENDER ─────────────────────────
+          Text(
+            'Giới tính',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _GenderCard(
+                  icon: Icons.male_rounded,
+                  label: 'Nam',
+                  isSelected: widget.gender == 'male',
+                  onTap: () => widget.onGenderChanged('male'),
+                  isDark: isDark,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: _GenderCard(
+                  icon: Icons.female_rounded,
+                  label: 'Nữ',
+                  isSelected: widget.gender == 'female',
+                  onTap: () => widget.onGenderChanged('female'),
+                  isDark: isDark,
+                ),
+              ),
+            ],
+          ),
 
-          const SizedBox(height: AppSizes.xl),
+          const SizedBox(height: 28),
 
-          // Height Section
-          _buildHeightSection(isDark, textColor, secondaryColor),
+          // ── HEIGHT ─────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Chiều cao',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${_height.toInt()}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' cm',
+                      style: TextStyle(fontSize: 14, color: secondaryColor),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildHorizontalRulerPicker(
+            controller: _heightController,
+            minValue: 100,
+            maxValue: 250,
+            currentValue: _height,
+            onChanged: (value) {
+              setState(() => _height = value.toDouble());
+              widget.onHeightChanged(value.toDouble());
+              HapticFeedback.selectionClick();
+            },
+            isDark: isDark,
+          ),
 
-          const SizedBox(height: AppSizes.xl),
+          const SizedBox(height: 24),
 
-          // Date of Birth Section
+          // ── WEIGHT ─────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Cân nặng',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${_weight.toInt()}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' kg',
+                      style: TextStyle(fontSize: 14, color: secondaryColor),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildHorizontalRulerPicker(
+            controller: _weightController,
+            minValue: 30,
+            maxValue: 200,
+            currentValue: _weight,
+            onChanged: (value) {
+              setState(() => _weight = value.toDouble());
+              widget.onWeightChanged(value.toDouble());
+              HapticFeedback.selectionClick();
+            },
+            isDark: isDark,
+          ),
+
+          const SizedBox(height: 28),
+
+          // ── DATE OF BIRTH ──────────────────
           _buildDateOfBirthSection(isDark, textColor, secondaryColor),
 
-          const SizedBox(height: AppSizes.xxl),
+          const SizedBox(height: 32),
 
-          // Continue Button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: widget.onNext,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusFull),
+          // ── GRADIENT BUTTON ────────────────
+          GestureDetector(
+            onTap: widget.onNext,
+            child: Container(
+              width: double.infinity,
+              height: 56,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
                 ),
-                elevation: 0,
+                borderRadius: BorderRadius.circular(9999),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF1565C0).withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
-              child: const Text(
-                'TIẾP THEO',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
+              child: const Center(
+                child: Text(
+                  'Tiếp theo',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: AppSizes.lg),
+          const SizedBox(height: 12),
+          Center(
+            child: Text(
+              'Quay lại',
+              style: TextStyle(fontSize: 15, color: secondaryColor),
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
+
+  // ─── DATE OF BIRTH ───────────────────────────────────────────
 
   Widget _buildDateOfBirthSection(
     bool isDark,
     Color textColor,
     Color secondaryColor,
   ) {
-    final bgColor = isDark ? AppColors.darkCard : Colors.white;
-    final borderColor = isDark ? AppColors.darkBorder : AppColors.border;
-
     final displayText =
         widget.dateOfBirth != null
-            ? '${widget.dateOfBirth!.day.toString().padLeft(2, '0')}/${widget.dateOfBirth!.month.toString().padLeft(2, '0')}/${widget.dateOfBirth!.year}'
+            ? '${widget.dateOfBirth!.day.toString().padLeft(2, '0')} / ${widget.dateOfBirth!.month.toString().padLeft(2, '0')} / ${widget.dateOfBirth!.year}'
             : 'Chọn ngày sinh';
 
     return Column(
@@ -160,49 +290,41 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
         Text(
           'Ngày sinh',
           style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
             color: textColor,
           ),
         ),
-        const SizedBox(height: AppSizes.md),
+        const SizedBox(height: 12),
         InkWell(
           onTap: () => _selectDate(context),
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(9999),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(AppSizes.md),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-              border: Border.all(color: borderColor),
+              color: isDark ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(9999),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
+              ),
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.calendar_today_rounded,
-                  size: 24,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: AppSizes.md),
                 Text(
                   displayText,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color:
-                        widget.dateOfBirth != null
-                            ? textColor
-                            : (isDark
-                                ? AppColors.darkTextHint
-                                : AppColors.textHint),
+                        widget.dateOfBirth != null ? textColor : secondaryColor,
                   ),
                 ),
                 const Spacer(),
                 Icon(
-                  Icons.arrow_drop_down_rounded,
+                  Icons.calendar_today_rounded,
+                  size: 22,
                   color: secondaryColor,
-                  size: 28,
                 ),
               ],
             ),
@@ -233,208 +355,7 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
     }
   }
 
-  Widget _buildWeightSection(
-    bool isDark,
-    Color textColor,
-    Color secondaryColor,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Label and Unit Toggle
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Cân nặng',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-            _buildUnitToggle(
-              firstUnit: 'kg',
-              secondUnit: 'lbs',
-              isFirst: _useKg,
-              onChanged: (value) {
-                setState(() => _useKg = value);
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSizes.md),
-
-        // Weight Value Display
-        Center(
-          child: Text(
-            _useKg
-                ? '${_weight.toStringAsFixed(1)} kg'
-                : '${(_weight * 2.205).toStringAsFixed(1)} lbs',
-            style: TextStyle(
-              fontSize: 48,
-              fontWeight: FontWeight.w300,
-              color: textColor,
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSizes.md),
-
-        // Weight Ruler Picker
-        _buildHorizontalRulerPicker(
-          controller: _weightController,
-          minValue: 30,
-          maxValue: 200,
-          currentValue: _weight,
-          onChanged: (value) {
-            setState(() => _weight = value.toDouble());
-            widget.onWeightChanged(value.toDouble());
-            HapticFeedback.selectionClick();
-          },
-          isDark: isDark,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeightSection(
-    bool isDark,
-    Color textColor,
-    Color secondaryColor,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Label and Unit Toggle
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Chiều cao',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-            _buildUnitToggle(
-              firstUnit: 'cm',
-              secondUnit: 'ft',
-              isFirst: _useCm,
-              onChanged: (value) {
-                setState(() => _useCm = value);
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSizes.md),
-
-        // Height Value Display
-        Center(
-          child:
-              _useCm
-                  ? Text(
-                    '${_height.toStringAsFixed(0)} cm',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.w300,
-                      color: textColor,
-                    ),
-                  )
-                  : RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.w300,
-                        color: textColor,
-                      ),
-                      children: [
-                        TextSpan(text: '${(_height / 30.48).floor()}'),
-                        TextSpan(
-                          text: 'ft ',
-                          style: TextStyle(fontSize: 24, color: secondaryColor),
-                        ),
-                        TextSpan(text: '${((_height % 30.48) / 2.54).round()}'),
-                        TextSpan(
-                          text: 'in',
-                          style: TextStyle(fontSize: 24, color: secondaryColor),
-                        ),
-                      ],
-                    ),
-                  ),
-        ),
-        const SizedBox(height: AppSizes.md),
-
-        // Height Ruler Picker
-        _buildHorizontalRulerPicker(
-          controller: _heightController,
-          minValue: 100,
-          maxValue: 250,
-          currentValue: _height,
-          onChanged: (value) {
-            setState(() => _height = value.toDouble());
-            widget.onHeightChanged(value.toDouble());
-            HapticFeedback.selectionClick();
-          },
-          isDark: isDark,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUnitToggle({
-    required String firstUnit,
-    required String secondUnit,
-    required bool isFirst,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.primarySoft,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildUnitButton(
-            text: firstUnit,
-            isSelected: isFirst,
-            onTap: () => onChanged(true),
-          ),
-          _buildUnitButton(
-            text: secondUnit,
-            isSelected: !isFirst,
-            onTap: () => onChanged(false),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUnitButton({
-    required String text,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? Colors.white : AppColors.primary,
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
+  // ─── HORIZONTAL RULER PICKER ─────────────────────────────────
 
   Widget _buildHorizontalRulerPicker({
     required FixedExtentScrollController controller,
@@ -446,12 +367,15 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
   }) {
     final itemCount = maxValue - minValue + 1;
 
-    return SizedBox(
-      height: 80,
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Ruler picker
           RotatedBox(
             quarterTurns: -1,
             child: ListWheelScrollView.useDelegate(
@@ -479,10 +403,10 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
                           Text(
                             value.toString(),
                             style: TextStyle(
-                              fontSize: isSelected ? 14 : 11,
+                              fontSize: isSelected ? 13 : 10,
                               fontWeight:
                                   isSelected
-                                      ? FontWeight.w600
+                                      ? FontWeight.w700
                                       : FontWeight.normal,
                               color:
                                   isSelected
@@ -494,7 +418,7 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
                           ),
                         Container(
                           width: 2,
-                          height: isMajorTick ? 24 : 12,
+                          height: isMajorTick ? 20 : 10,
                           decoration: BoxDecoration(
                             color:
                                 isSelected
@@ -512,17 +436,88 @@ class _BodyInfoStepState extends State<BodyInfoStep> {
               ),
             ),
           ),
-
-          // Center indicator
-          Container(
-            width: 3,
-            height: 60,
-            decoration: BoxDecoration(
+          // Center indicator triangle
+          Positioned(
+            top: 0,
+            child: Icon(
+              Icons.arrow_drop_down_rounded,
               color: AppColors.primary,
-              borderRadius: BorderRadius.circular(2),
+              size: 28,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─── GENDER CARD ──────────────────────────────────────────────
+
+class _GenderCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final bool isDark;
+
+  const _GenderCard({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: 100,
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? const Color(0xFFEBF5FF)
+                  : (isDark ? AppColors.darkCard : Colors.white),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color:
+                isSelected
+                    ? AppColors.primary
+                    : (isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0)),
+            width: isSelected ? 2.5 : 1.5,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 36,
+              color:
+                  isSelected
+                      ? AppColors.primary
+                      : (isDark
+                          ? AppColors.darkTextSecondary
+                          : const Color(0xFF94A3B8)),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color:
+                    isSelected
+                        ? AppColors.primary
+                        : (isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.textPrimary),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

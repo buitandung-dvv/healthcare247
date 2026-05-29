@@ -41,12 +41,12 @@ class GoalsRepository {
       final response = await _apiClient.put<Map<String, dynamic>>(
         '${ApiConfig.users}/$userId/goals',
         data: {
-          if (caloriesGoal != null) 'calories_goal': caloriesGoal,
-          if (proteinGoal != null) 'protein_goal': proteinGoal,
-          if (carbsGoal != null) 'carbs_goal': carbsGoal,
-          if (fatGoal != null) 'fat_goal': fatGoal,
-          if (waterGoalMl != null) 'water_goal_ml': waterGoalMl,
-          if (workoutsPerWeek != null) 'workouts_per_week': workoutsPerWeek,
+          'calories_goal': ?caloriesGoal,
+          'protein_goal': ?proteinGoal,
+          'carbs_goal': ?carbsGoal,
+          'fat_goal': ?fatGoal,
+          'water_goal_ml': ?waterGoalMl,
+          'workouts_per_week': ?workoutsPerWeek,
         },
       );
 

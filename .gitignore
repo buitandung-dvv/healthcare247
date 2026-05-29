@@ -74,3 +74,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Node dependencies at root
+node_modules/
+package-lock.json
+package.json
+
+# Zip files and redesign backups
+*.zip
+stitch_healthcare247_redesign/
+
+# Test outputs
+backend/test-report.json
+backend/test-report.txt
+backend/test-results-utf8.txt
+backend/test-results.txt
+backend/test-all-apis.js
+

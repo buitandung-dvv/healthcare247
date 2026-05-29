@@ -29,8 +29,8 @@ class RecipeRepository {
         ApiConfig.languageParam: languageId.toString(),
         ApiConfig.pageParam: page.toString(),
         ApiConfig.limitParam: limit.toString(),
-        if (category != null) 'category': category,
-        if (area != null) 'area': area,
+        'category': ?category,
+        'area': ?area,
         if (search != null && search.isNotEmpty) ApiConfig.searchParam: search,
       };
 

@@ -1,37 +1,42 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 /// Social Auth Service - Xử lý đăng nhập bằng Google/Facebook
+/// Updated for google_sign_in v7.2.0 API
 class SocialAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  bool _initialized = false;
 
   /// Singleton instance
   static final SocialAuthService _instance = SocialAuthService._internal();
   factory SocialAuthService() => _instance;
   SocialAuthService._internal();
 
+  /// Initialize GoogleSignIn (required for v7.x)
+  Future<void> _ensureInitialized() async {
+    if (!_initialized) {
+      await _googleSignIn.initialize();
+      _initialized = true;
+    }
+  }
+
   /// Đăng nhập bằng Google
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      await _ensureInitialized();
 
-      if (googleUser == null) {
-        // User cancelled the sign-in
-        return null;
-      }
+      // Trigger the authentication flow (v7.x uses authenticate())
+      // authenticate() throws GoogleSignInException on failure
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      // In v7.x, idToken is accessed via authentication getter
+      final idToken = googleUser.authentication.idToken;
 
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+      // Create a new credential with idToken
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
 
       // Sign in to Firebase with the Google credential
       return await _firebaseAuth.signInWithCredential(credential);
@@ -43,47 +48,53 @@ class SocialAuthService {
   /// Đăng nhập bằng Facebook
   Future<UserCredential?> signInWithFacebook() async {
     try {
-      print('[FacebookAuth] Starting Facebook login...');
+      debugPrint('[FacebookAuth] Starting Facebook login...');
 
       // Trigger the Facebook login flow
       final LoginResult result = await FacebookAuth.instance.login(
         permissions: ['email', 'public_profile'],
       );
 
-      print('[FacebookAuth] Login status: ${result.status}');
-      print('[FacebookAuth] Message: ${result.message}');
+      debugPrint('[FacebookAuth] Login status: ${result.status}');
+      debugPrint('[FacebookAuth] Message: ${result.message}');
 
       if (result.status == LoginStatus.cancelled) {
         // User cancelled the sign-in
-        print('[FacebookAuth] User cancelled login');
+        debugPrint('[FacebookAuth] User cancelled login');
         return null;
       }
 
       if (result.status == LoginStatus.failed) {
-        print('[FacebookAuth] Login failed: ${result.message}');
+        debugPrint('[FacebookAuth] Login failed: ${result.message}');
         throw Exception('Facebook login failed: ${result.message}');
       }
 
       // Get the access token
       final AccessToken? accessToken = result.accessToken;
       if (accessToken == null) {
-        print('[FacebookAuth] Access token is null');
+        debugPrint('[FacebookAuth] Access token is null');
         throw Exception('Failed to get Facebook access token');
       }
 
-      print('[FacebookAuth] Got access token, creating Firebase credential...');
+      debugPrint(
+        '[FacebookAuth] Got access token, creating Firebase credential...',
+      );
 
       // Create a credential from the access token
       final OAuthCredential facebookCredential =
           FacebookAuthProvider.credential(accessToken.tokenString);
 
       // Sign in to Firebase with the Facebook credential
-      final userCredential = await _firebaseAuth.signInWithCredential(facebookCredential);
-      print('[FacebookAuth] Firebase sign-in successful: ${userCredential.user?.email}');
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        facebookCredential,
+      );
+      debugPrint(
+        '[FacebookAuth] Firebase sign-in successful: ${userCredential.user?.email}',
+      );
 
       return userCredential;
     } catch (e) {
-      print('[FacebookAuth] Error: $e');
+      debugPrint('[FacebookAuth] Error: $e');
       throw Exception('Facebook sign-in failed: $e');
     }
   }
@@ -91,7 +102,8 @@ class SocialAuthService {
   /// Đăng xuất Google
   Future<void> signOutGoogle() async {
     try {
-      await _googleSignIn.signOut();
+      await _ensureInitialized();
+      await _googleSignIn.disconnect();
       await _firebaseAuth.signOut();
     } catch (e) {
       throw Exception('Sign out failed: $e');
@@ -111,7 +123,8 @@ class SocialAuthService {
   /// Đăng xuất tất cả
   Future<void> signOutAll() async {
     try {
-      await _googleSignIn.signOut();
+      await _ensureInitialized();
+      await _googleSignIn.disconnect();
       await FacebookAuth.instance.logOut();
       await _firebaseAuth.signOut();
     } catch (e) {

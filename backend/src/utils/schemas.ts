@@ -144,6 +144,11 @@ export const addFavoriteRecipeSchema = z.object({
     notes: z.string().max(500).optional(),
 });
 
+export const addFavoriteExerciseSchema = z.object({
+    exercise_id: z.number().int().positive('exercise_id is required'),
+    notes: z.string().max(500).optional(),
+});
+
 // ============ VALIDATION MIDDLEWARE ============
 
 /**

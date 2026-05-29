@@ -90,17 +90,17 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder:
-          (ctx) => _AddToPlanSheet(
-            exercise: widget.exercise,
-            langProvider: langProvider,
-            planProvider: planProvider,
-          ),
+      builder: (ctx) => _AddToPlanSheet(
+        exercise: widget.exercise,
+        langProvider: langProvider,
+        planProvider: planProvider,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final langProvider = context.watch<LanguageProvider>();
     final exercise = widget.exercise;
 
@@ -112,33 +112,47 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             expandedHeight: 300,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background:
-                  exercise.images.isNotEmpty
-                      ? _AnimatedHeaderImage(
-                        images: exercise.images,
-                        currentIndex: _currentImageIndex,
-                      )
-                      : Container(
-                        decoration: BoxDecoration(
-                          gradient: AppColors.primaryGradient,
-                        ),
-                        child: const Icon(
-                          Icons.fitness_center,
-                          size: 64,
-                          color: AppColors.textWhite,
-                        ),
+              background: exercise.images.isNotEmpty
+                  ? _AnimatedHeaderImage(
+                      images: exercise.images,
+                      currentIndex: _currentImageIndex,
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
                       ),
+                      child: const Icon(
+                        Icons.fitness_center,
+                        size: 64,
+                        color: AppColors.textWhite,
+                      ),
+                    ),
             ),
-            leading: IconButton(
-              icon: Container(
-                padding: const EdgeInsets.all(AppSizes.xs),
-                decoration: BoxDecoration(
-                  color: AppColors.surface.withValues(alpha: 0.8),
-                  shape: BoxShape.circle,
+            leading: Padding(
+              padding: const EdgeInsets.all(8),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkCard : Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 18,
+                    color: Color(0xFF334155),
+                  ),
                 ),
-                child: const Icon(Icons.arrow_back),
               ),
-              onPressed: () => Navigator.pop(context),
             ),
             actions: [
               // Play/Pause animation button
@@ -274,12 +288,11 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                             imageUrl: exercise.images[index],
                             index: index,
                             total: exercise.images.length,
-                            onTap:
-                                () => _showImageViewer(
-                                  context,
-                                  exercise.images,
-                                  index,
-                                ),
+                            onTap: () => _showImageViewer(
+                              context,
+                              exercise.images,
+                              index,
+                            ),
                           );
                         },
                       ),
@@ -308,27 +321,91 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
 
                   // Action Buttons - Ẩn khi xem từ màn hình tạo plan
                   if (!widget.hideActions) ...[
-                    // Start button full width
-                    SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        text: langProvider.getText(en: 'Start', vi: 'Bắt đầu'),
-                        icon: Icons.play_arrow,
-                        onPressed: () => _showWorkoutTimer(langProvider),
+                    // Gradient "Thêm vào kế hoạch" pill button
+                    GestureDetector(
+                      onTap: () => _showAddToPlanDialog(context, langProvider),
+                      child: Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                          ),
+                          borderRadius: BorderRadius.circular(9999),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(
+                                0xFF1565C0,
+                              ).withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              langProvider.getText(
+                                en: 'Add to Plan',
+                                vi: 'Thêm vào kế hoạch',
+                              ),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppSizes.sm),
-                    // Add to plan button full width
-                    SizedBox(
-                      width: double.infinity,
-                      child: SecondaryButton(
-                        text: langProvider.getText(
-                          en: 'Add to Plan',
-                          vi: 'Thêm vào kế hoạch',
+                    // Start workout — outlined style
+                    GestureDetector(
+                      onTap: () => _showWorkoutTimer(langProvider),
+                      child: Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.darkCard : Colors.white,
+                          borderRadius: BorderRadius.circular(9999),
+                          border: Border.all(color: const Color(0xFFF1F5F9)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 8,
+                            ),
+                          ],
                         ),
-                        icon: Icons.add,
-                        onPressed:
-                            () => _showAddToPlanDialog(context, langProvider),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.play_arrow,
+                              color: AppColors.primary,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              langProvider.getText(
+                                en: 'Start',
+                                vi: 'Bắt đầu tập',
+                              ),
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppSizes.lg),
@@ -389,36 +466,34 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         Wrap(
           spacing: AppSizes.sm,
           runSpacing: AppSizes.sm,
-          children:
-              muscles.map((muscle) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSizes.md,
-                    vertical: AppSizes.sm,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        isPrimary
-                            ? AppColors.primary.withValues(alpha: 0.1)
-                            : AppColors.background,
-                    borderRadius: BorderRadius.circular(AppSizes.radiusFull),
-                    border: Border.all(
-                      color: isPrimary ? AppColors.primary : AppColors.border,
-                    ),
-                  ),
-                  child: Text(
-                    muscle,
-                    style: TextStyle(
-                      color:
-                          isPrimary
-                              ? AppColors.primary
-                              : AppColors.textSecondary,
-                      fontWeight:
-                          isPrimary ? FontWeight.w600 : FontWeight.normal,
-                    ),
-                  ),
-                );
-              }).toList(),
+          children: muscles.map((muscle) {
+            return Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.md,
+                vertical: AppSizes.sm,
+              ),
+              decoration: BoxDecoration(
+                color: isPrimary
+                    ? AppColors.primary.withValues(alpha: 0.1)
+                    : const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusFull),
+                border: Border.all(
+                  color: isPrimary
+                      ? AppColors.primary
+                      : const Color(0xFFF59E0B),
+                ),
+              ),
+              child: Text(
+                muscle,
+                style: TextStyle(
+                  color: isPrimary
+                      ? AppColors.primary
+                      : const Color(0xFFF59E0B),
+                  fontWeight: isPrimary ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
@@ -432,9 +507,8 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder:
-            (context) =>
-                _ImageViewerScreen(images: images, initialIndex: initialIndex),
+        builder: (context) =>
+            _ImageViewerScreen(images: images, initialIndex: initialIndex),
       ),
     );
   }
@@ -462,30 +536,28 @@ class _ExerciseImageCard extends StatelessWidget {
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+              borderRadius: BorderRadius.circular(AppSizes.radiusCard),
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
                 width: 280,
                 height: 200,
                 fit: BoxFit.cover,
-                placeholder:
-                    (context, url) => Container(
-                      width: 280,
-                      height: 200,
-                      color: AppColors.background,
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
-                errorWidget:
-                    (context, url, error) => Container(
-                      width: 280,
-                      height: 200,
-                      color: AppColors.background,
-                      child: const Icon(
-                        Icons.fitness_center,
-                        size: 48,
-                        color: AppColors.textHint,
-                      ),
-                    ),
+                placeholder: (context, url) => Container(
+                  width: 280,
+                  height: 200,
+                  color: AppColors.background,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 280,
+                  height: 200,
+                  color: AppColors.background,
+                  child: const Icon(
+                    Icons.fitness_center,
+                    size: 48,
+                    color: AppColors.textHint,
+                  ),
+                ),
               ),
             ),
             // Image counter badge
@@ -571,16 +643,14 @@ class _ImageViewerScreenState extends State<_ImageViewerScreen> {
               child: CachedNetworkImage(
                 imageUrl: widget.images[index],
                 fit: BoxFit.contain,
-                placeholder:
-                    (context, url) => const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    ),
-                errorWidget:
-                    (context, url, error) => const Icon(
-                      Icons.fitness_center,
-                      size: 64,
-                      color: Colors.white54,
-                    ),
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.fitness_center,
+                  size: 64,
+                  color: Colors.white54,
+                ),
               ),
             ),
           );
@@ -607,7 +677,7 @@ class _InfoCard extends StatelessWidget {
       padding: AppSizes.paddingSm,
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
       ),
       child: Column(
         children: [
@@ -690,6 +760,7 @@ class _AnimatedHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -702,20 +773,18 @@ class _AnimatedHeaderImage extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: entry.value,
               fit: BoxFit.cover,
-              placeholder:
-                  (context, url) => Container(
-                    color: AppColors.background,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-              errorWidget:
-                  (context, url, error) => Container(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    child: const Icon(
-                      Icons.fitness_center,
-                      size: 64,
-                      color: AppColors.primary,
-                    ),
-                  ),
+              placeholder: (context, url) => Container(
+                color: AppColors.background,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                child: const Icon(
+                  Icons.fitness_center,
+                  size: 64,
+                  color: AppColors.primary,
+                ),
+              ),
             ),
           );
         }),
@@ -769,9 +838,11 @@ class _AnimatedHeaderImage extends StatelessWidget {
                       const SizedBox(width: AppSizes.xs),
                       Text(
                         '${currentIndex + 1}/${images.length}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -879,19 +950,17 @@ class _WorkoutTimerSheetState extends State<_WorkoutTimerSheet> {
                 label: lang.getText(en: 'Sets', vi: 'Hiệp'),
                 value: _sets,
                 onIncrement: () => setState(() => _sets++),
-                onDecrement:
-                    () => setState(() {
-                      if (_sets > 0) _sets--;
-                    }),
+                onDecrement: () => setState(() {
+                  if (_sets > 0) _sets--;
+                }),
               ),
               _CounterWidget(
                 label: lang.getText(en: 'Reps', vi: 'Lần'),
                 value: _reps,
                 onIncrement: () => setState(() => _reps++),
-                onDecrement:
-                    () => setState(() {
-                      if (_reps > 0) _reps--;
-                    }),
+                onDecrement: () => setState(() {
+                  if (_reps > 0) _reps--;
+                }),
               ),
             ],
           ),
@@ -1006,6 +1075,7 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final lang = widget.langProvider;
 
     return DraggableScrollableSheet(
@@ -1015,9 +1085,9 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
       expand: false,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -1049,9 +1119,9 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                         _selectedPlanId != null
                             ? _getSelectedPlanName()
                             : lang.getText(
-                              en: 'Add to Plan',
-                              vi: 'Thêm vào kế hoạch',
-                            ),
+                                en: 'Add to Plan',
+                                vi: 'Thêm vào kế hoạch',
+                              ),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -1067,10 +1137,9 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
 
               // Content
               Expanded(
-                child:
-                    _selectedPlanId != null
-                        ? _buildPlanDetailView(scrollController)
-                        : _buildMainView(scrollController),
+                child: _selectedPlanId != null
+                    ? _buildPlanDetailView(scrollController)
+                    : _buildMainView(scrollController),
               ),
             ],
           ),
@@ -1089,6 +1158,7 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
 
   Widget _buildMainView(ScrollController scrollController) {
     final lang = widget.langProvider;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ListView(
       controller: scrollController,
@@ -1106,40 +1176,25 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
               // Hình ảnh bài tập
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child:
-                    widget.exercise.images.isNotEmpty
-                        ? CachedNetworkImage(
-                          imageUrl: widget.exercise.images.first,
+                child: widget.exercise.images.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: widget.exercise.images.first,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
                           width: 60,
                           height: 60,
-                          fit: BoxFit.cover,
-                          placeholder:
-                              (context, url) => Container(
-                                width: 60,
-                                height: 60,
-                                color: AppColors.primary.withValues(alpha: 0.1),
-                                child: const Center(
-                                  child: SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          errorWidget:
-                              (context, url, error) => Container(
-                                width: 60,
-                                height: 60,
-                                color: AppColors.primary.withValues(alpha: 0.1),
-                                child: const Icon(
-                                  Icons.fitness_center,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                        )
-                        : Container(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          child: const Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
                           width: 60,
                           height: 60,
                           color: AppColors.primary.withValues(alpha: 0.1),
@@ -1148,6 +1203,16 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                             color: AppColors.primary,
                           ),
                         ),
+                      )
+                    : Container(
+                        width: 60,
+                        height: 60,
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        child: const Icon(
+                          Icons.fitness_center,
+                          color: AppColors.primary,
+                        ),
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -1282,7 +1347,9 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: AppColors.textPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -1311,47 +1378,43 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          gradient:
-                              isSelected
-                                  ? LinearGradient(
-                                    colors: [
-                                      AppColors.primary,
-                                      AppColors.secondary,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  )
-                                  : null,
+                          gradient: isSelected
+                              ? LinearGradient(
+                                  colors: [
+                                    AppColors.primary,
+                                    AppColors.secondary,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
+                              : null,
                           color: isSelected ? null : Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color:
-                                isSelected
-                                    ? Colors.transparent
-                                    : AppColors.border,
+                            color: isSelected
+                                ? Colors.transparent
+                                : AppColors.border,
                             width: 1.5,
                           ),
-                          boxShadow:
-                              isSelected
-                                  ? [
-                                    BoxShadow(
-                                      color: AppColors.primary.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.primary.withValues(
+                                      alpha: 0.3,
                                     ),
-                                  ]
-                                  : null,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
                         ),
                         child: Center(
                           child: Text(
                             dayNames[index],
                             style: TextStyle(
-                              color:
-                                  isSelected
-                                      ? Colors.white
-                                      : AppColors.textSecondary,
+                              color: isSelected
+                                  ? Colors.white
+                                  : AppColors.textSecondary,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
@@ -1367,10 +1430,9 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed:
-                        widget.planProvider.isLoading
-                            ? null
-                            : _createNewPlanAndAdd,
+                    onPressed: widget.planProvider.isLoading
+                        ? null
+                        : _createNewPlanAndAdd,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -1380,17 +1442,16 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
                       ),
                       elevation: 0,
                     ),
-                    icon:
-                        widget.planProvider.isLoading
-                            ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                            : const Icon(Icons.add_circle_outline, size: 20),
+                    icon: widget.planProvider.isLoading
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.add_circle_outline, size: 20),
                     label: Text(
                       lang.getText(
                         en: 'Create & Add Exercise',
@@ -1442,51 +1503,49 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
             }
 
             return Column(
-              children:
-                  widget.planProvider.userPlans.map((plan) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 8),
+              children: widget.planProvider.userPlans.map((plan) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.border),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    leading: Container(
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.border),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.secondary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 4,
-                        ),
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColors.secondary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.folder_outlined,
-                            color: AppColors.secondary,
-                          ),
-                        ),
-                        title: Text(
-                          plan.name ?? 'Unnamed',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        subtitle: Text(
-                          '${plan.details.length} ${lang.getText(en: 'exercises', vi: 'bài tập')}',
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 12,
-                          ),
-                        ),
-                        trailing: const Icon(
-                          Icons.chevron_right,
-                          color: AppColors.textSecondary,
-                        ),
-                        onTap:
-                            () => setState(() => _selectedPlanId = plan.planId),
+                      child: const Icon(
+                        Icons.folder_outlined,
+                        color: AppColors.secondary,
                       ),
-                    );
-                  }).toList(),
+                    ),
+                    title: Text(
+                      plan.name ?? 'Unnamed',
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: Text(
+                      '${plan.details.length} ${lang.getText(en: 'exercises', vi: 'bài tập')}',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.textSecondary,
+                    ),
+                    onTap: () => setState(() => _selectedPlanId = plan.planId),
+                  ),
+                );
+              }).toList(),
             );
           },
         ),
@@ -1506,144 +1565,139 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
       children: [
         // Danh sách bài tập trong kế hoạch
         Expanded(
-          child:
-              plan.details.isEmpty
-                  ? Center(
-                    child: Text(
-                      lang.getText(
-                        en: 'No exercises in this plan',
-                        vi: 'Chưa có bài tập trong kế hoạch',
-                      ),
-                      style: TextStyle(color: AppColors.textSecondary),
+          child: plan.details.isEmpty
+              ? Center(
+                  child: Text(
+                    lang.getText(
+                      en: 'No exercises in this plan',
+                      vi: 'Chưa có bài tập trong kế hoạch',
                     ),
-                  )
-                  : ListView.builder(
-                    controller: scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: plan.details.length,
-                    itemBuilder: (context, index) {
-                      final detail = plan.details[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.background,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            // Exercise image
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child:
-                                  detail.exerciseImage != null
-                                      ? CachedNetworkImage(
-                                        imageUrl: ApiConfig.getImageUrl(
-                                          detail.exerciseImage,
-                                        ),
-                                        width: 50,
-                                        height: 50,
-                                        fit: BoxFit.cover,
-                                        placeholder:
-                                            (context, url) => Container(
-                                              width: 50,
-                                              height: 50,
-                                              color: AppColors.primary
-                                                  .withValues(alpha: 0.1),
-                                              child: const Center(
-                                                child: SizedBox(
-                                                  width: 16,
-                                                  height: 16,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                        errorWidget:
-                                            (context, url, error) => Container(
-                                              width: 50,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primary
-                                                    .withValues(alpha: 0.1),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: const Icon(
-                                                Icons.fitness_center,
-                                                color: AppColors.primary,
-                                                size: 24,
-                                              ),
-                                            ),
-                                      )
-                                      : Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.primary.withValues(
-                                            alpha: 0.1,
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
+                )
+              : ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: plan.details.length,
+                  itemBuilder: (context, index) {
+                    final detail = plan.details[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          // Exercise image
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: detail.exerciseImage != null
+                                ? CachedNetworkImage(
+                                    imageUrl: ApiConfig.getImageUrl(
+                                      detail.exerciseImage,
+                                    ),
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      width: 50,
+                                      height: 50,
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      child: const Center(
+                                        child: SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        child: const Icon(
-                                          Icons.fitness_center,
-                                          color: AppColors.primary,
-                                          size: 24,
                                         ),
                                       ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    detail.exerciseName ?? 'Exercise',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.fitness_center,
+                                            color: AppColors.primary,
+                                            size: 24,
+                                          ),
+                                        ),
+                                  )
+                                : Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(
+                                      Icons.fitness_center,
+                                      color: AppColors.primary,
+                                      size: 24,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${detail.sets ?? 3} sets × ${detail.reps ?? 10} reps',
-                                    style: TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  detail.exerciseName ?? 'Exercise',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
-                              ),
-                            ),
-                            // Order number
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                color: AppColors.secondary.withValues(
-                                  alpha: 0.1,
                                 ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${index + 1}',
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${detail.sets ?? 3} sets × ${detail.reps ?? 10} reps',
                                   style: TextStyle(
-                                    color: AppColors.secondary,
-                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textSecondary,
                                     fontSize: 12,
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          // Order number
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: TextStyle(
+                                  color: AppColors.secondary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
         ),
 
         // Bottom button
@@ -1708,13 +1762,13 @@ class _AddToPlanSheetState extends State<_AddToPlanSheet> {
           content: Text(
             success
                 ? widget.langProvider.getText(
-                  en: 'Added to plan!',
-                  vi: 'Đã thêm vào kế hoạch!',
-                )
+                    en: 'Added to plan!',
+                    vi: 'Đã thêm vào kế hoạch!',
+                  )
                 : widget.langProvider.getText(
-                  en: 'Failed to add',
-                  vi: 'Thêm thất bại',
-                ),
+                    en: 'Failed to add',
+                    vi: 'Thêm thất bại',
+                  ),
           ),
           backgroundColor: success ? AppColors.success : AppColors.error,
         ),

@@ -456,8 +456,19 @@ CREATE TABLE Favorite_Recipes (
     FOREIGN KEY (recipe_id) REFERENCES Recipes(recipe_id) ON DELETE CASCADE
 );
 
+CREATE TABLE Favorite_Exercises (
+    user_id INT NOT NULL,
+    exercise_id INT NOT NULL,
+    notes NVARCHAR(255) NULL,
+    created_at DATETIME DEFAULT GETDATE(),
+    PRIMARY KEY (user_id, exercise_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (exercise_id) REFERENCES Exercises(exercise_id) ON DELETE CASCADE
+);
+
 CREATE INDEX IX_FavoriteFoods_UserId ON Favorite_Foods(user_id);
 CREATE INDEX IX_FavoriteRecipes_UserId ON Favorite_Recipes(user_id);
+CREATE INDEX IX_FavoriteExercises_UserId ON Favorite_Exercises(user_id);
 GO
 
 -- =====================================================
@@ -493,15 +504,6 @@ CREATE TABLE Plan_Details (
 CREATE INDEX IX_Plans_UserId ON Plans(user_id);
 GO
 
--- 1. Xóa Workout_Sessions trước (vì tham chiếu đến Plans)
-DELETE FROM Workout_Sessions;
-
--- 2. Xóa Plan_Details (nếu có)
-DELETE FROM Plan_Details;
-
--- 3. Xóa Plans
-DELETE FROM Plans;
-
 
 Select * from Plans;
 Select * from Plan_Details;
@@ -526,7 +528,6 @@ CREATE TABLE Workout_Sessions (
 );
 
 Select * from Workout_Sessions;
-Select * from Workout_Session_Details;
 
 CREATE TABLE Workout_Session_Details (
     session_id INT NOT NULL,
@@ -809,7 +810,7 @@ PRINT '   - Daily_Foods, Daily_Food_Translations (merged to Foods)'
 PRINT '   - Meals, Meal_Translations, Meal_Food_Items (replaced by Favorites)'
 PRINT ''
 PRINT '✨ NEW:'
-PRINT '   - Favorite_Foods, Favorite_Recipes (user favorites)'
+PRINT '   - Favorite_Foods, Favorite_Recipes, Favorite_Exercises (user favorites)'
 PRINT '   - Muscles, Muscle_Translations (i18n for muscle names)'
 PRINT ''
 PRINT '✨ OPTIMIZATIONS:'
@@ -856,7 +857,8 @@ SELECT 'Recipe_Ingredients', COUNT(*) FROM Recipe_Ingredients;
 
 -- Favorites
 SELECT 'Favorite_Foods' AS [Table], COUNT(*) AS [Records] FROM Favorite_Foods UNION ALL
-SELECT 'Favorite_Recipes', COUNT(*) FROM Favorite_Recipes;
+SELECT 'Favorite_Recipes', COUNT(*) FROM Favorite_Recipes UNION ALL
+SELECT 'Favorite_Exercises', COUNT(*) FROM Favorite_Exercises;
 
 -- Plans & Workouts
 SELECT 'Plans' AS [Table], COUNT(*) AS [Records] FROM Plans UNION ALL
@@ -886,11 +888,5 @@ SELECT * FROM Food_Translations WHERE category_name LIKE N'%Bữa ăn%';
 SELECT  * FROM Exercises;
 SELECT  * FROM Exercise_Translations WHERE language_id = 2;
 SELECT  * FROM Recipes;
-SELECT  * FROM Recipe_Translations WHERE language_id = 2;
-SELECT  * FROM Recipe_Instructions WHERE language_id = 2;
-
-ALTER TABLE Users ADD activity_level NVARCHAR(50);
-ALTER TABLE Users ADD onboarding_completed BIT NOT NULL DEFAULT 0;
-
-ALTER TABLE Users ADD body_goals NVARCHAR(500) NULL;
-ALTER TABLE Users ADD full_name NVARCHAR(100) NULL;
+SELECT  * FROM Recipe_Translations;
+SELECT  * FROM Recipe_Instructions;

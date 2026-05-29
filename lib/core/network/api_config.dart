@@ -67,11 +67,11 @@ class ApiConfig {
   static const String limitParam = 'limit';
   static const String searchParam = 'search';
 
-  // Timeouts - Optimized for fast response
-  static const Duration connectTimeout = Duration(seconds: 5);
-  static const Duration receiveTimeout = Duration(seconds: 15);
+  // Timeouts
+  static const Duration connectTimeout = Duration(seconds: 10);
+  static const Duration receiveTimeout = Duration(seconds: 60);
 
-  // Retry configuration - Reduced for faster failure
-  static const int maxRetries = 1;
-  static const Duration retryDelay = Duration(milliseconds: 500);
+  // Retry configuration
+  static const int maxRetries = 3;
+  static const Duration retryDelay = Duration(seconds: 1);
 }

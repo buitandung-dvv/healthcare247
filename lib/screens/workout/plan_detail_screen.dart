@@ -40,12 +40,46 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : Colors.white,
       appBar: AppBar(
-        title: Text(widget.plan.name ?? widget.plan.planType ?? 'Plan Detail'),
+        title: Text(
+          widget.plan.name ?? widget.plan.planType ?? 'Plan Detail',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : const Color(0xFF0F172A),
+          ),
+        ),
         backgroundColor: isDark ? AppColors.darkSurface : Colors.white,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        scrolledUnderElevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back,
+                color: Color(0xFF0F172A),
+                size: 20,
+              ),
+            ),
+          ),
+        ),
         actions: [
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+          IconButton(
+            icon: Icon(Icons.more_vert, color: const Color(0xFF64748B)),
+            onPressed: () {},
+          ),
         ],
       ),
       body: Column(
@@ -122,24 +156,39 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 ),
               ],
             ),
-            child: ElevatedButton.icon(
-              onPressed: () => _startWorkout(context),
-              icon: const Icon(Icons.play_arrow, size: 24),
-              label: Text(
-                lang.getText(en: 'Start Workout', vi: 'Bắt đầu tập'),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+            child: GestureDetector(
+              onTap: () => _startWorkout(context),
+              child: Container(
+                width: double.infinity,
+                height: 56,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                  ),
+                  borderRadius: BorderRadius.circular(9999),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF1565C0).withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.play_arrow, color: Colors.white, size: 24),
+                    const SizedBox(width: 8),
+                    Text(
+                      lang.getText(en: 'Start Workout', vi: 'Bắt đầu tập'),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                elevation: 0,
               ),
             ),
           ),

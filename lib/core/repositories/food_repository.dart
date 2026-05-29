@@ -22,7 +22,7 @@ class FoodRepository {
         ApiConfig.languageParam: languageId.toString(),
         ApiConfig.pageParam: page.toString(),
         ApiConfig.limitParam: limit.toString(),
-        if (category != null) 'category': category,
+        'category': ?category,
         if (search != null && search.isNotEmpty) ApiConfig.searchParam: search,
       };
 

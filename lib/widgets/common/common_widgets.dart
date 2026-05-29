@@ -407,7 +407,7 @@ class SecondaryButton extends StatelessWidget {
           vertical: AppSizes.md,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         ),
       ).copyWith(
         overlayColor: WidgetStateProperty.resolveWith((states) {
@@ -470,16 +470,19 @@ class CustomCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border:
-            isDark
-                ? Border.all(color: AppColors.darkBorder.withValues(alpha: 0.3))
-                : null,
+        border: Border.all(
+          color:
+              isDark
+                  ? AppColors.darkBorder.withValues(alpha: 0.3)
+                  : const Color(0xFFF1F5F9), // slate-100
+        ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? AppColors.darkShadow : AppColors.primary)
-                .withValues(alpha: isDark ? 0.2 : 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: (isDark ? AppColors.darkShadow : Colors.black).withValues(
+              alpha: isDark ? 0.2 : 0.04,
+            ),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),

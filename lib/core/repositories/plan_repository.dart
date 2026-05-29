@@ -16,7 +16,7 @@ class PlanRepository {
   }) async {
     try {
       final queryParams = {
-        if (planType != null) 'plan_type': planType,
+        'plan_type': ?planType,
       };
 
       final response = await _apiClient.get<Map<String, dynamic>>(
@@ -89,8 +89,8 @@ class PlanRepository {
       final response = await _apiClient.put<Map<String, dynamic>>(
         '${ApiConfig.plans}/$planId',
         data: {
-          if (planType != null) 'plan_type': planType,
-          if (description != null) 'description': description,
+          'plan_type': ?planType,
+          'description': ?description,
           if (details != null) 'details': details.map((e) => e.toJson()).toList(),
         },
       );

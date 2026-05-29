@@ -316,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     fit: BoxFit.cover,
                                     alignment: _getAvatarAlignment(),
                                     errorBuilder:
-                                        (_, __, ___) => Container(
+                                        (_, _, _) => Container(
                                           color: Colors.white,
                                           child: const Icon(
                                             Icons.person,
@@ -358,7 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fit: BoxFit.cover,
                           alignment: _getAlignment(),
                           errorBuilder:
-                              (_, __, ___) => Container(
+                              (_, _, _) => Container(
                                 decoration: BoxDecoration(
                                   gradient: AppColors.primaryGradient,
                                 ),
@@ -369,15 +369,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             gradient: AppColors.primaryGradient,
                           ),
                         ),
-                    // Dark overlay
+                    // Light overlay
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withValues(alpha: 0.3),
-                            Colors.black.withValues(alpha: 0.5),
+                            Colors.black.withValues(alpha: 0.05),
+                            Colors.black.withValues(alpha: 0.15),
                           ],
                         ),
                       ),
@@ -408,7 +408,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           fit: BoxFit.cover,
                                           alignment: _getAvatarAlignment(),
                                           errorBuilder:
-                                              (_, __, ___) =>
+                                              (_, _, _) =>
                                                   _buildDefaultAvatar(),
                                         ),
                                       )
@@ -459,6 +459,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildGoalCard(context, lang, user),
                       const SizedBox(height: AppSizes.lg),
                       _buildSettingsMenu(context, lang),
+                      const SizedBox(height: AppSizes.md),
+                      _buildSettingsMenu2(context, lang),
                       const SizedBox(height: AppSizes.lg),
                       _buildLogoutButton(context, lang, auth),
                       const SizedBox(height: AppSizes.xl),
@@ -688,25 +690,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ) {
     return SizedBox(
       width: double.infinity,
-      child: OutlinedButton.icon(
+      child: ElevatedButton(
         onPressed: () => _showLogoutDialog(context, lang, auth),
-        icon: const Icon(Icons.logout, color: AppColors.error),
-        label: Text(
-          lang.getText(en: 'Logout', vi: 'Đăng xuất'),
-          style: const TextStyle(color: AppColors.error),
-        ),
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          side: const BorderSide(color: AppColors.error),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFFEE2E2),
+          foregroundColor: AppColors.error,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        child: Text(
+          lang.getText(en: 'Logout', vi: 'Đăng xuất'),
+          style: const TextStyle(
+            color: AppColors.error,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStats(context, lang, user) {
+  Widget _buildStats(
+    BuildContext context,
+    LanguageProvider lang,
+    dynamic user,
+  ) {
     return Row(
       children: [
         Expanded(
@@ -743,6 +754,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           _SettingsItem(
             icon: Icons.person_outline,
+            iconColor: AppColors.primary,
+            iconBgColor: AppColors.primarySoft,
             title: lang.getText(en: 'Edit Profile', vi: 'Chỉnh sửa hồ sơ'),
             onTap:
                 () => _showEditProfileDialog(
@@ -753,7 +766,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const Divider(height: 1),
           _SettingsItem(
+            icon: Icons.track_changes,
+            iconColor: AppColors.primary,
+            iconBgColor: const Color(0xFFE3F2FD),
+            title: lang.getText(en: 'Goals', vi: 'Mục tiêu'),
+            onTap: () => _showGoalsDialog(context, lang),
+          ),
+          const Divider(height: 1),
+          _SettingsItem(
+            icon: Icons.favorite_outline,
+            iconColor: const Color(0xFFEF4444),
+            iconBgColor: const Color(0xFFFEE2E2),
+            title: lang.getText(en: 'Favorites', vi: 'Yêu thích'),
+            onTap: () {},
+          ),
+          const Divider(height: 1),
+          _SettingsItem(
+            icon: Icons.emoji_events_outlined,
+            iconColor: const Color(0xFFF59E0B),
+            iconBgColor: const Color(0xFFFEF3C7),
+            title: lang.getText(en: 'Achievements', vi: 'Thành tựu'),
+            onTap: () {},
+          ),
+          const Divider(height: 1),
+          _SettingsItem(
+            icon: Icons.notifications_outlined,
+            iconColor: AppColors.primary,
+            iconBgColor: const Color(0xFFE3F2FD),
+            title: lang.getText(en: 'Notifications', vi: 'Thông báo'),
+            onTap: () => _showNotificationsSettings(context, lang),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsMenu2(BuildContext context, LanguageProvider lang) {
+    return CustomCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          _SettingsItem(
             icon: Icons.language,
+            iconColor: const Color(0xFF64748B),
+            iconBgColor: const Color(0xFFF1F5F9),
             title: lang.getText(en: 'Language', vi: 'Ngôn ngữ'),
             subtitle: lang.isEnglish ? 'English' : 'Tiếng Việt',
             onTap: () {
@@ -761,38 +817,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           const Divider(height: 1),
-          _SettingsSwitchItem(
-            icon: Icons.dark_mode_outlined,
-            title: lang.getText(en: 'Dark Mode', vi: 'Chế độ tối'),
-            value: context.watch<ThemeProvider>().isDarkMode,
-            onChanged: (value) {
-              final themeProvider = context.read<ThemeProvider>();
-              if (value) {
-                themeProvider.useDarkTheme();
-              } else {
-                themeProvider.useLightTheme();
-              }
+          Builder(
+            builder: (context) {
+              final isDark = context.watch<ThemeProvider>().isDarkMode;
+              return SwitchListTile(
+                secondary: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.dark_mode_outlined,
+                    color: Color(0xFF64748B),
+                    size: 20,
+                  ),
+                ),
+                title: Text(lang.getText(en: 'Dark Mode', vi: 'Chế độ tối')),
+                value: isDark,
+                onChanged: (value) {
+                  final themeProvider = context.read<ThemeProvider>();
+                  if (value) {
+                    themeProvider.useDarkTheme();
+                  } else {
+                    themeProvider.useLightTheme();
+                  }
+                },
+                activeThumbColor: AppColors.primary,
+              );
             },
           ),
           const Divider(height: 1),
           _SettingsItem(
-            icon: Icons.track_changes,
-            title: lang.getText(en: 'Goals', vi: 'Mục tiêu'),
-            onTap: () => _showGoalsDialog(context, lang),
-          ),
-          const Divider(height: 1),
-          _SettingsItem(
-            icon: Icons.notifications_outlined,
-            title: lang.getText(en: 'Notifications', vi: 'Thông báo'),
-            onTap: () => _showNotificationsSettings(context, lang),
-          ),
-          const Divider(height: 1),
-          _SettingsItem(
             icon: Icons.privacy_tip_outlined,
+            iconColor: const Color(0xFF64748B),
+            iconBgColor: const Color(0xFFF1F5F9),
             title: lang.getText(en: 'Privacy', vi: 'Quyền riêng tư'),
             onTap:
                 () =>
                     _showInfoDialog(context, lang, 'Privacy', 'Quyền riêng tư'),
+          ),
+          const Divider(height: 1),
+          _SettingsItem(
+            icon: Icons.info_outline,
+            iconColor: const Color(0xFF64748B),
+            iconBgColor: const Color(0xFFF1F5F9),
+            title: lang.getText(en: 'About App', vi: 'Về ứng dụng'),
+            onTap: () => _showInfoDialog(context, lang, 'About', 'Về ứng dụng'),
           ),
           const Divider(height: 1),
           _SettingsItem(
@@ -869,7 +941,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 16),
                         DropdownButtonFormField<String>(
-                          value: selectedGender,
+                          initialValue: selectedGender,
                           decoration: InputDecoration(
                             labelText: lang.getText(
                               en: 'Gender',
@@ -1279,12 +1351,16 @@ class _StatItem extends StatelessWidget {
 
 class _SettingsItem extends StatelessWidget {
   final IconData icon;
+  final Color? iconColor;
+  final Color? iconBgColor;
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
 
   const _SettingsItem({
     required this.icon,
+    this.iconColor,
+    this.iconBgColor,
     required this.title,
     this.subtitle,
     required this.onTap,
@@ -1294,9 +1370,22 @@ class _SettingsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListTile(
-      leading: Icon(
-        icon,
-        color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color:
+              iconBgColor ??
+              (isDark ? AppColors.darkCard : const Color(0xFFF1F5F9)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          icon,
+          color:
+              iconColor ??
+              (isDark ? AppColors.darkTextSecondary : AppColors.textSecondary),
+          size: 20,
+        ),
       ),
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle!) : null,
@@ -1308,33 +1397,3 @@ class _SettingsItem extends StatelessWidget {
     );
   }
 }
-
-class _SettingsSwitchItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const _SettingsSwitchItem({
-    required this.icon,
-    required this.title,
-    required this.value,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return SwitchListTile(
-      secondary: Icon(
-        icon,
-        color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
-      ),
-      title: Text(title),
-      value: value,
-      onChanged: onChanged,
-      activeColor: isDark ? AppColors.darkPrimary : AppColors.primary,
-    );
-  }
-}
-

@@ -376,7 +376,7 @@ class StatCard extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 80),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.card,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         border:
             isDark ? Border.all(color: AppColors.darkBorder, width: 1) : null,
         boxShadow: [

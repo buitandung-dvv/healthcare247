@@ -136,6 +136,14 @@ export interface FavoriteRecipe {
   recipe?: Recipe;  // Joined data
 }
 
+export interface FavoriteExercise {
+  user_id: number;
+  exercise_id: number;
+  notes?: string;
+  created_at: Date;
+  exercise?: Partial<Exercise>;  // Joined data (subset of fields)
+}
+
 // Tracking Types
 export interface ExerciseTracking {
   tracking_id?: number;

@@ -120,19 +120,17 @@ class AuthRepository {
       final response = await _apiClient.put<Map<String, dynamic>>(
         '${ApiConfig.auth}/me',
         data: {
-          if (username != null) 'username': username,
-          if (gender != null) 'gender': gender,
+          'username': ?username,
+          'gender': ?gender,
           if (dateOfBirth != null)
             'date_of_birth': dateOfBirth.toIso8601String(),
-          if (height != null) 'height': height,
-          if (weight != null) 'weight': weight,
-          if (goal != null) 'goal': goal,
-          if (bodyGoals != null) 'body_goals': bodyGoals,
-          if (activityLevel != null) 'activity_level': activityLevel,
-          if (preferredLanguageId != null)
-            'preferred_language_id': preferredLanguageId,
-          if (onboardingCompleted != null)
-            'onboarding_completed': onboardingCompleted,
+          'height': ?height,
+          'weight': ?weight,
+          'goal': ?goal,
+          'body_goals': ?bodyGoals,
+          'activity_level': ?activityLevel,
+          'preferred_language_id': ?preferredLanguageId,
+          'onboarding_completed': ?onboardingCompleted,
         },
       );
 
@@ -191,7 +189,7 @@ class AuthRepository {
           'provider_id': providerId ?? '',
           'email': email,
           'name': name,
-          if (photoUrl != null) 'photo_url': photoUrl,
+          'photo_url': ?photoUrl,
         },
       );
 

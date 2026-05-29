@@ -23,14 +23,24 @@ class AppSizes {
   static const EdgeInsets paddingXl = EdgeInsets.all(32);
 
   // Horizontal Padding
-  static const EdgeInsets paddingHorizontalSm = EdgeInsets.symmetric(horizontal: 8);
-  static const EdgeInsets paddingHorizontalMd = EdgeInsets.symmetric(horizontal: 16);
-  static const EdgeInsets paddingHorizontalLg = EdgeInsets.symmetric(horizontal: 24);
+  static const EdgeInsets paddingHorizontalSm = EdgeInsets.symmetric(
+    horizontal: 8,
+  );
+  static const EdgeInsets paddingHorizontalMd = EdgeInsets.symmetric(
+    horizontal: 16,
+  );
+  static const EdgeInsets paddingHorizontalLg = EdgeInsets.symmetric(
+    horizontal: 24,
+  );
 
   // Vertical Padding
   static const EdgeInsets paddingVerticalSm = EdgeInsets.symmetric(vertical: 8);
-  static const EdgeInsets paddingVerticalMd = EdgeInsets.symmetric(vertical: 16);
-  static const EdgeInsets paddingVerticalLg = EdgeInsets.symmetric(vertical: 24);
+  static const EdgeInsets paddingVerticalMd = EdgeInsets.symmetric(
+    vertical: 16,
+  );
+  static const EdgeInsets paddingVerticalLg = EdgeInsets.symmetric(
+    vertical: 24,
+  );
 
   // Border Radius
   static const double radiusXs = 4.0;
@@ -38,6 +48,7 @@ class AppSizes {
   static const double radiusMd = 12.0;
   static const double radiusLg = 16.0;
   static const double radiusXl = 24.0;
+  static const double radiusCard = 20.0; // Stitch card radius
   static const double radiusFull = 999.0;
 
   // Icon Sizes
@@ -86,4 +97,3 @@ class AppSizes {
   // Max Width for content
   static const double maxContentWidth = 600.0;
 }
-

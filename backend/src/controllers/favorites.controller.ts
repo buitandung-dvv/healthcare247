@@ -175,6 +175,80 @@ export class FavoritesController {
             ApiResponse.serverError(res, 'Failed to remove favorite recipe');
         }
     }
+
+    // Get favorite exercises
+    async getFavoriteExercises(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            const userId = req.userId || req.user?.user_id;
+            if (!userId) {
+                ApiResponse.unauthorized(res);
+                return;
+            }
+
+            const languageId = parseIntSafe(req.query.language_id as string, 1) ?? 1;
+            const exercises = await favoritesService.getUserFavoriteExercises(userId, languageId);
+            ApiResponse.success(res, exercises);
+        } catch (error) {
+            console.error('❌ Get favorite exercises error:', error);
+            ApiResponse.serverError(res, 'Failed to get favorite exercises');
+        }
+    }
+
+    // Add exercise to favorites
+    async addFavoriteExercise(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            const userId = req.userId || req.user?.user_id;
+            if (!userId) {
+                ApiResponse.unauthorized(res);
+                return;
+            }
+
+            const { exercise_id, notes } = req.body;
+            if (!exercise_id) {
+                ApiResponse.badRequest(res, 'exercise_id is required');
+                return;
+            }
+
+            const success = await favoritesService.addFavoriteExercise(userId, exercise_id, notes);
+
+            if (success) {
+                ApiResponse.created(res, null, 'Exercise added to favorites');
+            } else {
+                ApiResponse.badRequest(res, 'Failed to add exercise to favorites');
+            }
+        } catch (error) {
+            console.error('❌ Add favorite exercise error:', error);
+            ApiResponse.serverError(res, 'Failed to add favorite exercise');
+        }
+    }
+
+    // Remove exercise from favorites
+    async removeFavoriteExercise(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            const userId = req.userId || req.user?.user_id;
+            if (!userId) {
+                ApiResponse.unauthorized(res);
+                return;
+            }
+
+            const exerciseId = parseIdParam(req.params.exerciseId);
+            if (!exerciseId) {
+                ApiResponse.badRequest(res, 'Invalid exercise ID');
+                return;
+            }
+
+            const success = await favoritesService.removeFavoriteExercise(userId, exerciseId);
+
+            if (success) {
+                res.status(204).send();
+            } else {
+                ApiResponse.notFound(res, 'Exercise in favorites');
+            }
+        } catch (error) {
+            console.error('❌ Remove favorite exercise error:', error);
+            ApiResponse.serverError(res, 'Failed to remove favorite exercise');
+        }
+    }
 }
 
 export const favoritesController = new FavoritesController();

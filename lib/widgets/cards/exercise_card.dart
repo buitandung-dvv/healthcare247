@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
-import '../../core/utils/translation_helper.dart';
 import '../../data/models/exercise_model.dart';
 import '../common/common_widgets.dart';
 
-/// Exercise Card Widget
+/// Exercise Card Widget - Grid/Square style (similar to RecipeCard)
 class ExerciseCard extends StatelessWidget {
   final Exercise exercise;
   final VoidCallback? onTap;
@@ -30,65 +29,70 @@ class ExerciseCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.08),
+              color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Exercise Image with gradient overlay
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-              child: Stack(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Exercise Image
+              Stack(
                 children: [
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child:
-                        exercise.images.isNotEmpty
-                            ? CachedNetworkImage(
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 1.3,
+                      child: exercise.images.isNotEmpty
+                          ? CachedNetworkImage(
                               imageUrl: exercise.images.first,
                               fit: BoxFit.cover,
-                              placeholder:
-                                  (context, url) => Container(
-                                    color: AppColors.primarySoft,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      AppColors.primary.withValues(alpha: 0.2),
+                                      AppColors.primary.withValues(alpha: 0.05),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
                                   ),
-                              errorWidget:
-                                  (context, url, error) => Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.primary.withValues(
-                                            alpha: 0.2,
-                                          ),
-                                          AppColors.secondary.withValues(
-                                            alpha: 0.1,
-                                          ),
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.fitness_center,
-                                      size: 48,
-                                      color: AppColors.primary,
-                                    ),
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      AppColors.primary.withValues(alpha: 0.2),
+                                      AppColors.primary.withValues(alpha: 0.05),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
                                   ),
+                                ),
+                                child: const Icon(
+                                  Icons.fitness_center,
+                                  size: 48,
+                                  color: AppColors.primary,
+                                ),
+                              ),
                             )
-                            : Container(
+                          : Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
                                     AppColors.primary.withValues(alpha: 0.2),
-                                    AppColors.secondary.withValues(alpha: 0.1),
+                                    AppColors.primary.withValues(alpha: 0.05),
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -100,131 +104,82 @@ class ExerciseCard extends StatelessWidget {
                                 color: AppColors.primary,
                               ),
                             ),
+                    ),
                   ),
-                  // Level badge overlay
+                  // Favourite icon overlay
                   Positioned(
-                    top: 12,
-                    left: 12,
-                    child: LevelBadge(level: exercise.level),
-                  ),
-                  // Add to plan button
-                  if (onAddToPlan != null)
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: GestureDetector(
-                        onTap: onAddToPlan,
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            size: 20,
-                            color: AppColors.primary,
-                          ),
-                        ),
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.favorite_border,
+                        color: Colors.white,
+                        size: 16,
                       ),
                     ),
-                ],
-              ),
-            ),
-
-            // Exercise Info
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Name
-                  Text(
-                    exercise.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: AppSizes.sm),
-
-                  // All tags in horizontal wrap
-                  Wrap(
-                    spacing: AppSizes.xs,
-                    runSpacing: AppSizes.xs,
-                    children: [
-                      // Category chip
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondarySoft,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          TranslationHelper.translateCategory(
-                            context,
-                            exercise.category,
-                          ),
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(
-                            color: AppColors.secondaryDark,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      // Muscles chips (already translated in database for Vietnamese)
-                      ...exercise.primaryMuscles
-                          .take(2)
-                          .map((muscle) => _MuscleChip(muscle: muscle)),
-
-                      // Equipment chip
-                      if (exercise.equipment != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.accentSoft,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.sports_gymnastics,
-                                size: 12,
-                                color: AppColors.accent,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                TranslationHelper.translateEquipment(
-                                  context,
-                                  exercise.equipment!,
-                                ),
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  color: AppColors.accent,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
+                  // Level badge overlay (bottom-left)
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: _StitchLevelChip(level: exercise.level),
                   ),
                 ],
               ),
-            ),
-          ],
+              // Info section
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      exercise.name,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 5),
+                    // Build up to 4 tags: primary (blue) + secondary (orange)
+                    Builder(builder: (context) {
+                      const maxTags = 4;
+                      final tags = <Widget>[];
+                      for (final m in exercise.primaryMuscles) {
+                        if (tags.length >= maxTags) break;
+                        tags.add(_StitchOutlineChip(
+                          label: m.toUpperCase(),
+                          color: AppColors.primary,
+                        ));
+                      }
+                      for (final m in exercise.secondaryMuscles) {
+                        if (tags.length >= maxTags) break;
+                        tags.add(_StitchOutlineChip(
+                          label: m.toUpperCase(),
+                          color: const Color(0xFFF59E0B),
+                        ));
+                      }
+                      if (tags.isEmpty) return const SizedBox.shrink();
+                      return Wrap(
+                        spacing: 4,
+                        runSpacing: 3,
+                        children: tags,
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -250,38 +205,35 @@ class ExerciseListTile extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          // Thumbnail - Static (no animation in list view)
+          // Thumbnail
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             child: SizedBox(
               width: 60,
               height: 60,
-              child:
-                  exercise.images.isNotEmpty
-                      ? CachedNetworkImage(
-                        imageUrl: exercise.images.first,
-                        fit: BoxFit.cover,
-                        width: 60,
-                        height: 60,
-                        placeholder:
-                            (context, url) =>
-                                Container(color: AppColors.background),
-                        errorWidget:
-                            (context, url, error) => Container(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              child: const Icon(
-                                Icons.fitness_center,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                      )
-                      : Container(
+              child: exercise.images.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: exercise.images.first,
+                      fit: BoxFit.cover,
+                      width: 60,
+                      height: 60,
+                      placeholder: (context, url) =>
+                          Container(color: AppColors.background),
+                      errorWidget: (context, url, error) => Container(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         child: const Icon(
                           Icons.fitness_center,
                           color: AppColors.primary,
                         ),
                       ),
+                    )
+                  : Container(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      child: const Icon(
+                        Icons.fitness_center,
+                        color: AppColors.primary,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(width: AppSizes.md),
@@ -293,9 +245,10 @@ class ExerciseListTile extends StatelessWidget {
               children: [
                 Text(
                   exercise.name,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(fontWeight: FontWeight.w600),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -323,24 +276,71 @@ class ExerciseListTile extends StatelessWidget {
   }
 }
 
-class _MuscleChip extends StatelessWidget {
-  final String muscle;
+class _StitchOutlineChip extends StatelessWidget {
+  final String label;
+  final Color color;
 
-  const _MuscleChip({required this.muscle});
+  const _StitchOutlineChip({required this.label, required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppSizes.radiusFull),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withAlpha(80)),
+        color: color.withAlpha(15),
       ),
       child: Text(
-        muscle,
-        style: Theme.of(
-          context,
-        ).textTheme.labelSmall?.copyWith(color: AppColors.primary),
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.3,
+        ),
+      ),
+    );
+  }
+}
+
+class _StitchLevelChip extends StatelessWidget {
+  final String level;
+
+  const _StitchLevelChip({required this.level});
+
+  Color get _chipColor {
+    switch (level.toLowerCase()) {
+      case 'easy':
+      case 'beginner':
+        return const Color(0xFF4CAF50);
+      case 'medium':
+      case 'intermediate':
+        return const Color(0xFFF59E0B);
+      case 'hard':
+      case 'advanced':
+      case 'expert':
+        return const Color(0xFFEF4444);
+      default:
+        return const Color(0xFF78909C);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: _chipColor.withAlpha(200),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        level.toUpperCase(),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

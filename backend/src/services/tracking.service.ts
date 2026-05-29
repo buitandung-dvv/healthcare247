@@ -446,6 +446,48 @@ export class TrackingService {
     };
   }
 
+  // Get weekly water summary (7 days, aggregated per day)
+  async getWeeklyWaterSummary(userId: number): Promise<{
+    date: string;
+    totalMl: number;
+  }[]> {
+    const pool = getPool();
+
+    // Get water goal for progress calculation
+    const goalResult = await pool.request()
+      .input('user_id', sql.Int, userId)
+      .query(`
+        SELECT COALESCE(water_goal_ml, 2000) as water_goal
+        FROM User_Goals
+        WHERE user_id = @user_id
+      `);
+    const goal = goalResult.recordset[0]?.water_goal || 2000;
+
+    const result = await pool.request()
+      .input('user_id', sql.Int, userId)
+      .query(`
+        WITH DateRange AS (
+          SELECT CAST(DATEADD(day, -6, GETDATE()) AS DATE) as date
+          UNION ALL
+          SELECT DATEADD(day, 1, date)
+          FROM DateRange
+          WHERE date < CAST(GETDATE() AS DATE)
+        )
+        SELECT
+          CONVERT(varchar, dr.date, 23) as date,
+          COALESCE(SUM(wt.amount_ml), 0) as total_ml
+        FROM DateRange dr
+        LEFT JOIN Water_Tracking wt ON CAST(wt.tracked_at AS DATE) = dr.date AND wt.user_id = @user_id
+        GROUP BY dr.date
+        ORDER BY dr.date
+      `);
+
+    return result.recordset.map((r: { date: string; total_ml: number }) => ({
+      date: r.date,
+      totalMl: r.total_ml,
+    }));
+  }
+
   // Delete water tracking
   async deleteWaterTracking(
     userId: number,

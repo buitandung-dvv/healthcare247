@@ -115,7 +115,7 @@ class TrackingRepository {
           'fat': fat,
           'notes': notes,
           'quantity': quantity ?? 100,
-          'tracked_at': (trackedAt ?? DateTime.now()).toIso8601String(),
+          'date': (trackedAt ?? DateTime.now()).toIso8601String().split('T')[0],
         },
       );
 
@@ -408,14 +408,50 @@ class TrackingRepository {
     }
   }
 
-  /// Xóa entry nước uống
-  Future<bool> deleteWaterEntry({required int trackingId}) async {
+  /// Lấy tổng hợp nước uống 7 ngày gần nhất
+  Future<List<Map<String, dynamic>>> getWeeklyWaterSummary({
+    required int userId,
+  }) async {
     try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConfig.tracking}/water/weekly',
+      );
+
+      if (response.data != null && response.data!['data'] != null) {
+        final list = response.data!['data'] as List;
+        return list.cast<Map<String, dynamic>>();
+      }
+      return [];
+    } catch (e) {
+      debugPrint('❌ Weekly water summary error: $e');
+      throw Exception('Failed to get weekly water summary: $e');
+    }
+  }
+
+  /// Xóa entry nước uống
+  Future<bool> deleteWaterEntry({
+    required int trackingId,
+    DateTime? trackedAt,
+  }) async {
+    try {
+      // Backend dùng tracked_at trong body để xóa
+      if (trackedAt != null) {
+        final response = await _apiClient.delete<Map<String, dynamic>>(
+          '${ApiConfig.tracking}/water/${trackedAt.toIso8601String()}',
+          data: {'tracked_at': trackedAt.toIso8601String()},
+        );
+        // 204 No Content = thành công, hoặc data success
+        return response.statusCode == 204 ||
+            response.data?['success'] == true ||
+            (response.statusCode != null && response.statusCode! < 300);
+      }
+
+      // Fallback: dùng ID
       final response = await _apiClient.delete<Map<String, dynamic>>(
         '${ApiConfig.tracking}/water/$trackingId',
       );
-
-      return response.data?['success'] == true;
+      return response.data?['success'] == true ||
+          (response.statusCode != null && response.statusCode! < 300);
     } catch (e) {
       debugPrint('❌ Delete water entry error: $e');
       throw Exception('Failed to delete water entry: $e');

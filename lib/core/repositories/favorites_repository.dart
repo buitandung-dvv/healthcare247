@@ -12,6 +12,7 @@ class FavoritesRepository {
   // Base endpoints
   static const String _favoritesFood = '/favorites/foods';
   static const String _favoritesRecipes = '/favorites/recipes';
+  static const String _favoritesExercises = '/favorites/exercises';
 
   /// Get user's favorite foods
   Future<PaginatedResponse<FavoriteFood>> getFavoriteFoods({
@@ -79,12 +80,45 @@ class FavoritesRepository {
     }
   }
 
+  /// Get user's favorite exercises
+  Future<PaginatedResponse<FavoriteExercise>> getFavoriteExercises({
+    int page = 1,
+    int limit = 20,
+  }) async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        _favoritesExercises,
+        queryParameters: {
+          ApiConfig.pageParam: page.toString(),
+          ApiConfig.limitParam: limit.toString(),
+        },
+      );
+
+      if (response.data != null) {
+        return PaginatedResponse.fromJson(
+          response.data!,
+          (json) => FavoriteExercise.fromJson(json),
+        );
+      }
+
+      return PaginatedResponse<FavoriteExercise>(
+        items: [],
+        totalCount: 0,
+        page: page,
+        pageSize: limit,
+        hasMore: false,
+      );
+    } catch (e) {
+      throw Exception('Failed to load favorite exercises: $e');
+    }
+  }
+
   /// Add food to favorites
   Future<FavoriteFood> addFavoriteFood(int foodId, {String? notes}) async {
     try {
       final response = await _apiClient.post<Map<String, dynamic>>(
         _favoritesFood,
-        data: {'food_id': foodId, if (notes != null) 'notes': notes},
+        data: {'food_id': foodId, 'notes': ?notes},
       );
 
       if (response.data != null && response.data!['data'] != null) {
@@ -107,7 +141,7 @@ class FavoritesRepository {
     try {
       final response = await _apiClient.post<Map<String, dynamic>>(
         _favoritesRecipes,
-        data: {'recipe_id': recipeId, if (notes != null) 'notes': notes},
+        data: {'recipe_id': recipeId, 'notes': ?notes},
       );
 
       if (response.data != null && response.data!['data'] != null) {
@@ -119,6 +153,29 @@ class FavoritesRepository {
       throw Exception('Invalid response format');
     } catch (e) {
       throw Exception('Failed to add favorite recipe: $e');
+    }
+  }
+
+  /// Add exercise to favorites
+  Future<FavoriteExercise> addFavoriteExercise(
+    int exerciseId, {
+    String? notes,
+  }) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        _favoritesExercises,
+        data: {'exercise_id': exerciseId, 'notes': ?notes},
+      );
+
+      if (response.data != null && response.data!['data'] != null) {
+        return FavoriteExercise.fromJson(
+          response.data!['data'] as Map<String, dynamic>,
+        );
+      }
+
+      throw Exception('Invalid response format');
+    } catch (e) {
+      throw Exception('Failed to add favorite exercise: $e');
     }
   }
 
@@ -140,6 +197,15 @@ class FavoritesRepository {
     }
   }
 
+  /// Remove exercise from favorites
+  Future<void> removeFavoriteExercise(int exerciseId) async {
+    try {
+      await _apiClient.delete('$_favoritesExercises/$exerciseId');
+    } catch (e) {
+      throw Exception('Failed to remove favorite exercise: $e');
+    }
+  }
+
   /// Check if food is favorite
   Future<bool> isFavoriteFood(int foodId) async {
     try {
@@ -157,6 +223,18 @@ class FavoritesRepository {
     try {
       final response = await _apiClient.get<Map<String, dynamic>>(
         '$_favoritesRecipes/$recipeId',
+      );
+      return response.data != null && response.data!['data'] != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Check if exercise is favorite
+  Future<bool> isFavoriteExercise(int exerciseId) async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '$_favoritesExercises/$exerciseId',
       );
       return response.data != null && response.data!['data'] != null;
     } catch (e) {

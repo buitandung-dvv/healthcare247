@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
 
-/// Activity level selection step with emoji
+/// Activity level step — Stitch design: 5 levels with icon circles + radio
 class ActivityLevelStep extends StatelessWidget {
   final String? selectedLevel;
   final ValueChanged<String> onChanged;
@@ -18,27 +17,33 @@ class ActivityLevelStep extends StatelessWidget {
   static const List<Map<String, dynamic>> _levels = [
     {
       'id': 'sedentary',
-      'emoji': '🧘',
+      'icon': Icons.weekend_rounded,
       'label': 'Ít vận động',
-      'desc': 'Ít hoặc không tập thể dục',
+      'desc': 'Công việc văn phòng, ít di chuyển',
     },
     {
       'id': 'lightly_active',
-      'emoji': '🚶',
-      'label': 'Hơi tích cực',
-      'desc': 'Tập nhẹ 1-3 ngày/tuần',
+      'icon': Icons.directions_walk_rounded,
+      'label': 'Nhẹ nhàng',
+      'desc': 'Đi bộ nhẹ nhàng, 1-2 lần/tuần',
     },
     {
       'id': 'moderately_active',
-      'emoji': '🏃',
-      'label': 'Tích cực vừa phải',
-      'desc': 'Tập vừa 3-5 ngày/tuần',
+      'icon': Icons.directions_run_rounded,
+      'label': 'Trung bình',
+      'desc': 'Tập luyện 3-4 lần/tuần',
     },
     {
       'id': 'very_active',
-      'emoji': '🏋️',
-      'label': 'Rất tích cực',
-      'desc': 'Tập nặng 6-7 ngày/tuần',
+      'icon': Icons.sports_martial_arts_rounded,
+      'label': 'Năng động',
+      'desc': 'Tập luyện 5-6 lần/tuần',
+    },
+    {
+      'id': 'extra_active',
+      'icon': Icons.local_fire_department_rounded,
+      'label': 'Rất năng động',
+      'desc': 'Tập luyện hàng ngày hoặc công việc nặng',
     },
   ];
 
@@ -48,80 +53,135 @@ class ActivityLevelStep extends StatelessWidget {
     final textColor =
         isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSizes.lg),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: AppSizes.xl),
+          const SizedBox(height: 24),
           Text(
-            'Mức độ vận động\ncủa bạn?',
+            'Mức độ vận động của bạn?',
             style: TextStyle(
               fontSize: 26,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
               color: textColor,
-              height: 1.3,
             ),
           ),
-          const SizedBox(height: AppSizes.xxl),
-          // Activity options
-          ..._levels.map(
-            (level) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSizes.md),
-              child: _ActivityOption(
-                emoji: level['emoji'],
-                label: level['label'],
-                description: level['desc'],
-                isSelected: selectedLevel == level['id'],
-                onTap: () => onChanged(level['id']),
-                isDark: isDark,
+          const SizedBox(height: 8),
+          Text(
+            'Chọn mức độ phù hợp với lối sống hiện tại của bạn để chúng tôi tính toán lộ trình chính xác nhất.',
+            style: TextStyle(
+              fontSize: 14,
+              color:
+                  isDark
+                      ? AppColors.darkTextSecondary
+                      : const Color(0xFF64748B),
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Activity level cards
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children:
+                    _levels
+                        .map(
+                          (level) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: _StitchOptionCard(
+                              icon: level['icon'],
+                              label: level['label'],
+                              description: level['desc'],
+                              isSelected: selectedLevel == level['id'],
+                              onTap: () => onChanged(level['id']),
+                              isDark: isDark,
+                            ),
+                          ),
+                        )
+                        .toList(),
               ),
             ),
           ),
-          const SizedBox(height: AppSizes.xxl),
-          // Next button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: selectedLevel != null ? onNext : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor:
-                    isDark ? AppColors.darkBorder : AppColors.border,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusFull),
+
+          const SizedBox(height: 16),
+
+          // Gradient Next button
+          GestureDetector(
+            onTap: selectedLevel != null ? onNext : null,
+            child: Container(
+              width: double.infinity,
+              height: 56,
+              decoration: BoxDecoration(
+                gradient:
+                    selectedLevel != null
+                        ? const LinearGradient(
+                          colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                        )
+                        : LinearGradient(
+                          colors: [
+                            const Color(0xFF42A5F5).withValues(alpha: 0.4),
+                            const Color(0xFF1565C0).withValues(alpha: 0.4),
+                          ],
+                        ),
+                borderRadius: BorderRadius.circular(9999),
+                boxShadow:
+                    selectedLevel != null
+                        ? [
+                          BoxShadow(
+                            color: const Color(
+                              0xFF1565C0,
+                            ).withValues(alpha: 0.3),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
+                          ),
+                        ]
+                        : null,
+              ),
+              child: const Center(
+                child: Text(
+                  'Tiếp theo',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'TIẾP THEO',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
               ),
             ),
           ),
-          const SizedBox(height: AppSizes.lg),
+          const SizedBox(height: 12),
+          Center(
+            child: Text(
+              'Quay lại',
+              style: TextStyle(
+                fontSize: 15,
+                color:
+                    isDark
+                        ? AppColors.darkTextSecondary
+                        : const Color(0xFF94A3B8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
 }
 
-class _ActivityOption extends StatelessWidget {
-  final String emoji;
+/// Stitch-style option card with icon circle + radio indicator
+class _StitchOptionCard extends StatelessWidget {
+  final IconData icon;
   final String label;
   final String description;
   final bool isSelected;
   final VoidCallback onTap;
   final bool isDark;
 
-  const _ActivityOption({
-    required this.emoji,
+  const _StitchOptionCard({
+    required this.icon,
     required this.label,
     required this.description,
     required this.isSelected,
@@ -131,79 +191,103 @@ class _ActivityOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor =
-        isSelected
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : isDark
-            ? AppColors.darkCard
-            : Colors.white;
-    final borderColor =
-        isSelected
-            ? AppColors.primary
-            : isDark
-            ? AppColors.darkBorder
-            : AppColors.border;
-    final textColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(AppSizes.md),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-            border: Border.all(color: borderColor, width: isSelected ? 2 : 1),
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? const Color(0xFFEBF5FF)
+                  : (isDark ? AppColors.darkCard : Colors.white),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color:
+                isSelected
+                    ? AppColors.primary
+                    : (isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0)),
+            width: isSelected ? 2 : 1.5,
           ),
-          child: Row(
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 28)),
-              const SizedBox(width: AppSizes.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: AppSizes.fontMd,
-                        fontWeight: FontWeight.w600,
-                        color: isSelected ? AppColors.primary : textColor,
-                      ),
-                    ),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        fontSize: AppSizes.fontSm,
-                        color:
-                            isDark
-                                ? AppColors.darkTextSecondary
-                                : AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
+        ),
+        child: Row(
+          children: [
+            // Icon circle
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color:
+                    isSelected
+                        ? AppColors.primary.withValues(alpha: 0.15)
+                        : (isDark
+                            ? const Color(0xFF334155)
+                            : const Color(0xFFF1F5F9)),
+                shape: BoxShape.circle,
               ),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
+              child: Icon(
+                icon,
+                size: 24,
+                color:
+                    isSelected
+                        ? AppColors.primary
+                        : (isDark
+                            ? AppColors.darkTextSecondary
+                            : const Color(0xFF64748B)),
+              ),
+            ),
+            const SizedBox(width: 14),
+            // Text
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color:
+                          isSelected
+                              ? const Color(0xFF0F172A)
+                              : (isDark
+                                  ? AppColors.darkTextPrimary
+                                  : const Color(0xFF334155)),
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.check_rounded,
-                    color: Colors.white,
-                    size: 16,
+                  const SizedBox(height: 2),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color:
+                          isDark
+                              ? AppColors.darkTextSecondary
+                              : const Color(0xFF94A3B8),
+                    ),
                   ),
+                ],
+              ),
+            ),
+            // Radio indicator
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color:
+                      isSelected
+                          ? AppColors.primary
+                          : (isDark
+                              ? const Color(0xFF475569)
+                              : const Color(0xFFCBD5E1)),
+                  width: isSelected ? 7 : 2,
                 ),
-            ],
-          ),
+                color: isSelected ? Colors.white : Colors.transparent,
+              ),
+            ),
+          ],
         ),
       ),
     );

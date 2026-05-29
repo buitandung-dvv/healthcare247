@@ -43,7 +43,7 @@ class ExerciseListItem extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(AppSizes.radiusCard),
         boxShadow: [
           BoxShadow(
             color: (isDark ? AppColors.darkShadow : AppColors.shadow)
@@ -57,7 +57,7 @@ class ExerciseListItem extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          borderRadius: BorderRadius.circular(AppSizes.radiusCard),
           child: Padding(
             padding: const EdgeInsets.all(AppSizes.sm),
             child: Row(
@@ -155,14 +155,14 @@ class ExerciseListItem extends StatelessWidget {
                   imageUrl: imageUrl!,
                   fit: BoxFit.cover,
                   placeholder:
-                      (_, __) => Container(
+                      (_, _) => Container(
                         color: placeholderColor,
                         child: const Center(
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       ),
                   errorWidget:
-                      (_, __, ___) => Container(
+                      (_, _, _) => Container(
                         color: placeholderColor,
                         child: Icon(
                           Icons.fitness_center_rounded,

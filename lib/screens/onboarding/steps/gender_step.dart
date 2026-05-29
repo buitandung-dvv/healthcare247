@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_sizes.dart';
 
-/// Gender selection step
+/// Gender selection step — Stitch design: side-by-side card selectors
 class GenderStep extends StatelessWidget {
   final String? selectedGender;
   final ValueChanged<String> onChanged;
@@ -21,96 +20,126 @@ class GenderStep extends StatelessWidget {
     final textColor =
         isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSizes.lg),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: AppSizes.xl),
+          const SizedBox(height: 24),
+
+          // Title
           Text(
-            'Giới tính của bạn?',
+            'Giới tính',
             style: TextStyle(
               fontSize: 26,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
               color: textColor,
             ),
           ),
-          const SizedBox(height: AppSizes.sm),
+          const SizedBox(height: 8),
           Text(
-            'Điều này giúp chúng tôi cá nhân hóa trải nghiệm của bạn',
+            'Điều này giúp chúng tôi tính toán chỉ số phù hợp',
             style: TextStyle(
-              fontSize: AppSizes.fontMd,
+              fontSize: 14,
               color:
                   isDark
                       ? AppColors.darkTextSecondary
-                      : AppColors.textSecondary,
+                      : const Color(0xFF64748B),
             ),
           ),
-          const SizedBox(height: AppSizes.xxl),
-          // Gender options
-          _GenderOption(
-            icon: Icons.male_rounded,
-            label: 'Nam',
-            value: 'male',
-            isSelected: selectedGender == 'male',
-            onTap: () => onChanged('male'),
-            isDark: isDark,
-          ),
-          const SizedBox(height: AppSizes.md),
-          _GenderOption(
-            icon: Icons.female_rounded,
-            label: 'Nữ',
-            value: 'female',
-            isSelected: selectedGender == 'female',
-            onTap: () => onChanged('female'),
-            isDark: isDark,
-          ),
-          const SizedBox(height: AppSizes.xxl),
-          // Next button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: selectedGender != null ? onNext : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor:
-                    isDark ? AppColors.darkBorder : AppColors.border,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusFull),
+
+          const SizedBox(height: 32),
+
+          // Stitch-style side-by-side gender cards
+          Row(
+            children: [
+              Expanded(
+                child: _GenderCard(
+                  icon: Icons.male_rounded,
+                  label: 'Nam',
+                  isSelected: selectedGender == 'male',
+                  onTap: () => onChanged('male'),
+                  isDark: isDark,
                 ),
-                elevation: 0,
               ),
-              child: const Text(
-                'TIẾP THEO',
-                style: TextStyle(
-                  fontSize: AppSizes.fontMd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
+              const SizedBox(width: 16),
+              Expanded(
+                child: _GenderCard(
+                  icon: Icons.female_rounded,
+                  label: 'Nữ',
+                  isSelected: selectedGender == 'female',
+                  onTap: () => onChanged('female'),
+                  isDark: isDark,
+                ),
+              ),
+            ],
+          ),
+
+          const Spacer(),
+
+          // Gradient Next button
+          GestureDetector(
+            onTap: selectedGender != null ? onNext : null,
+            child: Container(
+              width: double.infinity,
+              height: 56,
+              decoration: BoxDecoration(
+                gradient:
+                    selectedGender != null
+                        ? const LinearGradient(
+                          colors: [Color(0xFF42A5F5), Color(0xFF1565C0)],
+                        )
+                        : LinearGradient(
+                          colors: [
+                            const Color(0xFF42A5F5).withValues(alpha: 0.4),
+                            const Color(0xFF1565C0).withValues(alpha: 0.4),
+                          ],
+                        ),
+                borderRadius: BorderRadius.circular(9999),
+                boxShadow:
+                    selectedGender != null
+                        ? [
+                          BoxShadow(
+                            color: const Color(
+                              0xFF1565C0,
+                            ).withValues(alpha: 0.3),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
+                          ),
+                        ]
+                        : null,
+              ),
+              child: const Center(
+                child: Text(
+                  'Tiếp theo',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: AppSizes.lg),
+
+          const SizedBox(height: 32),
         ],
       ),
     );
   }
 }
 
-class _GenderOption extends StatelessWidget {
+/// Stitch gender card: large rounded box with icon + label, blue border when selected
+class _GenderCard extends StatelessWidget {
   final IconData icon;
   final String label;
-  final String value;
   final bool isSelected;
   final VoidCallback onTap;
   final bool isDark;
 
-  const _GenderOption({
+  const _GenderCard({
     required this.icon,
     required this.label,
-    required this.value,
     required this.isSelected,
     required this.onTap,
     required this.isDark,
@@ -118,67 +147,53 @@ class _GenderOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor =
-        isSelected
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : isDark
-            ? AppColors.darkCard
-            : Colors.white;
-    final borderColor =
-        isSelected
-            ? AppColors.primary
-            : isDark
-            ? AppColors.darkBorder
-            : AppColors.border;
-    final textColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(AppSizes.lg),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-            border: Border.all(color: borderColor, width: isSelected ? 2 : 1),
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: 160,
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? const Color(0xFFEBF5FF)
+                  : (isDark ? AppColors.darkCard : Colors.white),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color:
+                isSelected
+                    ? AppColors.primary
+                    : (isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0)),
+            width: isSelected ? 2.5 : 1.5,
           ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 32,
-                color: isSelected ? AppColors.primary : textColor,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 48,
+              color:
+                  isSelected
+                      ? AppColors.primary
+                      : (isDark
+                          ? AppColors.darkTextSecondary
+                          : const Color(0xFF94A3B8)),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color:
+                    isSelected
+                        ? AppColors.primary
+                        : (isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.textPrimary),
               ),
-              const SizedBox(width: AppSizes.md),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: AppSizes.fontLg,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? AppColors.primary : textColor,
-                ),
-              ),
-              const Spacer(),
-              if (isSelected)
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check_rounded,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
